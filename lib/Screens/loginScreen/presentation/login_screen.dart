@@ -73,7 +73,10 @@ class _LoginScreenState extends State<LoginScreen> {
                       Stack(
                         children: [
                           Padding(
-                            padding: const EdgeInsets.only(top: 10, bottom: 55),
+                            padding: EdgeInsets.only(
+                              top: SizeUtils().hp(3),
+                              bottom: SizeUtils().hp(7),
+                            ),
                             child: SizedBox(
                                 height: SizeUtils().hp(60),
                                 width: SizeUtils().wp(150),
