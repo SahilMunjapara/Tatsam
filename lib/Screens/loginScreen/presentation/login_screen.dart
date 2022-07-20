@@ -58,9 +58,7 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
               Center(
                 child: Padding(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: SizeUtils().wp(8),
-                  ),
+                  padding: EdgeInsets.symmetric(horizontal: SizeUtils().wp(8)),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
@@ -78,12 +76,13 @@ class _LoginScreenState extends State<LoginScreen> {
                               bottom: SizeUtils().hp(7),
                             ),
                             child: SizedBox(
-                                height: SizeUtils().hp(60),
-                                width: SizeUtils().wp(150),
-                                child: Image.asset(
-                                  ImageString.rectangle,
-                                  fit: BoxFit.fill,
-                                )),
+                              height: SizeUtils().hp(60),
+                              width: SizeUtils().wp(150),
+                              child: Image.asset(
+                                ImageString.rectangle,
+                                fit: BoxFit.fill,
+                              ),
+                            ),
                           ),
                           Positioned(
                             top: SizeUtils().hp(13),
@@ -92,7 +91,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  Strings.login.toUpperCase(),
+                                  Strings.login,
                                   style: size38Regular(),
                                 ),
                                 SizedBox(height: SizeUtils().hp(7)),
@@ -148,22 +147,50 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                           Positioned(
                             bottom: SizeUtils().hp(17),
-                            child: SvgPicture.asset(ImageString.facebookSvg),
+                            child: SizedBox(
+                              height: SizeUtils().hp(3.5),
+                              width: SizeUtils().wp(3.5),
+                              child: SvgPicture.asset(
+                                ImageString.facebookSvg,
+                                fit: BoxFit.fill,
+                              ),
+                            ),
                           ),
                           Positioned(
-                            bottom: SizeUtils().hp(14),
+                            bottom: SizeUtils().hp(13.8),
                             left: SizeUtils().wp(16),
-                            child: SvgPicture.asset(ImageString.googleSvg),
+                            child: SizedBox(
+                              height: SizeUtils().hp(3.5),
+                              width: SizeUtils().wp(6),
+                              child: SvgPicture.asset(
+                                ImageString.googleSvg,
+                                fit: BoxFit.fill,
+                              ),
+                            ),
                           ),
                           Positioned(
                             bottom: SizeUtils().hp(10.5),
-                            left: SizeUtils().wp(35),
-                            child: SvgPicture.asset(ImageString.instagramSvg),
+                            left: SizeUtils().wp(34),
+                            child: SizedBox(
+                              height: SizeUtils().hp(3.3),
+                              width: SizeUtils().wp(6),
+                              child: SvgPicture.asset(
+                                ImageString.instagramSvg,
+                                fit: BoxFit.fill,
+                              ),
+                            ),
                           ),
                           Positioned(
-                            bottom: SizeUtils().hp(6.5),
+                            bottom: SizeUtils().hp(6),
                             left: SizeUtils().wp(11),
-                            child: SvgPicture.asset(ImageString.loginSvg),
+                            child: SizedBox(
+                              height: SizeUtils().hp(3),
+                              width: SizeUtils().wp(6),
+                              child: SvgPicture.asset(
+                                ImageString.loginSvg,
+                                fit: BoxFit.fill,
+                              ),
+                            ),
                           ),
                           Positioned(
                             right: 0,

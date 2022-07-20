@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:tatsam/Navigation/routes_key.dart';
 import 'package:tatsam/Utils/constants/colors.dart';
 import 'package:tatsam/Utils/constants/image.dart';
 import 'package:tatsam/Utils/constants/strings.dart';
@@ -35,7 +36,7 @@ class _OtpScreenState extends State<OtpScreen> {
               ),
               Center(
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 30.0),
+                  padding: EdgeInsets.symmetric(horizontal: SizeUtils().wp(8)),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
@@ -55,30 +56,10 @@ class _OtpScreenState extends State<OtpScreen> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Column(
-                            children: [
-                              Image.asset(ImageString.otpBox),
-                              const SizedBox(height: 30),
-                            ],
-                          ),
-                          Column(
-                            children: [
-                              const SizedBox(height: 30),
-                              Image.asset(ImageString.otpBox),
-                            ],
-                          ),
-                          Column(
-                            children: [
-                              Image.asset(ImageString.otpBox),
-                              const SizedBox(height: 30),
-                            ],
-                          ),
-                          Column(
-                            children: [
-                              const SizedBox(height: 30),
-                              Image.asset(ImageString.otpBox),
-                            ],
-                          ),
+                          _otpTextFillWidget(isUp: true),
+                          _otpTextFillWidget(isUp: false),
+                          _otpTextFillWidget(isUp: true),
+                          _otpTextFillWidget(isUp: false),
                         ],
                       ),
                       SizedBox(height: SizeUtils().hp(4)),
@@ -87,17 +68,25 @@ class _OtpScreenState extends State<OtpScreen> {
                         style: size15Regular(),
                       ),
                       SizedBox(height: SizeUtils().hp(2)),
-                      Container(
-                        decoration: BoxDecoration(
-                          color: otpBoxColor,
-                          borderRadius: BorderRadius.circular(30),
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 50, vertical: 12),
-                          child: Text(
-                            Strings.verify,
-                            style: size19Regular(textColor: blackColor),
+                      InkWell(
+                        onTap: () {
+                          Navigator.pushNamedAndRemoveUntil(context,
+                              Routes.dashboardScreen, (route) => false);
+                        },
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: otpBoxColor,
+                            borderRadius: BorderRadius.circular(30),
+                          ),
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: SizeUtils().hp(5),
+                              vertical: SizeUtils().wp(3),
+                            ),
+                            child: Text(
+                              Strings.verify,
+                              style: size19Regular(textColor: blackColor),
+                            ),
                           ),
                         ),
                       ),
@@ -109,6 +98,23 @@ class _OtpScreenState extends State<OtpScreen> {
           ),
         ),
       ),
+    );
+  }
+
+  Widget _otpTextFillWidget({bool? isUp}) {
+    return Column(
+      children: [
+        Visibility(visible: !isUp!, child: SizedBox(height: SizeUtils().hp(5))),
+        SizedBox(
+          height: SizeUtils().hp(9),
+          width: SizeUtils().wp(14),
+          child: SvgPicture.asset(
+            ImageString.otpBoxSvg,
+            fit: BoxFit.fill,
+          ),
+        ),
+        Visibility(visible: isUp, child: SizedBox(height: SizeUtils().hp(5))),
+      ],
     );
   }
 }

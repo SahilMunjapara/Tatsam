@@ -103,7 +103,7 @@ class _SignupScreenState extends State<SignupScreen> {
                             top: SizeUtils().hp(10),
                             right: SizeUtils().wp(7),
                             child: Text(
-                              Strings.signup.toUpperCase(),
+                              Strings.signup,
                               style: size38Regular(),
                             ),
                           ),
@@ -217,27 +217,56 @@ class _SignupScreenState extends State<SignupScreen> {
                           Positioned(
                             bottom: SizeUtils().hp(16.5),
                             right: SizeUtils().wp(0.5),
-                            child: SvgPicture.asset(ImageString.instagramSvg),
+                            child: SizedBox(
+                              height: SizeUtils().hp(3.3),
+                              width: SizeUtils().wp(6),
+                              child: SvgPicture.asset(
+                                ImageString.instagramSvg,
+                                fit: BoxFit.fill,
+                              ),
+                            ),
                           ),
                           Positioned(
                             bottom: SizeUtils().hp(13),
                             right: SizeUtils().wp(17.5),
-                            child: SvgPicture.asset(ImageString.googleSvg),
+                            child: SizedBox(
+                              height: SizeUtils().hp(3.5),
+                              width: SizeUtils().wp(6),
+                              child: SvgPicture.asset(
+                                ImageString.googleSvg,
+                                fit: BoxFit.fill,
+                              ),
+                            ),
                           ),
                           Positioned(
-                            bottom: SizeUtils().hp(10),
+                            bottom: SizeUtils().hp(9.8),
                             right: SizeUtils().wp(37),
-                            child: SvgPicture.asset(ImageString.facebookSvg),
+                            child: SizedBox(
+                              height: SizeUtils().hp(3.5),
+                              width: SizeUtils().wp(3.5),
+                              child: SvgPicture.asset(
+                                ImageString.facebookSvg,
+                                fit: BoxFit.fill,
+                              ),
+                            ),
                           ),
                           Positioned(
                             bottom: SizeUtils().hp(6.5),
                             right: SizeUtils().wp(11),
-                            child: InkWell(
+                            child: SizedBox(
+                              height: SizeUtils().hp(3),
+                              width: SizeUtils().wp(6),
+                              child: InkWell(
                                 onTap: () {
                                   Navigator.pushNamedAndRemoveUntil(context,
                                       Routes.otpScreen, (route) => false);
                                 },
-                                child: SvgPicture.asset(ImageString.signupSvg)),
+                                child: SvgPicture.asset(
+                                  ImageString.signupSvg,
+                                  fit: BoxFit.fill,
+                                ),
+                              ),
+                            ),
                           ),
                           Positioned(
                             bottom: 0,
