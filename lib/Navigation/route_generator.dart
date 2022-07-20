@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tatsam/Navigation/routes_key.dart';
 import 'package:tatsam/Screens/loginScreen/presentation/login_screen.dart';
+import 'package:tatsam/Screens/otpScreen/presentation/otp_screen.dart';
 import 'package:tatsam/Screens/signupScreen/presentation/signup_screen.dart';
 
 class RouteGenerator {
@@ -12,6 +13,8 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (context) => const LoginScreen());
       case Routes.signupScreen:
         return MaterialPageRoute(builder: (context) => const SignupScreen());
+      case Routes.otpScreen:
+        return MaterialPageRoute(builder: (context) => const OtpScreen());
       default:
         return _errorRoute();
     }

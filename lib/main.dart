@@ -37,7 +37,7 @@ class Application extends StatelessWidget {
         scaffoldBackgroundColor: Colors.black,
       ),
       debugShowCheckedModeBanner: false,
-      initialRoute: Routes.signupScreen,
+      initialRoute: Routes.loginScreen,
       onGenerateRoute: RouteGenerator.generateRoute,
     );
   }

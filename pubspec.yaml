@@ -35,3 +35,7 @@ flutter:
       fonts:
         - asset: assets/fonts/JosefinSans-Regular.ttf
           weight: 400
+    - family: AlegreyaSans
+      fonts:
+        - asset: assets/fonts/AlegreyaSansSC-Regular.ttf
+          weight: 400

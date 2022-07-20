@@ -1,9 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:tatsam/Utils/constants/colors.dart';
+import 'package:tatsam/Utils/constants/strings.dart';
 import 'package:tatsam/Utils/size_utils/size_utils.dart';
 
 /// 1px = sp(1 * 0.8 = 0.8)
-///
+/// 1px = sp(1 * 0.76 = 0.76)
+
+TextStyle size15Regular({
+  Color? textColor,
+  double? letterSpacing = 0.0,
+  TextDecoration? decoration = TextDecoration.none,
+}) =>
+    TextStyle(
+      fontFamily: Strings.secondFontFamily,
+      color: textColor ?? whiteColor,
+      fontSize: SizeUtils().sp(11.4),
+      letterSpacing: letterSpacing,
+      fontWeight: FontWeight.w400,
+      decoration: decoration,
+    );
 
 TextStyle size16Regular({
   Color? textColor,
@@ -12,7 +27,7 @@ TextStyle size16Regular({
 }) =>
     TextStyle(
       color: textColor ?? whiteColor,
-      fontSize: SizeUtils().sp(12.8),
+      fontSize: SizeUtils().sp(12.16),
       letterSpacing: letterSpacing,
       fontWeight: FontWeight.w400,
       decoration: decoration,
@@ -24,8 +39,37 @@ TextStyle size18Regular({
   TextDecoration? decoration = TextDecoration.none,
 }) =>
     TextStyle(
+      fontFamily: Strings.secondFontFamily,
       color: textColor ?? whiteColor,
-      fontSize: SizeUtils().sp(14.4),
+      fontSize: SizeUtils().sp(13.68),
+      letterSpacing: letterSpacing,
+      fontWeight: FontWeight.w400,
+      decoration: decoration,
+    );
+
+TextStyle size19Regular({
+  Color? textColor,
+  double? letterSpacing = 0.0,
+  TextDecoration? decoration = TextDecoration.none,
+}) =>
+    TextStyle(
+      fontFamily: Strings.secondFontFamily,
+      color: textColor ?? whiteColor,
+      fontSize: SizeUtils().sp(14.44),
+      letterSpacing: letterSpacing,
+      fontWeight: FontWeight.w400,
+      decoration: decoration,
+    );
+
+TextStyle size20Regular({
+  Color? textColor,
+  double? letterSpacing = 0.0,
+  TextDecoration? decoration = TextDecoration.none,
+}) =>
+    TextStyle(
+      fontFamily: Strings.secondFontFamily,
+      color: textColor ?? whiteColor,
+      fontSize: SizeUtils().sp(15.2),
       letterSpacing: letterSpacing,
       fontWeight: FontWeight.w400,
       decoration: decoration,
@@ -38,7 +82,7 @@ TextStyle size48Regular({
 }) =>
     TextStyle(
       color: textColor ?? whiteColor,
-      fontSize: SizeUtils().sp(38.4),
+      fontSize: SizeUtils().sp(36.48),
       letterSpacing: letterSpacing,
       fontWeight: FontWeight.w400,
       decoration: decoration,
@@ -51,7 +95,7 @@ TextStyle size38Regular({
 }) =>
     TextStyle(
       color: textColor ?? whiteColor,
-      fontSize: SizeUtils().sp(29),
+      fontSize: SizeUtils().sp(28.88),
       letterSpacing: letterSpacing,
       fontWeight: FontWeight.w400,
       decoration: decoration,
