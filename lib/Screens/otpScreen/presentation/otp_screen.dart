@@ -5,6 +5,7 @@ import 'package:tatsam/Utils/constants/colors.dart';
 import 'package:tatsam/Utils/constants/image.dart';
 import 'package:tatsam/Utils/constants/strings.dart';
 import 'package:tatsam/Utils/constants/textStyle.dart';
+import 'package:tatsam/Utils/log_utils/log_util.dart';
 import 'package:tatsam/Utils/size_utils/size_utils.dart';
 
 class OtpScreen extends StatefulWidget {
@@ -15,6 +16,28 @@ class OtpScreen extends StatefulWidget {
 }
 
 class _OtpScreenState extends State<OtpScreen> {
+  late List<FocusNode?> _focusNodes;
+  late List<TextEditingController?> _textControllers;
+  late List<String> _pin;
+
+  @override
+  void initState() {
+    super.initState();
+    _focusNodes = List<FocusNode?>.filled(4, null, growable: false);
+    _textControllers =
+        List<TextEditingController?>.filled(4, null, growable: false);
+    _pin = List.generate(4, (int i) {
+      return '';
+    });
+  }
+
+  @override
+  void dispose() {
+    _focusNodes.map((node) => node!.dispose()).toList();
+    _textControllers.map((controller) => controller!.dispose()).toList();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     SizeUtils().init(context);
@@ -22,6 +45,7 @@ class _OtpScreenState extends State<OtpScreen> {
       onWillPop: () => Future<bool>.value(false),
       child: SafeArea(
         child: Scaffold(
+          resizeToAvoidBottomInset: false,
           backgroundColor: backgroundColor,
           body: Stack(
             children: [
@@ -33,6 +57,17 @@ class _OtpScreenState extends State<OtpScreen> {
                 left: 0,
                 bottom: 0,
                 child: Image.asset(ImageString.bottomLeftCircle),
+              ),
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: SizedBox(
+                  height: SizeUtils().hp(18),
+                  width: SizeUtils().screenWidth,
+                  child: Image.asset(
+                    ImageString.building,
+                    fit: BoxFit.fill,
+                  ),
+                ),
               ),
               Center(
                 child: Padding(
@@ -46,7 +81,14 @@ class _OtpScreenState extends State<OtpScreen> {
                         style: size48Regular(),
                       ),
                       SizedBox(height: SizeUtils().hp(2)),
-                      SvgPicture.asset(ImageString.otpVerificationSvg),
+                      SizedBox(
+                        height: SizeUtils().hp(16),
+                        width: SizeUtils().wp(24),
+                        child: SvgPicture.asset(
+                          ImageString.otpVerificationSvg,
+                          fit: BoxFit.fill,
+                        ),
+                      ),
                       SizedBox(height: SizeUtils().hp(7.5)),
                       Text(
                         Strings.otpScreenDetail,
@@ -56,10 +98,10 @@ class _OtpScreenState extends State<OtpScreen> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          _otpTextFillWidget(isUp: true),
-                          _otpTextFillWidget(isUp: false),
-                          _otpTextFillWidget(isUp: true),
-                          _otpTextFillWidget(isUp: false),
+                          _otpTextFillWidget(isUp: true, i: 0),
+                          _otpTextFillWidget(isUp: false, i: 1),
+                          _otpTextFillWidget(isUp: true, i: 2),
+                          _otpTextFillWidget(isUp: false, i: 3),
                         ],
                       ),
                       SizedBox(height: SizeUtils().hp(4)),
@@ -101,20 +143,108 @@ class _OtpScreenState extends State<OtpScreen> {
     );
   }
 
-  Widget _otpTextFillWidget({bool? isUp}) {
+  Widget _otpTextFillWidget({bool? isUp, int? i}) {
+    if (_focusNodes[i!] == null) _focusNodes[i] = FocusNode();
+
+    if (_textControllers[i] == null) {
+      _textControllers[i] = TextEditingController();
+    }
     return Column(
       children: [
         Visibility(visible: !isUp!, child: SizedBox(height: SizeUtils().hp(5))),
         SizedBox(
           height: SizeUtils().hp(9),
           width: SizeUtils().wp(14),
-          child: SvgPicture.asset(
-            ImageString.otpBoxSvg,
-            fit: BoxFit.fill,
+          child: Stack(
+            children: [
+              SizedBox(
+                height: SizeUtils().hp(9),
+                width: SizeUtils().wp(14),
+                child: SvgPicture.asset(
+                  ImageString.otpBoxSvg,
+                  fit: BoxFit.fill,
+                ),
+              ),
+              Center(
+                child: Padding(
+                  padding: EdgeInsets.only(
+                    left: SizeUtils().wp(3),
+                    right: SizeUtils().wp(3),
+                  ),
+                  child: TextFormField(
+                    controller: _textControllers[i],
+                    focusNode: _focusNodes[i],
+                    keyboardType: TextInputType.phone,
+                    style: size20Regular(textColor: blackColor),
+                    textAlign: TextAlign.center,
+                    cursorColor: blackColor,
+                    decoration: const InputDecoration(
+                      border: InputBorder.none,
+                    ),
+                    onChanged: (String str) {
+                      if (str.length > 1) {
+                        _handlePaste(str);
+                        return;
+                      }
+
+                      if (str.isEmpty) {
+                        if (i == 0) return;
+                        _focusNodes[i]!.unfocus();
+                        _focusNodes[i - 1]!.requestFocus();
+                      }
+
+                      setState(() {
+                        _pin[i] = str;
+                      });
+
+                      if (str.isNotEmpty) _focusNodes[i]!.unfocus();
+                      if (i + 1 != 4 && str.isNotEmpty) {
+                        FocusScope.of(context).requestFocus(_focusNodes[i + 1]);
+                      }
+
+                      String currentPin = _getCurrentPin();
+
+                      if (!_pin.contains(null) &&
+                          !_pin.contains('') &&
+                          currentPin.length == 4) {
+                        LogUtils.showLogs(message: currentPin, tag: 'PIN');
+                      }
+                    },
+                  ),
+                ),
+              ),
+            ],
           ),
         ),
         Visibility(visible: isUp, child: SizedBox(height: SizeUtils().hp(5))),
       ],
     );
+  }
+
+  String _getCurrentPin() {
+    String currentPin = "";
+    for (var value in _pin) {
+      currentPin += value;
+    }
+    return currentPin;
+  }
+
+  void _handlePaste(String str) {
+    if (str.length > 4) {
+      str = str.substring(0, 4);
+    }
+    for (int i = 0; i < str.length; i++) {
+      String digit = str.substring(i, i + 1);
+      _textControllers[i]!.text = digit;
+      _pin[i] = digit;
+    }
+
+    FocusScope.of(context).requestFocus(_focusNodes[4 - 1]);
+
+    String currentPin = _getCurrentPin();
+
+    if (!_pin.contains(null) && !_pin.contains('') && currentPin.length == 4) {
+      LogUtils.showLogs(message: currentPin, tag: 'PIN');
+    }
   }
 }

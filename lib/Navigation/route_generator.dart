@@ -3,6 +3,7 @@ import 'package:tatsam/Navigation/routes_key.dart';
 import 'package:tatsam/Screens/dashboard/presentation/dashboard.dart';
 import 'package:tatsam/Screens/loginScreen/presentation/login_screen.dart';
 import 'package:tatsam/Screens/otpScreen/presentation/otp_screen.dart';
+import 'package:tatsam/Screens/profileScreen/presentation/profile_screen.dart';
 import 'package:tatsam/Screens/signupScreen/presentation/signup_screen.dart';
 
 class RouteGenerator {
@@ -18,6 +19,8 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (context) => const OtpScreen());
       case Routes.dashboardScreen:
         return MaterialPageRoute(builder: (context) => const DashBoardScreen());
+      case Routes.profileScreen:
+        return MaterialPageRoute(builder: (context) => const ProfileScreen());
       default:
         return _errorRoute();
     }

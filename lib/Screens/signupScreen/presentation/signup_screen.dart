@@ -69,6 +69,17 @@ class _SignupScreenState extends State<SignupScreen> {
                 left: 0,
                 child: Image.asset(ImageString.bottomLeftBlur),
               ),
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: SizedBox(
+                  height: SizeUtils().hp(18),
+                  width: SizeUtils().screenWidth,
+                  child: Image.asset(
+                    ImageString.building,
+                    fit: BoxFit.fill,
+                  ),
+                ),
+              ),
               Center(
                 child: Padding(
                   padding: EdgeInsets.symmetric(

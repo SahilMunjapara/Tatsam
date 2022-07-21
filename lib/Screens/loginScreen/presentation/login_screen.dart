@@ -56,6 +56,17 @@ class _LoginScreenState extends State<LoginScreen> {
                 right: 0,
                 child: Image.asset(ImageString.bottomRightBlur),
               ),
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: SizedBox(
+                  height: SizeUtils().hp(18),
+                  width: SizeUtils().screenWidth,
+                  child: Image.asset(
+                    ImageString.building,
+                    fit: BoxFit.fill,
+                  ),
+                ),
+              ),
               Center(
                 child: Padding(
                   padding: EdgeInsets.symmetric(horizontal: SizeUtils().wp(8)),

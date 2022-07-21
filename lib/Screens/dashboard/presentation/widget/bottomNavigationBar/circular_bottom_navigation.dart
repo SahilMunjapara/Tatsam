@@ -5,6 +5,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:tatsam/Screens/dashboard/presentation/widget/bottomNavigationBar/tab_item.dart';
+import 'package:tatsam/Utils/constants/colors.dart';
 import 'package:tatsam/Utils/constants/strings.dart';
 import 'package:tatsam/Utils/size_utils/size_utils.dart';
 
@@ -200,6 +201,18 @@ class _CircularBottomNavigationState extends State<CircularBottomNavigation>
                           bottomRight: Radius.circular(widget.circleSize / 2),
                         ),
                         color: widget.barBackgroundColor,
+                        boxShadow: <BoxShadow>[
+                          BoxShadow(
+                            color: widget.backgroundBoxShadow!.first.color,
+                            blurRadius: 6.0,
+                            offset: const Offset(0, 3),
+                          ),
+                          BoxShadow(
+                            color: widget.barBackgroundColor,
+                            blurRadius: 4.0,
+                            offset: const Offset(0, -8),
+                          ),
+                        ],
                       ),
                     ),
                   ),

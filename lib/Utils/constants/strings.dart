@@ -15,4 +15,5 @@ class Strings {
       'We sent otp code to verify your number';
   static const String resendOtp = 'Resend in 30 sec';
   static const String verify = 'Verify';
+  static const String profile = 'Profile';
 }

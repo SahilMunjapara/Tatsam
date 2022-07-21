@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tatsam/Screens/dashboard/presentation/widget/bottomNavigationBar/circular_bottom_navigation.dart';
+import 'package:tatsam/Screens/profileScreen/presentation/profile_screen.dart';
 import 'package:tatsam/Utils/constants/colors.dart';
 import 'package:tatsam/Utils/constants/image.dart';
 import 'package:tatsam/Utils/size_utils/size_utils.dart';
@@ -62,7 +63,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                 ),
               ]),
               padding: EdgeInsets.only(
-                bottom: SizeUtils().hp(10),
+                bottom: SizeUtils().hp(8),
               ),
             ),
             Align(alignment: Alignment.bottomCenter, child: bottomNav())
@@ -77,8 +78,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
     String slogan;
     switch (selectedPos) {
       case 0:
-        slogan = "Profile Page";
-        break;
+        return const ProfileScreen();
       case 1:
         slogan = "Search";
         break;
@@ -113,10 +113,13 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
       controller: _navigationController,
       selectedPos: selectedPos,
       normalIconColor: unActiveBottomNav,
-      barHeight: SizeUtils().hp(10),
+      circleSize: SizeUtils().hp(8),
+      iconsSize: SizeUtils().wp(5),
+      barHeight: SizeUtils().hp(8),
       barBackgroundColor: backgroundColor,
       backgroundBoxShadow: const <BoxShadow>[
-        BoxShadow(color: bottomBarColor, blurRadius: 10.0),
+        BoxShadow(
+            color: bottomBarColor, blurRadius: 6.0, offset: Offset(0, -1)),
       ],
       animationDuration: const Duration(milliseconds: 300),
       selectedCallback: (int? selectedPos) {

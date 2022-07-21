@@ -8,3 +8,6 @@ const Color whiteColor = Color(0XFFFFFFFF);
 const Color blackColor = Color(0XFF000000);
 const Color otpBoxColor = Color(0XFFD9D9D9);
 const Color unActiveBottomNav = Color(0XFF308297);
+const Color transparentColor = Color(0X00000000);
+const Color profileButtonColor = Color(0XFF101E2D);
+const Color boxShadow = Color(0XA145EDF2);
