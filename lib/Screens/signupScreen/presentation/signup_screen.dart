@@ -1,11 +1,18 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:tatsam/Navigation/routes_key.dart';
+import 'package:tatsam/Screens/otpScreen/data/model/otp_screen_param.dart';
 import 'package:tatsam/Utils/constants/colors.dart';
 import 'package:tatsam/Utils/constants/image.dart';
 import 'package:tatsam/Utils/constants/strings.dart';
 import 'package:tatsam/Utils/constants/textStyle.dart';
+import 'package:tatsam/Utils/log_utils/log_util.dart';
 import 'package:tatsam/Utils/size_utils/size_utils.dart';
+import 'package:tatsam/Utils/validation/validation.dart';
+import 'package:tatsam/commonWidget/custom_text_field.dart';
+import 'package:tatsam/commonWidget/progress_bar_round.dart';
+import 'package:tatsam/commonWidget/snackbar_widget.dart';
 
 class SignupScreen extends StatefulWidget {
   const SignupScreen({Key? key}) : super(key: key);
@@ -15,6 +22,7 @@ class SignupScreen extends StatefulWidget {
 }
 
 class _SignupScreenState extends State<SignupScreen> {
+  bool isLoading = false;
   late TextEditingController nameController;
   late TextEditingController mobileNumberController;
   late TextEditingController emailIdController;
@@ -22,6 +30,8 @@ class _SignupScreenState extends State<SignupScreen> {
   late FocusNode nameFocusNode;
   late FocusNode mobileNumberFocusNode;
   late FocusNode emailIdFocusNode;
+
+  FirebaseAuth auth = FirebaseAuth.instance;
 
   GlobalKey<FormState>? formKey;
 
@@ -41,6 +51,7 @@ class _SignupScreenState extends State<SignupScreen> {
   void dispose() {
     super.dispose();
     formKey = null;
+    isLoading = false;
     nameController.dispose();
     mobileNumberController.dispose();
     emailIdController.dispose();
@@ -130,22 +141,13 @@ class _SignupScreenState extends State<SignupScreen> {
                                 ),
                                 SizedBox(
                                   width: SizeUtils().wp(70),
-                                  height: SizeUtils().hp(3.8),
-                                  child: TextFormField(
-                                    decoration: const InputDecoration(
-                                      enabledBorder: UnderlineInputBorder(
-                                        borderSide:
-                                            BorderSide(color: Colors.white),
-                                      ),
-                                      focusedBorder: UnderlineInputBorder(
-                                        borderSide:
-                                            BorderSide(color: Colors.white),
-                                      ),
-                                      border: UnderlineInputBorder(
-                                        borderSide:
-                                            BorderSide(color: Colors.white),
-                                      ),
-                                    ),
+                                  height: SizeUtils().hp(4),
+                                  child: CustomTextField(
+                                    controller: nameController,
+                                    focusNode: nameFocusNode,
+                                    textInputType: TextInputType.name,
+                                    textInputAction: TextInputAction.next,
+                                    style: size15Regular(letterSpacing: 1.25),
                                   ),
                                 ),
                                 SizedBox(height: SizeUtils().hp(2.8)),
@@ -155,22 +157,13 @@ class _SignupScreenState extends State<SignupScreen> {
                                 ),
                                 SizedBox(
                                   width: SizeUtils().wp(70),
-                                  height: SizeUtils().hp(3.8),
-                                  child: TextFormField(
-                                    decoration: const InputDecoration(
-                                      enabledBorder: UnderlineInputBorder(
-                                        borderSide:
-                                            BorderSide(color: Colors.white),
-                                      ),
-                                      focusedBorder: UnderlineInputBorder(
-                                        borderSide:
-                                            BorderSide(color: Colors.white),
-                                      ),
-                                      border: UnderlineInputBorder(
-                                        borderSide:
-                                            BorderSide(color: Colors.white),
-                                      ),
-                                    ),
+                                  height: SizeUtils().hp(4),
+                                  child: CustomTextField(
+                                    controller: emailIdController,
+                                    focusNode: emailIdFocusNode,
+                                    textInputType: TextInputType.emailAddress,
+                                    textInputAction: TextInputAction.next,
+                                    style: size15Regular(letterSpacing: 1.25),
                                   ),
                                 ),
                                 SizedBox(height: SizeUtils().hp(2.8)),
@@ -180,23 +173,15 @@ class _SignupScreenState extends State<SignupScreen> {
                                 ),
                                 SizedBox(
                                   width: SizeUtils().wp(70),
-                                  height: SizeUtils().hp(3.8),
-                                  child: TextFormField(
-                                    decoration: const InputDecoration(
-                                      prefix: Text(Strings.phoneCode),
-                                      enabledBorder: UnderlineInputBorder(
-                                        borderSide:
-                                            BorderSide(color: Colors.white),
-                                      ),
-                                      focusedBorder: UnderlineInputBorder(
-                                        borderSide:
-                                            BorderSide(color: Colors.white),
-                                      ),
-                                      border: UnderlineInputBorder(
-                                        borderSide:
-                                            BorderSide(color: Colors.white),
-                                      ),
-                                    ),
+                                  height: SizeUtils().hp(4),
+                                  child: CustomTextField(
+                                    prefix: Strings.phoneCode,
+                                    maxLength: 10,
+                                    controller: mobileNumberController,
+                                    focusNode: mobileNumberFocusNode,
+                                    textInputType: TextInputType.phone,
+                                    textInputAction: TextInputAction.done,
+                                    style: size15Regular(letterSpacing: 1.25),
                                   ),
                                 ),
                               ],
@@ -267,11 +252,31 @@ class _SignupScreenState extends State<SignupScreen> {
                             child: SizedBox(
                               height: SizeUtils().hp(3),
                               width: SizeUtils().wp(6),
-                              child: InkWell(
-                                onTap: () {
-                                  Navigator.pushNamedAndRemoveUntil(context,
-                                      Routes.otpScreen, (route) => false);
-                                },
+                              child: GestureDetector(
+                                onTap: isLoading
+                                    ? null
+                                    : () {
+                                        if (checkValidation()) {
+                                          // Navigator.of(context)
+                                          //     .pushNamedAndRemoveUntil(
+                                          //   Routes.otpScreen,
+                                          //   (route) => false,
+                                          //   arguments: OtpScreenParam(
+                                          //     tokenId: '',
+                                          //     mobileNumber:
+                                          //         mobileNumberController.text,
+                                          //     userName: nameController.text,
+                                          //     userEmail: emailIdController.text,
+                                          //   ),
+                                          // );
+                                          _phoneVerification(
+                                            Strings.phoneCode.trim() +
+                                                mobileNumberController.text,
+                                            nameController.text,
+                                            emailIdController.text,
+                                          );
+                                        }
+                                      },
                                 child: SvgPicture.asset(
                                   ImageString.signupSvg,
                                   fit: BoxFit.fill,
@@ -282,10 +287,12 @@ class _SignupScreenState extends State<SignupScreen> {
                           Positioned(
                             bottom: 0,
                             child: InkWell(
-                              onTap: () {
-                                Navigator.pushNamedAndRemoveUntil(context,
-                                    Routes.loginScreen, (route) => false);
-                              },
+                              onTap: isLoading
+                                  ? null
+                                  : () {
+                                      Navigator.pushNamedAndRemoveUntil(context,
+                                          Routes.loginScreen, (route) => false);
+                                    },
                               child: Text(
                                 Strings.login,
                                 style: size18Regular(
@@ -300,10 +307,80 @@ class _SignupScreenState extends State<SignupScreen> {
                   ),
                 ),
               ),
+              ProgressBarRound(isLoading: isLoading),
             ],
           ),
         ),
       ),
+    );
+  }
+
+  bool checkValidation() {
+    if (mobileNumberController.text.isEmpty &&
+        emailIdController.text.isEmpty &&
+        nameController.text.isEmpty) {
+      SnackbarWidget.showSnackbar(
+        context: context,
+        message: ValidatorString.allFieldRequired,
+      );
+      return false;
+    } else {
+      if (!Validator.validCharacters.hasMatch(nameController.text)) {
+        SnackbarWidget.showSnackbar(
+          context: context,
+          message: ValidatorString.validName,
+        );
+        return false;
+      } else if (!Validator.emailCharacter.hasMatch(emailIdController.text)) {
+        SnackbarWidget.showSnackbar(
+          context: context,
+          message: ValidatorString.validEmail,
+        );
+        return false;
+      } else if (!Validator.mobileCharacter
+          .hasMatch(mobileNumberController.text)) {
+        SnackbarWidget.showSnackbar(
+          context: context,
+          message: ValidatorString.validMobile,
+        );
+        return false;
+      } else {
+        return true;
+      }
+    }
+  }
+
+  void _phoneVerification(
+      String phoneNumber, String userName, String emailId) async {
+    setState(() => isLoading = true);
+    await auth.verifyPhoneNumber(
+      phoneNumber: phoneNumber,
+      timeout: const Duration(seconds: 120),
+      verificationCompleted: (PhoneAuthCredential credential) {
+        if (mounted) setState(() => isLoading = false);
+      },
+      verificationFailed: (FirebaseAuthException exception) {
+        if (mounted) setState(() => isLoading = false);
+        LogUtils.showLogs(tag: 'EXCEPTION', message: exception.message!);
+      },
+      codeSent: (String? verificationId, int? resendToken) {
+        if (mounted) setState(() => isLoading = false);
+        LogUtils.showLogs(
+            tag: 'VERIFICATION', message: verificationId ?? 'NO FOUND');
+        Navigator.of(context).pushNamedAndRemoveUntil(
+          Routes.otpScreen,
+          (route) => false,
+          arguments: OtpScreenParam(
+            tokenId: verificationId!,
+            mobileNumber: phoneNumber,
+            userName: userName,
+            userEmail: emailId,
+          ),
+        );
+      },
+      codeAutoRetrievalTimeout: (String verificationId) {
+        if (mounted) setState(() => isLoading = false);
+      },
     );
   }
 }

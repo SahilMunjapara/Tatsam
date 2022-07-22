@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "5084183021",
+    "project_id": "tatsam-fd8d9",
+    "storage_bucket": "tatsam-fd8d9.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:5084183021:android:d244ea55fb00196f73cfe4",
+        "android_client_info": {
+          "package_name": "com.tatsam.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "5084183021-spk6ebs40jmdmrn27923mcpbob7r4o45.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.tatsam.app",
+            "certificate_hash": "e11513dd94b7ebeda9ba8a42e23b732e1888be06"
+          }
+        },
+        {
+          "client_id": "5084183021-pvb5hq0cqk3tphtdvs2cgnjn7d14l947.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDccb5GJrZITjx0PQqbjD5AlnaiGqKgxSE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "5084183021-pvb5hq0cqk3tphtdvs2cgnjn7d14l947.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -7,6 +7,9 @@ import 'package:tatsam/Utils/constants/image.dart';
 import 'package:tatsam/Utils/constants/strings.dart';
 import 'package:tatsam/Utils/constants/textStyle.dart';
 import 'package:tatsam/Utils/size_utils/size_utils.dart';
+import 'package:tatsam/Utils/validation/validation.dart';
+import 'package:tatsam/commonWidget/custom_text_field.dart';
+import 'package:tatsam/commonWidget/snackbar_widget.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({
@@ -113,22 +116,14 @@ class _LoginScreenState extends State<LoginScreen> {
                                 SizedBox(
                                   width: SizeUtils().wp(70),
                                   height: SizeUtils().hp(5),
-                                  child: TextFormField(
-                                    decoration: const InputDecoration(
-                                      prefix: Text(Strings.phoneCode),
-                                      enabledBorder: UnderlineInputBorder(
-                                        borderSide:
-                                            BorderSide(color: Colors.white),
-                                      ),
-                                      focusedBorder: UnderlineInputBorder(
-                                        borderSide:
-                                            BorderSide(color: Colors.white),
-                                      ),
-                                      border: UnderlineInputBorder(
-                                        borderSide:
-                                            BorderSide(color: Colors.white),
-                                      ),
-                                    ),
+                                  child: CustomTextField(
+                                    prefix: Strings.phoneCode,
+                                    maxLength: 10,
+                                    controller: mobileNumberController,
+                                    focusNode: mobileNumberFocusNode,
+                                    textInputType: TextInputType.phone,
+                                    textInputAction: TextInputAction.done,
+                                    style: size15Regular(letterSpacing: 1.25),
                                   ),
                                 ),
                               ],
@@ -194,12 +189,17 @@ class _LoginScreenState extends State<LoginScreen> {
                           Positioned(
                             bottom: SizeUtils().hp(6),
                             left: SizeUtils().wp(11),
-                            child: SizedBox(
-                              height: SizeUtils().hp(3),
-                              width: SizeUtils().wp(6),
-                              child: SvgPicture.asset(
-                                ImageString.loginSvg,
-                                fit: BoxFit.fill,
+                            child: GestureDetector(
+                              onTap: () {
+                                checkValidation();
+                              },
+                              child: SizedBox(
+                                height: SizeUtils().hp(3),
+                                width: SizeUtils().wp(6),
+                                child: SvgPicture.asset(
+                                  ImageString.loginSvg,
+                                  fit: BoxFit.fill,
+                                ),
                               ),
                             ),
                           ),
@@ -255,5 +255,24 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
       ),
     );
+  }
+
+  bool checkValidation() {
+    if (mobileNumberController.text.isEmpty) {
+      SnackbarWidget.showSnackbar(
+        context: context,
+        message: ValidatorString.mobileRequire,
+      );
+      return false;
+    } else if (!Validator.mobileCharacter
+        .hasMatch(mobileNumberController.text)) {
+      SnackbarWidget.showSnackbar(
+        context: context,
+        message: ValidatorString.validMobile,
+      );
+      return false;
+    } else {
+      return true;
+    }
   }
 }

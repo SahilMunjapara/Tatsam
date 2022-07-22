@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:tatsam/Navigation/route_generator.dart';
@@ -8,9 +9,10 @@ import 'package:tatsam/Utils/constants/strings.dart';
 
 import 'Utils/log_utils/log_util.dart';
 
-void main() {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
+  await Firebase.initializeApp();
+  await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
       .then((_) async {
     runZonedGuarded(() {
       runApp(const Application());

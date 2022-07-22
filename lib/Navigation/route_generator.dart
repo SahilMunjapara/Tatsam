@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:tatsam/Navigation/routes_key.dart';
 import 'package:tatsam/Screens/dashboard/presentation/dashboard.dart';
 import 'package:tatsam/Screens/loginScreen/presentation/login_screen.dart';
+import 'package:tatsam/Screens/otpScreen/data/model/otp_screen_param.dart';
 import 'package:tatsam/Screens/otpScreen/presentation/otp_screen.dart';
 import 'package:tatsam/Screens/profileScreen/presentation/profile_screen.dart';
 import 'package:tatsam/Screens/signupScreen/presentation/signup_screen.dart';
@@ -16,7 +17,11 @@ class RouteGenerator {
       case Routes.signupScreen:
         return MaterialPageRoute(builder: (context) => const SignupScreen());
       case Routes.otpScreen:
-        return MaterialPageRoute(builder: (context) => const OtpScreen());
+        return MaterialPageRoute(
+          builder: (context) => OtpScreen(
+            otpScreenParam: args as OtpScreenParam,
+          ),
+        );
       case Routes.dashboardScreen:
         return MaterialPageRoute(builder: (context) => const DashBoardScreen());
       case Routes.profileScreen:
