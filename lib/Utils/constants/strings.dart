@@ -18,6 +18,12 @@ class Strings {
   static const String profile = 'Profile';
   static const String resendOtpDetail = 'Resend Otp in ';
   static const String twoMinute = '2:00';
+  static const String fullName = 'Full Name :';
+  static const String contactNum = 'Contact Num:';
+  static const String emailId = 'Email :';
+  static const String nameHint = 'Type Name...';
+  static const String contactHint = 'Type Contact Number...';
+  static const String emailHint = 'xyz@gmail.com';
 }
 
 class ValidatorString {
@@ -28,4 +34,8 @@ class ValidatorString {
   static const String validEmail = 'Enter valid Email.';
   static const String otpRequired = 'Otp is required.';
   static const String validOtp = 'Enter Valid Otp.';
+}
+
+class FirebaseCollectionString {
+  static const String users = 'Users';
 }

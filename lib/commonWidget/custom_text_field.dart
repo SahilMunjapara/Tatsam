@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tatsam/Utils/constants/colors.dart';
+import 'package:tatsam/Utils/constants/textStyle.dart';
 
 // ignore: must_be_immutable
 class CustomTextField extends StatelessWidget {
@@ -13,6 +14,8 @@ class CustomTextField extends StatelessWidget {
   final ValueChanged<String>? onFieldSubmitted;
   final int maxLength;
   final String prefix;
+  final bool isBorder;
+  final String hintText;
 
   // ignore: use_key_in_widget_constructors
   const CustomTextField({
@@ -26,12 +29,15 @@ class CustomTextField extends StatelessWidget {
     this.validator,
     this.maxLength = 255,
     this.prefix = '',
+    this.isBorder = true,
+    this.hintText = '',
   });
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
       keyboardType: textInputType,
+      autocorrect: false,
       cursorColor: whiteColor,
       controller: controller,
       maxLength: maxLength,
@@ -45,15 +51,23 @@ class CustomTextField extends StatelessWidget {
           null,
       decoration: InputDecoration(
         prefix: Text(prefix),
-        enabledBorder: const UnderlineInputBorder(
-          borderSide: BorderSide(color: Colors.white),
-        ),
-        focusedBorder: const UnderlineInputBorder(
-          borderSide: BorderSide(color: Colors.white),
-        ),
-        border: const UnderlineInputBorder(
-          borderSide: BorderSide(color: Colors.white),
-        ),
+        hintText: hintText,
+        hintStyle: size12Regular(textColor: hintTextColor),
+        enabledBorder: isBorder
+            ? const UnderlineInputBorder(
+                borderSide: BorderSide(color: Colors.white),
+              )
+            : InputBorder.none,
+        focusedBorder: isBorder
+            ? const UnderlineInputBorder(
+                borderSide: BorderSide(color: Colors.white),
+              )
+            : InputBorder.none,
+        border: isBorder
+            ? const UnderlineInputBorder(
+                borderSide: BorderSide(color: Colors.white),
+              )
+            : InputBorder.none,
       ),
       style: style,
     );

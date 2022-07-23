@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tatsam/Navigation/routes_key.dart';
 import 'package:tatsam/Screens/dashboard/presentation/widget/bottomNavigationBar/circular_bottom_navigation.dart';
 import 'package:tatsam/Screens/profileScreen/presentation/profile_screen.dart';
 import 'package:tatsam/Utils/constants/colors.dart';
@@ -41,6 +42,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
     return SafeArea(
       child: Scaffold(
         backgroundColor: backgroundColor,
+        resizeToAvoidBottomInset: false,
         body: Stack(
           children: [
             Positioned(
@@ -80,28 +82,34 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
       case 0:
         return const ProfileScreen();
       case 1:
-        slogan = "Search";
+        slogan = "Log Out";
         break;
       case 2:
-        slogan = "Reports";
+        slogan = "Log Out";
         break;
       case 3:
-        slogan = "Notification";
+        slogan = "Log Out";
         break;
       default:
         slogan = "";
         break;
     }
 
-    return Container(
-      width: double.infinity,
-      height: double.infinity,
-      color: selectedColor,
-      child: Center(
-        child: Text(
-          slogan,
-          style: const TextStyle(
-              color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20),
+    return GestureDetector(
+      onTap: () {
+        Navigator.pushNamedAndRemoveUntil(
+            context, Routes.loginScreen, (route) => false);
+      },
+      child: Container(
+        width: double.infinity,
+        height: double.infinity,
+        color: selectedColor,
+        child: Center(
+          child: Text(
+            slogan,
+            style: const TextStyle(
+                color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20),
+          ),
         ),
       ),
     );

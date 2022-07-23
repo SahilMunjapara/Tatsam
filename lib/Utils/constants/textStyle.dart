@@ -6,6 +6,20 @@ import 'package:tatsam/Utils/size_utils/size_utils.dart';
 /// 1px = sp(1 * 0.8 = 0.8)
 /// 1px = sp(1 * 0.76 = 0.76)
 
+TextStyle size12Regular({
+  Color? textColor,
+  double? letterSpacing = 0.0,
+  TextDecoration? decoration = TextDecoration.none,
+}) =>
+    TextStyle(
+      fontFamily: Strings.secondFontFamily,
+      color: textColor ?? whiteColor,
+      fontSize: SizeUtils().sp(9.12),
+      letterSpacing: letterSpacing,
+      fontWeight: FontWeight.w400,
+      decoration: decoration,
+    );
+
 TextStyle size15Regular({
   Color? textColor,
   double? letterSpacing = 0.0,
@@ -70,6 +84,20 @@ TextStyle size20Regular({
       fontFamily: Strings.secondFontFamily,
       color: textColor ?? whiteColor,
       fontSize: SizeUtils().sp(15.2),
+      letterSpacing: letterSpacing,
+      fontWeight: FontWeight.w400,
+      decoration: decoration,
+    );
+
+TextStyle size30Regular({
+  Color? textColor,
+  double? letterSpacing = 0.0,
+  TextDecoration? decoration = TextDecoration.none,
+}) =>
+    TextStyle(
+      fontFamily: Strings.secondFontFamily,
+      color: textColor ?? whiteColor,
+      fontSize: SizeUtils().sp(22.8),
       letterSpacing: letterSpacing,
       fontWeight: FontWeight.w400,
       decoration: decoration,

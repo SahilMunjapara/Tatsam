@@ -12,6 +12,8 @@ class ImageString {
   static const String topRightCircle = "assets/png/topRightCircle.png";
   static const String bottomLeftCircle = "assets/png/bottomLeftCircle.png";
   static const String building = "assets/png/building.png";
+  static const String textForm = "assets/png/textForm.png";
+  static const String person = "assets/png/person.png";
 
   static const String googleSvg = "assets/svg/google.svg";
   static const String facebookSvg = "assets/svg/facebook.svg";

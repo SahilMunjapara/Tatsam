@@ -256,19 +256,19 @@ class _SignupScreenState extends State<SignupScreen> {
                                 onTap: isLoading
                                     ? null
                                     : () {
+                                        // Navigator.of(context)
+                                        //     .pushNamedAndRemoveUntil(
+                                        //   Routes.otpScreen,
+                                        //   (route) => false,
+                                        //   arguments: OtpScreenParam(
+                                        //     tokenId: '',
+                                        //     mobileNumber:
+                                        //         mobileNumberController.text,
+                                        //     userName: nameController.text,
+                                        //     userEmail: emailIdController.text,
+                                        //   ),
+                                        // );
                                         if (checkValidation()) {
-                                          // Navigator.of(context)
-                                          //     .pushNamedAndRemoveUntil(
-                                          //   Routes.otpScreen,
-                                          //   (route) => false,
-                                          //   arguments: OtpScreenParam(
-                                          //     tokenId: '',
-                                          //     mobileNumber:
-                                          //         mobileNumberController.text,
-                                          //     userName: nameController.text,
-                                          //     userEmail: emailIdController.text,
-                                          //   ),
-                                          // );
                                           _phoneVerification(
                                             Strings.phoneCode.trim() +
                                                 mobileNumberController.text,
@@ -316,8 +316,8 @@ class _SignupScreenState extends State<SignupScreen> {
   }
 
   bool checkValidation() {
-    if (mobileNumberController.text.isEmpty &&
-        emailIdController.text.isEmpty &&
+    if (mobileNumberController.text.isEmpty ||
+        emailIdController.text.isEmpty ||
         nameController.text.isEmpty) {
       SnackbarWidget.showSnackbar(
         context: context,

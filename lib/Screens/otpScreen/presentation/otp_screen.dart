@@ -5,10 +5,13 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:tatsam/Navigation/routes_key.dart';
 import 'package:tatsam/Screens/otpScreen/bloc/bloc.dart';
 import 'package:tatsam/Screens/otpScreen/data/model/otp_screen_param.dart';
+import 'package:tatsam/Utils/app_preferences/app_preferences.dart';
+import 'package:tatsam/Utils/app_preferences/prefrences_key.dart';
 import 'package:tatsam/Utils/constants/colors.dart';
 import 'package:tatsam/Utils/constants/image.dart';
 import 'package:tatsam/Utils/constants/strings.dart';
 import 'package:tatsam/Utils/constants/textStyle.dart';
+import 'package:tatsam/Utils/database/database_service.dart';
 import 'package:tatsam/Utils/log_utils/log_util.dart';
 import 'package:tatsam/Utils/size_utils/size_utils.dart';
 import 'package:tatsam/Utils/validation/validation.dart';
@@ -196,6 +199,10 @@ class _OtpScreenState extends State<OtpScreen> {
                             onTap: isLoading
                                 ? null
                                 : () {
+                                    // Navigator.pushNamedAndRemoveUntil(
+                                    //     context,
+                                    //     Routes.dashboardScreen,
+                                    //     (route) => false);
                                     if (checkValidation()) {
                                       _verifyOtp(
                                         _verificationToken,
@@ -240,9 +247,20 @@ class _OtpScreenState extends State<OtpScreen> {
       smsCode: smsCode,
     );
     setState(() => isLoading = true);
-    await auth.signInWithCredential(credential).then((value) {
-      Navigator.pushNamedAndRemoveUntil(
-          context, Routes.dashboardScreen, (route) => false);
+    await auth.signInWithCredential(credential).then((value) async {
+      final DatabaseService _databaseService = DatabaseService();
+      await _databaseService
+          .updateUserData(
+        uid: value.user!.uid.toString(),
+        userName: widget.otpScreenParam!.userName,
+        userEmail: widget.otpScreenParam!.userEmail,
+        userMobile: widget.otpScreenParam!.mobileNumber,
+      )
+          .then((value) {
+        AppPreference().setBoolData(PreferencesKey.isLogin, true);
+        Navigator.pushNamedAndRemoveUntil(
+            context, Routes.dashboardScreen, (route) => false);
+      });
     }).onError((error, stackTrace) {
       SnackbarWidget.showSnackbar(
         context: context,

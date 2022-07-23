@@ -10,8 +10,8 @@ class SnackbarWidget {
   }) {
     ScaffoldMessenger.of(context!).showSnackBar(
       SnackBar(
-        content: Text(message!, style: size15Regular()),
-        backgroundColor: blackColor,
+        content: Text(message!, style: size15Regular(textColor: blackColor)),
+        backgroundColor: whiteColor,
         duration: Duration(milliseconds: duration),
       ),
     );

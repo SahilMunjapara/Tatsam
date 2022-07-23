@@ -5,12 +5,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:tatsam/Navigation/route_generator.dart';
 import 'package:tatsam/Navigation/routes_key.dart';
+import 'package:tatsam/Utils/app_preferences/app_preferences.dart';
+import 'package:tatsam/Utils/app_preferences/prefrences_key.dart';
 import 'package:tatsam/Utils/constants/strings.dart';
 
 import 'Utils/log_utils/log_util.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await AppPreference().initialAppPreference();
   await Firebase.initializeApp();
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
       .then((_) async {
@@ -39,7 +42,9 @@ class Application extends StatelessWidget {
         scaffoldBackgroundColor: Colors.black,
       ),
       debugShowCheckedModeBanner: false,
-      initialRoute: Routes.loginScreen,
+      initialRoute: AppPreference().getBoolData(PreferencesKey.isLogin) ?? false
+          ? Routes.dashboardScreen
+          : Routes.signupScreen,
       onGenerateRoute: RouteGenerator.generateRoute,
     );
   }
