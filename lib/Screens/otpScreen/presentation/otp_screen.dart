@@ -75,6 +75,12 @@ class _OtpScreenState extends State<OtpScreen> {
           body: BlocListener(
             bloc: otpBloc,
             listener: (context, state) {
+              if (state is LoadingStartedState) {
+                isLoading = state.loaded;
+              }
+              if (state is LoadingStoppedState) {
+                isLoading = state.loaded;
+              }
               if (state is TimerStartedState) {
                 _textControllers
                     .map((controller) => controller!.clear())
@@ -199,11 +205,11 @@ class _OtpScreenState extends State<OtpScreen> {
                             onTap: isLoading
                                 ? null
                                 : () {
-                                    // Navigator.pushNamedAndRemoveUntil(
-                                    //     context,
-                                    //     Routes.dashboardScreen,
-                                    //     (route) => false);
                                     if (checkValidation()) {
+                                      // Navigator.pushNamedAndRemoveUntil(
+                                      //     context,
+                                      //     Routes.dashboardScreen,
+                                      //     (route) => false);
                                       _verifyOtp(
                                         _verificationToken,
                                         _getCurrentPin(),
@@ -246,7 +252,7 @@ class _OtpScreenState extends State<OtpScreen> {
       verificationId: verificationCode,
       smsCode: smsCode,
     );
-    setState(() => isLoading = true);
+    otpBloc.add(LoadingStartedEvent());
     await auth.signInWithCredential(credential).then((value) async {
       final DatabaseService _databaseService = DatabaseService();
       await _databaseService
@@ -268,7 +274,7 @@ class _OtpScreenState extends State<OtpScreen> {
         duration: 1500,
       );
     });
-    if (mounted) setState(() => isLoading = false);
+    if (mounted) otpBloc.add(LoadingStoppedEvent());
   }
 
   bool checkValidation() {
@@ -291,25 +297,25 @@ class _OtpScreenState extends State<OtpScreen> {
   }
 
   void _resendOtp() async {
-    setState(() => isLoading = true);
+    if (mounted) otpBloc.add(LoadingStartedEvent());
     await auth.verifyPhoneNumber(
       phoneNumber: widget.otpScreenParam!.mobileNumber,
       timeout: const Duration(seconds: 120),
       verificationCompleted: (PhoneAuthCredential credential) {
-        if (mounted) setState(() => isLoading = false);
+        if (mounted) otpBloc.add(LoadingStoppedEvent());
       },
       verificationFailed: (FirebaseAuthException exception) {
         SnackbarWidget.showSnackbar(
             context: context, message: exception.message);
-        if (mounted) setState(() => isLoading = false);
+        if (mounted) otpBloc.add(LoadingStoppedEvent());
       },
       codeSent: (String? verificationId, int? resendToken) {
         _verificationToken = verificationId!;
-        if (mounted) setState(() => isLoading = false);
+        if (mounted) otpBloc.add(LoadingStoppedEvent());
         otpBloc.add(TimerStartEvent());
       },
       codeAutoRetrievalTimeout: (String verificationId) {
-        if (mounted) setState(() => isLoading = false);
+        if (mounted) otpBloc.add(LoadingStoppedEvent());
       },
     );
   }

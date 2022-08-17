@@ -5,6 +5,10 @@ abstract class OtpScreenEvent extends Equatable {
   List<Object?> get props => [];
 }
 
+class LoadingStartedEvent extends OtpScreenEvent {}
+
+class LoadingStoppedEvent extends OtpScreenEvent {}
+
 class TimerStartEvent extends OtpScreenEvent {}
 
 class TimerStartedEvent extends OtpScreenEvent {}

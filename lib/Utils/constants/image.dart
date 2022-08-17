@@ -25,4 +25,6 @@ class ImageString {
   static const String otpBoxSvg = "assets/svg/otpBox.svg";
   static const String searchSvg = "assets/svg/search.svg";
   static const String menuSvg = "assets/svg/menu.svg";
+  static const String closeSvg = "assets/svg/close.svg";
+  static const String checkSvg = "assets/svg/check.svg";
 }

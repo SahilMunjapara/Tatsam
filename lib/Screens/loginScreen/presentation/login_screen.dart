@@ -158,7 +158,6 @@ class _LoginScreenState extends State<LoginScreen> {
                               width: SizeUtils().wp(3.5),
                               child: SvgPicture.asset(
                                 ImageString.facebookSvg,
-                                fit: BoxFit.fill,
                               ),
                             ),
                           ),
@@ -170,7 +169,6 @@ class _LoginScreenState extends State<LoginScreen> {
                               width: SizeUtils().wp(6),
                               child: SvgPicture.asset(
                                 ImageString.googleSvg,
-                                fit: BoxFit.fill,
                               ),
                             ),
                           ),
@@ -182,7 +180,6 @@ class _LoginScreenState extends State<LoginScreen> {
                               width: SizeUtils().wp(6),
                               child: SvgPicture.asset(
                                 ImageString.instagramSvg,
-                                fit: BoxFit.fill,
                               ),
                             ),
                           ),
@@ -198,7 +195,6 @@ class _LoginScreenState extends State<LoginScreen> {
                                 width: SizeUtils().wp(6),
                                 child: SvgPicture.asset(
                                   ImageString.loginSvg,
-                                  fit: BoxFit.fill,
                                 ),
                               ),
                             ),

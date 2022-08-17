@@ -50,7 +50,7 @@ class CustomTextField extends StatelessWidget {
               {int? currentLength, int? maxLength, bool? isFocused}) =>
           null,
       decoration: InputDecoration(
-        prefix: Text(prefix),
+        prefix: Text(prefix, style: style),
         hintText: hintText,
         hintStyle: size12Regular(textColor: hintTextColor),
         enabledBorder: isBorder

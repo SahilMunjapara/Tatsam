@@ -2,6 +2,16 @@ abstract class OtpScreenState {}
 
 class OtpInitialState extends OtpScreenState {}
 
+class LoadingStartedState extends OtpScreenState {
+  bool loaded;
+  LoadingStartedState(this.loaded);
+}
+
+class LoadingStoppedState extends OtpScreenState {
+  bool loaded;
+  LoadingStoppedState(this.loaded);
+}
+
 class TimerStartState extends OtpScreenState {}
 
 class TimerStartedState extends OtpScreenState {}

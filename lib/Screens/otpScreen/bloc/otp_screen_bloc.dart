@@ -37,5 +37,13 @@ class OtpBloc extends Bloc<OtpScreenEvent, OtpScreenState> {
     if (event is TimerStoppedEvent) {
       yield TimerStoppedState();
     }
+
+    if (event is LoadingStartedEvent) {
+      yield LoadingStartedState(true);
+    }
+
+    if (event is LoadingStoppedEvent) {
+      yield LoadingStoppedState(false);
+    }
   }
 }

@@ -21,7 +21,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return SafeArea(
       child: Scaffold(
         backgroundColor: transparentColor,
-        resizeToAvoidBottomInset: false,
+        resizeToAvoidBottomInset: true,
         body: Padding(
           padding: EdgeInsets.symmetric(horizontal: SizeUtils().wp(8)),
           child: Column(
@@ -29,18 +29,25 @@ class _ProfileScreenState extends State<ProfileScreen> {
               SizedBox(height: SizeUtils().hp(2)),
               _profileTitleWidgets(),
               SizedBox(height: SizeUtils().hp(4)),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const Icon(Icons.close),
-                  Text(
-                    Strings.profile,
-                    style: size30Regular(),
-                  ),
-                  const Icon(Icons.check),
-                ],
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: SizeUtils().wp(2.5)),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    SizedBox(
+                      height: SizeUtils().hp(2.5),
+                      width: SizeUtils().wp(5),
+                      child: SvgPicture.asset(ImageString.closeSvg),
+                    ),
+                    SizedBox(
+                      height: SizeUtils().hp(2.5),
+                      width: SizeUtils().wp(5),
+                      child: SvgPicture.asset(ImageString.checkSvg),
+                    ),
+                  ],
+                ),
               ),
-              SizedBox(height: SizeUtils().hp(3)),
+              SizedBox(height: SizeUtils().hp(2)),
               Container(
                 height: SizeUtils().hp(18),
                 width: SizeUtils().wp(34),
@@ -153,7 +160,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       children: [
         Column(
           children: [
-            SizedBox(height: SizeUtils().hp(3)),
+            SizedBox(height: SizeUtils().hp(2)),
             Container(
               height: SizeUtils().hp(6),
               width: SizeUtils().wp(11),
@@ -187,7 +194,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ),
         Column(
           children: [
-            SizedBox(height: SizeUtils().hp(3)),
+            SizedBox(height: SizeUtils().hp(2)),
             Container(
               height: SizeUtils().hp(6),
               width: SizeUtils().wp(11),
