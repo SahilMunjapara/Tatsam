@@ -16,6 +16,7 @@ class CustomTextField extends StatelessWidget {
   final String prefix;
   final bool isBorder;
   final String hintText;
+  final bool enabled;
 
   // ignore: use_key_in_widget_constructors
   const CustomTextField({
@@ -31,11 +32,13 @@ class CustomTextField extends StatelessWidget {
     this.prefix = '',
     this.isBorder = true,
     this.hintText = '',
+    this.enabled = true,
   });
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      enabled: enabled,
       keyboardType: textInputType,
       autocorrect: false,
       cursorColor: whiteColor,

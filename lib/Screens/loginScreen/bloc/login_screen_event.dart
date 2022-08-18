@@ -7,12 +7,20 @@ abstract class LoginScreenEvent extends Equatable {
   List<Object?> get props => [];
 }
 
-class LoginPerformLoginEvent extends LoginScreenEvent {
-  final String phoneNumber;
-  final String password;
+class PhoneCheckEvent extends LoginScreenEvent {
+  final String? phoneNumber;
 
-  LoginPerformLoginEvent({required this.phoneNumber, required this.password});
+  PhoneCheckEvent({this.phoneNumber});
 
   @override
-  List<Object?> get props => [phoneNumber, password];
+  List<Object?> get props => [phoneNumber];
+}
+
+class LoginUserDetailEvent extends LoginScreenEvent {
+  final String? phoneNumber;
+
+  LoginUserDetailEvent({this.phoneNumber});
+
+  @override
+  List<Object?> get props => [phoneNumber];
 }

@@ -17,6 +17,7 @@ import 'package:tatsam/Utils/size_utils/size_utils.dart';
 import 'package:tatsam/Utils/validation/validation.dart';
 import 'package:tatsam/commonWidget/progress_bar_round.dart';
 import 'package:tatsam/commonWidget/snackbar_widget.dart';
+import 'package:tatsam/service/exception/exception.dart';
 
 class OtpScreen extends StatefulWidget {
   const OtpScreen({this.otpScreenParam, Key? key}) : super(key: key);
@@ -81,6 +82,46 @@ class _OtpScreenState extends State<OtpScreen> {
               if (state is LoadingStoppedState) {
                 isLoading = state.loaded;
               }
+              if (state is FetchUserState) {
+                if (state.responseModel.userData!.isEmpty) {
+                  SnackbarWidget.showSnackbar(
+                    context: context,
+                    message: state.responseModel.message,
+                    duration: 1500,
+                  );
+                } else {
+                  AppPreference().setBoolData(PreferencesKey.isLogin, true);
+                  AppPreference().setStringData(PreferencesKey.userName,
+                      state.responseModel.userData!.first.name!);
+                  AppPreference().setStringData(PreferencesKey.userEmail,
+                      state.responseModel.userData!.first.email!);
+                  AppPreference().setStringData(PreferencesKey.userPhone,
+                      state.responseModel.userData!.first.phoneNo!);
+                  AppPreference().setStringData(PreferencesKey.userId,
+                      state.responseModel.userData!.first.id!.toString());
+                  Navigator.pushNamedAndRemoveUntil(
+                      context, Routes.dashboardScreen, (route) => false);
+                }
+              }
+              if (state is SignupState) {
+                if (state.responseModel.signupData!.isEmpty) {
+                  SnackbarWidget.showSnackbar(
+                    context: context,
+                    message: state.responseModel.message,
+                    duration: 1500,
+                  );
+                } else {
+                  AppPreference().setBoolData(PreferencesKey.isLogin, true);
+                  AppPreference().setStringData(
+                      PreferencesKey.userName, widget.otpScreenParam!.userName);
+                  AppPreference().setStringData(PreferencesKey.userEmail,
+                      widget.otpScreenParam!.userEmail);
+                  AppPreference().setStringData(PreferencesKey.userPhone,
+                      widget.otpScreenParam!.mobileNumber);
+                  Navigator.pushNamedAndRemoveUntil(
+                      context, Routes.dashboardScreen, (route) => false);
+                }
+              }
               if (state is TimerStartedState) {
                 _textControllers
                     .map((controller) => controller!.clear())
@@ -92,6 +133,14 @@ class _OtpScreenState extends State<OtpScreen> {
               }
               if (state is TimerTickedState) {
                 timerValue = formatTime(int.parse(state.timeDetails));
+              }
+              if (state is OtpErrorState) {
+                AppException exception = state.exception;
+                SnackbarWidget.showSnackbar(
+                  context: context,
+                  message: exception.message,
+                  duration: 1500,
+                );
               }
             },
             child: BlocBuilder(
@@ -263,9 +312,20 @@ class _OtpScreenState extends State<OtpScreen> {
         userMobile: widget.otpScreenParam!.mobileNumber,
       )
           .then((value) {
-        AppPreference().setBoolData(PreferencesKey.isLogin, true);
-        Navigator.pushNamedAndRemoveUntil(
-            context, Routes.dashboardScreen, (route) => false);
+        otpBloc.add(
+          FetchUserEvent(userEmail: widget.otpScreenParam!.userEmail),
+        );
+        // otpBloc.add(
+        //   SignUpEvent(
+        //     userName: widget.otpScreenParam!.userName,
+        //     userEmail: widget.otpScreenParam!.userEmail,
+        //     userPassword: "123456",
+        //     userMobileNumber: widget.otpScreenParam!.mobileNumber.substring(3),
+        //   ),
+        // );
+        // AppPreference().setBoolData(PreferencesKey.isLogin, true);
+        // Navigator.pushNamedAndRemoveUntil(
+        //     context, Routes.dashboardScreen, (route) => false);
       });
     }).onError((error, stackTrace) {
       SnackbarWidget.showSnackbar(

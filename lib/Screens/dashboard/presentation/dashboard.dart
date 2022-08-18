@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:tatsam/Navigation/routes_key.dart';
 import 'package:tatsam/Screens/dashboard/presentation/widget/bottomNavigationBar/circular_bottom_navigation.dart';
 import 'package:tatsam/Screens/profileScreen/presentation/profile_screen.dart';
+import 'package:tatsam/Utils/app_preferences/app_preferences.dart';
 import 'package:tatsam/Utils/constants/colors.dart';
 import 'package:tatsam/Utils/constants/image.dart';
 import 'package:tatsam/Utils/size_utils/size_utils.dart';
@@ -96,7 +97,8 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
     }
 
     return GestureDetector(
-      onTap: () {
+      onTap: () async {
+        await AppPreference().clearSharedPreferences();
         Navigator.pushNamedAndRemoveUntil(
             context, Routes.loginScreen, (route) => false);
       },

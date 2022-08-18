@@ -55,6 +55,42 @@ class NetworkAPICall {
     }
   }
 
+  Future<dynamic> patch(
+    String url,
+    dynamic body, {
+    bool isBaseUrl = true,
+    Map<String, String>? headers,
+  }) async {
+    var client = http.Client();
+    try {
+      late String fullURL;
+      late Map<String, String> header;
+      if (isBaseUrl) {
+        fullURL = baseURL + url;
+        header = {};
+      } else {
+        fullURL = url;
+        header = headers!;
+      }
+
+      LogUtils.showLogs(message: fullURL, tag: 'API Url');
+      LogUtils.showLogs(message: '$header', tag: 'API header');
+      LogUtils.showLogs(message: '$body', tag: 'API body');
+
+      var uri = Uri.parse(fullURL);
+
+      var response = await http
+          .patch(uri, body: body, headers: header)
+          .timeout(const Duration(seconds: 30));
+      LogUtils.showLogs(
+          message: response.statusCode.toString(), tag: 'Response statusCode');
+      return checkResponse(response);
+    } catch (exception) {
+      client.close();
+      throw AppException.exceptionHandler(exception);
+    }
+  }
+
   Future<dynamic> get(String url) async {
     final client = http.Client();
     try {
@@ -153,28 +189,16 @@ class NetworkAPICall {
   }
 
   dynamic checkResponse(http.Response response, {bool isCallBackUrl = false}) {
-    RegExp _numeric = RegExp(r'^-?[0-9]+$');
     switch (response.statusCode) {
       case 200:
+      case 201:
         try {
           var json = jsonDecode(response.body);
           LogUtils.showLogs(message: '$json', tag: 'API RESPONSE');
-          if (json['IsSuccess'] ?? false) {
-            if (_numeric.hasMatch(json['Data'].toString())) {
-              json['Data'] = [json['Data']];
-            }
-            // if (json['Data'] == 1 || json['Data'] == '1') {
-            //   json['Data'] = [json['Data']];
-            // }
-            return json;
-          } else {
-            throw AppException(
-                message: json['Message'], errorCode: response.statusCode);
-          }
+          return json;
         } catch (e, stackTrace) {
           throw AppException.exceptionHandler(e, stackTrace);
         }
-      case 201:
       case 400:
       case 401:
       case 500:

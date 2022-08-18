@@ -1,11 +1,14 @@
 import 'package:tatsam/Screens/loginScreen/bloc/login_screen_event.dart';
-import 'package:tatsam/Screens/loginScreen/data/model/login_response_model.dart';
+import 'package:tatsam/Screens/loginScreen/data/model/phone_check_response_model.dart';
+import 'package:tatsam/Screens/otpScreen/data/model/fetch_user_response_model.dart';
 import 'package:tatsam/service/network/model/resource_model.dart';
 import 'package:tatsam/service/network/network.dart';
 import 'package:tatsam/service/network/network_string.dart';
 
 abstract class ILoginRepository {
-  Future performLogin(LoginPerformLoginEvent event);
+  Future phoneCheck(PhoneCheckEvent event);
+
+  Future loginUserDetail(LoginUserDetailEvent event);
 }
 
 class LoginRepository implements ILoginRepository {
@@ -18,18 +21,40 @@ class LoginRepository implements ILoginRepository {
   LoginRepository._init();
 
   @override
-  Future performLogin(LoginPerformLoginEvent event) async {
+  Future phoneCheck(PhoneCheckEvent event) async {
     Resource? resource;
     try {
-      var body = <String, dynamic>{};
-      body['CustomerPhoneNo'] = event.phoneNumber;
-      body['CustomerPassword'] = event.password;
-
-      var result = await NetworkAPICall().post(loginURL, body);
-      LoginResponseModel responseData = LoginResponseModel.fromJson(result);
+      var result =
+          await NetworkAPICall().get(phoneCheckURL + event.phoneNumber!);
+      PhoneCheckResponseModel responseData =
+          PhoneCheckResponseModel.fromJson(result);
       resource = Resource(
         error: null,
         data: responseData,
+      );
+    } catch (e, stackTrace) {
+      resource = Resource(
+        error: e.toString(),
+        data: null,
+      );
+      print('ERROR: $e');
+      print('STACKTRACE: $stackTrace');
+    }
+    return resource;
+  }
+
+  @override
+  Future loginUserDetail(LoginUserDetailEvent event) async {
+    Resource? resource;
+    try {
+      var result = await NetworkAPICall().get(userDetail + event.phoneNumber!);
+
+      FetchUserResponseModel responseModel =
+          FetchUserResponseModel.fromJson(result);
+
+      resource = Resource(
+        error: null,
+        data: responseModel,
       );
     } catch (e, stackTrace) {
       resource = Resource(

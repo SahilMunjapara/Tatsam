@@ -15,6 +15,7 @@ import 'package:tatsam/Utils/validation/validation.dart';
 import 'package:tatsam/commonWidget/custom_text_field.dart';
 import 'package:tatsam/commonWidget/progress_bar_round.dart';
 import 'package:tatsam/commonWidget/snackbar_widget.dart';
+import 'package:tatsam/service/exception/exception.dart';
 
 class SignupScreen extends StatefulWidget {
   const SignupScreen({Key? key}) : super(key: key);
@@ -80,6 +81,29 @@ class _SignupScreenState extends State<SignupScreen> {
               }
               if (state is SignupLoadingStoppedState) {
                 isLoading = state.loaded;
+              }
+              if (state is SignupUserState) {
+                if (state.responseModel.signupData!.isEmpty) {
+                  SnackbarWidget.showSnackbar(
+                    context: context,
+                    message: state.responseModel.message,
+                    duration: 1500,
+                  );
+                } else {
+                  _phoneVerification(
+                    Strings.phoneCode.trim() + mobileNumberController.text,
+                    nameController.text,
+                    emailIdController.text,
+                  );
+                }
+              }
+              if (state is SignupErrorState) {
+                AppException exception = state.exception;
+                SnackbarWidget.showSnackbar(
+                  context: context,
+                  message: exception.message,
+                  duration: 1500,
+                );
               }
             },
             child: BlocBuilder(
@@ -275,6 +299,21 @@ class _SignupScreenState extends State<SignupScreen> {
                                           ? null
                                           : () {
                                               if (checkValidation()) {
+                                                signupBloc.add(
+                                                  SignupUserEvent(
+                                                    userEmail: emailIdController
+                                                        .text
+                                                        .trim(),
+                                                    userName: nameController
+                                                        .text
+                                                        .trim(),
+                                                    userMobileNumber:
+                                                        mobileNumberController
+                                                            .text
+                                                            .trim(),
+                                                    userPassword: "123456",
+                                                  ),
+                                                );
                                                 // Navigator.of(context)
                                                 //     .pushNamedAndRemoveUntil(
                                                 //   Routes.otpScreen,
@@ -290,13 +329,13 @@ class _SignupScreenState extends State<SignupScreen> {
                                                 //         emailIdController.text,
                                                 //   ),
                                                 // );
-                                                _phoneVerification(
-                                                  Strings.phoneCode.trim() +
-                                                      mobileNumberController
-                                                          .text,
-                                                  nameController.text,
-                                                  emailIdController.text,
-                                                );
+                                                // _phoneVerification(
+                                                //   Strings.phoneCode.trim() +
+                                                //       mobileNumberController
+                                                //           .text,
+                                                //   nameController.text,
+                                                //   emailIdController.text,
+                                                // );
                                               }
                                             },
                                       child: SvgPicture.asset(

@@ -1,4 +1,7 @@
-const String baseURL = 'https://buypartsonline.in/AdminSide/Admin/Ajax/';
+const String baseURL = 'http://139.59.19.111:5000/';
 
 const loginURL = 'login_api';
-const signupURL = 'RegisterCustomer';
+const signupURL = 'user';
+const userDetail = 'user/detail/';
+const phoneCheckURL = 'user/phone/';
+const updateProfileURL = 'user/';

@@ -23,3 +23,30 @@ class TimerTickedEvent extends OtpScreenEvent {
   @override
   List<Object?> get props => [time];
 }
+
+class FetchUserEvent extends OtpScreenEvent {
+  final String? userEmail;
+
+  FetchUserEvent({this.userEmail});
+
+  @override
+  List<Object?> get props => [userEmail];
+}
+
+class SignUpEvent extends OtpScreenEvent {
+  final String? userName;
+  final String? userEmail;
+  final String? userPassword;
+  final String? userMobileNumber;
+
+  SignUpEvent({
+    this.userName,
+    this.userEmail,
+    this.userPassword,
+    this.userMobileNumber,
+  });
+
+  @override
+  List<Object?> get props =>
+      [userName, userEmail, userPassword, userMobileNumber];
+}

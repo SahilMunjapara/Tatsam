@@ -44,7 +44,7 @@ class Application extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       initialRoute: AppPreference().getBoolData(PreferencesKey.isLogin) ?? false
           ? Routes.dashboardScreen
-          : Routes.signupScreen,
+          : Routes.loginScreen,
       onGenerateRoute: RouteGenerator.generateRoute,
     );
   }

@@ -10,11 +10,23 @@ class LoginBloc extends Bloc<LoginScreenEvent, LoginScreenState> {
 
   @override
   Stream<LoginScreenState> mapEventToState(LoginScreenEvent event) async* {
-    if (event is LoginPerformLoginEvent) {
+    if (event is PhoneCheckEvent) {
       yield LoginLoadingBeginState();
-      Resource resource = await LoginRepository().performLogin(event);
+      Resource resource = await LoginRepository().phoneCheck(event);
       if (resource.data != null) {
-        yield LoginFormSubmitted(resource.data);
+        yield PhoneCheckState(resource.data);
+      } else {
+        yield LoginErrorState(
+            AppException.decodeExceptionData(jsonString: resource.error ?? ''));
+      }
+      yield LoginLoadingEndState();
+    }
+
+    if (event is LoginUserDetailEvent) {
+      yield LoginLoadingBeginState();
+      Resource resource = await LoginRepository().loginUserDetail(event);
+      if (resource.data != null) {
+        yield LoginUserDetailState(resource.data);
       } else {
         yield LoginErrorState(
             AppException.decodeExceptionData(jsonString: resource.error ?? ''));
