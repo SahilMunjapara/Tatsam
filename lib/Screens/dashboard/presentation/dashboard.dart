@@ -96,17 +96,17 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
         break;
     }
 
-    return GestureDetector(
-      onTap: () async {
-        await AppPreference().clearSharedPreferences();
-        Navigator.pushNamedAndRemoveUntil(
-            context, Routes.loginScreen, (route) => false);
-      },
-      child: Container(
-        width: double.infinity,
-        height: double.infinity,
-        color: selectedColor,
-        child: Center(
+    return Container(
+      width: double.infinity,
+      height: double.infinity,
+      color: selectedColor,
+      child: Center(
+        child: GestureDetector(
+          onTap: () async {
+            await AppPreference().clearSharedPreferences();
+            Navigator.pushNamedAndRemoveUntil(
+                context, Routes.loginScreen, (route) => false);
+          },
           child: Text(
             slogan,
             style: const TextStyle(
@@ -123,8 +123,8 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
       controller: _navigationController,
       selectedPos: selectedPos,
       normalIconColor: unActiveBottomNav,
-      circleSize: SizeUtils().hp(8),
-      iconsSize: SizeUtils().wp(5),
+      circleSize: SizeUtils().hp(7),
+      iconsSize: SizeUtils().wp(6),
       barHeight: SizeUtils().hp(8),
       barBackgroundColor: backgroundColor,
       backgroundBoxShadow: const <BoxShadow>[

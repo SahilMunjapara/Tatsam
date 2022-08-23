@@ -15,6 +15,8 @@ class TimerStartedEvent extends OtpScreenEvent {}
 
 class TimerStoppedEvent extends OtpScreenEvent {}
 
+class BackButtonEvent extends OtpScreenEvent {}
+
 class TimerTickedEvent extends OtpScreenEvent {
   final String? time;
 
@@ -25,12 +27,12 @@ class TimerTickedEvent extends OtpScreenEvent {
 }
 
 class FetchUserEvent extends OtpScreenEvent {
-  final String? userEmail;
+  final String? userPhone;
 
-  FetchUserEvent({this.userEmail});
+  FetchUserEvent({this.userPhone});
 
   @override
-  List<Object?> get props => [userEmail];
+  List<Object?> get props => [userPhone];
 }
 
 class SignUpEvent extends OtpScreenEvent {

@@ -22,6 +22,14 @@ class LoginBloc extends Bloc<LoginScreenEvent, LoginScreenState> {
       yield LoginLoadingEndState();
     }
 
+    if (event is LoginLoadingBeginEvent) {
+      yield LoginLoadingBeginState();
+    }
+
+    if (event is LoginLoadingEndEvent) {
+      yield LoginLoadingEndState();
+    }
+
     if (event is LoginUserDetailEvent) {
       yield LoginLoadingBeginState();
       Resource resource = await LoginRepository().loginUserDetail(event);

@@ -92,8 +92,6 @@ class _SignupScreenState extends State<SignupScreen> {
                 } else {
                   _phoneVerification(
                     Strings.phoneCode.trim() + mobileNumberController.text,
-                    nameController.text,
-                    emailIdController.text,
                   );
                 }
               }
@@ -246,12 +244,34 @@ class _SignupScreenState extends State<SignupScreen> {
                                 Positioned(
                                   bottom: 0,
                                   right: 0,
-                                  child: SizedBox(
-                                    height: SizeUtils().hp(15),
-                                    width: SizeUtils().wp(40),
-                                    child: Image.asset(
-                                      ImageString.polygonBottomRight,
-                                      fit: BoxFit.fill,
+                                  child: GestureDetector(
+                                    onTap: isLoading
+                                        ? null
+                                        : () {
+                                            if (checkValidation()) {
+                                              signupBloc.add(
+                                                SignupUserEvent(
+                                                  userEmail: emailIdController
+                                                      .text
+                                                      .trim(),
+                                                  userName: nameController.text
+                                                      .trim(),
+                                                  userMobileNumber:
+                                                      mobileNumberController
+                                                          .text
+                                                          .trim(),
+                                                  userPassword: "123456",
+                                                ),
+                                              );
+                                            }
+                                          },
+                                    child: SizedBox(
+                                      height: SizeUtils().hp(15),
+                                      width: SizeUtils().wp(40),
+                                      child: Image.asset(
+                                        ImageString.polygonBottomRight,
+                                        fit: BoxFit.fill,
+                                      ),
                                     ),
                                   ),
                                 ),
@@ -314,28 +334,6 @@ class _SignupScreenState extends State<SignupScreen> {
                                                     userPassword: "123456",
                                                   ),
                                                 );
-                                                // Navigator.of(context)
-                                                //     .pushNamedAndRemoveUntil(
-                                                //   Routes.otpScreen,
-                                                //   (route) => false,
-                                                //   arguments: OtpScreenParam(
-                                                //     tokenId: '',
-                                                //     mobileNumber:
-                                                //         mobileNumberController
-                                                //             .text,
-                                                //     userName:
-                                                //         nameController.text,
-                                                //     userEmail:
-                                                //         emailIdController.text,
-                                                //   ),
-                                                // );
-                                                // _phoneVerification(
-                                                //   Strings.phoneCode.trim() +
-                                                //       mobileNumberController
-                                                //           .text,
-                                                //   nameController.text,
-                                                //   emailIdController.text,
-                                                // );
                                               }
                                             },
                                       child: SvgPicture.asset(
@@ -355,10 +353,15 @@ class _SignupScreenState extends State<SignupScreen> {
                                                 Routes.loginScreen,
                                                 (route) => false);
                                           },
-                                    child: Text(
-                                      Strings.login,
-                                      style: size18Regular(
-                                        decoration: TextDecoration.underline,
+                                    child: Padding(
+                                      padding: EdgeInsets.symmetric(
+                                        vertical: SizeUtils().hp(1),
+                                      ),
+                                      child: Text(
+                                        Strings.login,
+                                        style: size18Regular(
+                                          decoration: TextDecoration.underline,
+                                        ),
                                       ),
                                     ),
                                   ),
@@ -415,8 +418,7 @@ class _SignupScreenState extends State<SignupScreen> {
     }
   }
 
-  void _phoneVerification(
-      String phoneNumber, String userName, String emailId) async {
+  void _phoneVerification(String phoneNumber) async {
     signupBloc.add(SignupLoadingStartedEvent());
     await auth.verifyPhoneNumber(
       phoneNumber: phoneNumber,
@@ -438,8 +440,6 @@ class _SignupScreenState extends State<SignupScreen> {
           arguments: OtpScreenParam(
             tokenId: verificationId!,
             mobileNumber: phoneNumber,
-            userName: userName,
-            userEmail: emailId,
           ),
         );
       },

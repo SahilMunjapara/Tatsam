@@ -7,6 +7,10 @@ abstract class LoginScreenEvent extends Equatable {
   List<Object?> get props => [];
 }
 
+class LoginLoadingBeginEvent extends LoginScreenEvent {}
+
+class LoginLoadingEndEvent extends LoginScreenEvent {}
+
 class PhoneCheckEvent extends LoginScreenEvent {
   final String? phoneNumber;
 

@@ -57,7 +57,7 @@ class OtpScreenRepository implements IOtpScreenRepository {
     try {
       var body = <String, dynamic>{};
 
-      var result = await NetworkAPICall().get(userDetail + event.userEmail!);
+      var result = await NetworkAPICall().get(userDetail + event.userPhone!);
 
       FetchUserResponseModel responseModel =
           FetchUserResponseModel.fromJson(result);

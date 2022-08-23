@@ -13,22 +13,52 @@ class RouteGenerator {
 
     switch (settings.name) {
       case Routes.loginScreen:
-        return MaterialPageRoute(builder: (context) => const LoginScreen());
+        return _animatedNavigation(const LoginScreen(), isFromLeft: true);
+        // return MaterialPageRoute(builder: (context) => const LoginScreen());
       case Routes.signupScreen:
-        return MaterialPageRoute(builder: (context) => const SignupScreen());
+        return _animatedNavigation(const SignupScreen());
+        // return MaterialPageRoute(builder: (context) => const SignupScreen());
       case Routes.otpScreen:
-        return MaterialPageRoute(
-          builder: (context) => OtpScreen(
-            otpScreenParam: args as OtpScreenParam,
-          ),
-        );
+        return _animatedNavigation(
+            OtpScreen(otpScreenParam: args as OtpScreenParam));
+        // return MaterialPageRoute(
+        //   builder: (context) => OtpScreen(
+        //     otpScreenParam: args as OtpScreenParam,
+        //   ),
+        // );
       case Routes.dashboardScreen:
-        return MaterialPageRoute(builder: (context) => const DashBoardScreen());
+        return _animatedNavigation(const DashBoardScreen());
+        // return MaterialPageRoute(builder: (context) => const DashBoardScreen());
       case Routes.profileScreen:
-        return MaterialPageRoute(builder: (context) => const ProfileScreen());
+        return _animatedNavigation(const ProfileScreen());
+        // return MaterialPageRoute(builder: (context) => const ProfileScreen());
       default:
         return _errorRoute();
     }
+  }
+
+  static Route<dynamic> _animatedNavigation(Widget page,
+      {bool isFromLeft = false}) {
+    return PageRouteBuilder(
+      transitionDuration: const Duration(milliseconds: 600),
+      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+        Offset begin =
+            isFromLeft ? const Offset(-1.0, 0.0) : const Offset(1.0, 0.0);
+        const end = Offset.zero;
+        const curve = Curves.ease;
+        var tween = Tween(begin: begin, end: end).chain(
+          CurveTween(curve: curve),
+        );
+        return SlideTransition(
+          position: animation.drive(tween),
+          child: child,
+        );
+      },
+      pageBuilder: (BuildContext context, Animation<double> animation,
+          Animation<double> secondaryAnimation) {
+        return page;
+      },
+    );
   }
 
   static Route<dynamic> _errorRoute() {

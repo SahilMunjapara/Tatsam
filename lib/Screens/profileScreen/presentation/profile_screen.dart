@@ -165,10 +165,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(30),
                             color: whiteColor,
-                            image: const DecorationImage(
-                              image: AssetImage(ImageString.person),
-                              fit: BoxFit.fill,
-                            ),
+                            // image: const DecorationImage(
+                            //   image: AssetImage(ImageString.person),
+                            //   fit: BoxFit.fill,
+                            // ),
                           ),
                           child: Stack(
                             children: [
@@ -198,7 +198,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     ),
                                   ),
                                 ),
-                              )
+                              ),
+                              SizedBox(
+                                height: SizeUtils().hp(18),
+                                width: SizeUtils().wp(34),
+                                child: Center(
+                                  child: Text(
+                                    nameController.text.substring(0, 1),
+                                    style: size48Regular(
+                                        textColor: profileButtonColor),
+                                  ),
+                                ),
+                              ),
                             ],
                           ),
                         ),

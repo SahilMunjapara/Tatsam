@@ -31,6 +31,7 @@ class _OtpScreenState extends State<OtpScreen> {
   OtpBloc otpBloc = OtpBloc();
   bool isLoading = false;
   bool isResendAvailable = false;
+  bool isBackAvailable = false;
   late List<FocusNode?> _focusNodes;
   late List<TextEditingController?> _textControllers;
   late List<String> _pin;
@@ -82,6 +83,9 @@ class _OtpScreenState extends State<OtpScreen> {
               if (state is LoadingStoppedState) {
                 isLoading = state.loaded;
               }
+              if (state is BackButtonState) {
+                isBackAvailable = true;
+              }
               if (state is FetchUserState) {
                 if (state.responseModel.userData!.isEmpty) {
                   SnackbarWidget.showSnackbar(
@@ -112,10 +116,6 @@ class _OtpScreenState extends State<OtpScreen> {
                   );
                 } else {
                   AppPreference().setBoolData(PreferencesKey.isLogin, true);
-                  AppPreference().setStringData(
-                      PreferencesKey.userName, widget.otpScreenParam!.userName);
-                  AppPreference().setStringData(PreferencesKey.userEmail,
-                      widget.otpScreenParam!.userEmail);
                   AppPreference().setStringData(PreferencesKey.userPhone,
                       widget.otpScreenParam!.mobileNumber);
                   Navigator.pushNamedAndRemoveUntil(
@@ -250,15 +250,28 @@ class _OtpScreenState extends State<OtpScreen> {
                                   ),
                                 ),
                           SizedBox(height: SizeUtils().hp(2)),
+                          Visibility(
+                            visible: isBackAvailable,
+                            child: GestureDetector(
+                              onTap: () {
+                                Navigator.of(context).pushNamedAndRemoveUntil(
+                                    Routes.loginScreen, (route) => false);
+                              },
+                              child: Text(
+                                Strings.backToLogin,
+                                style: size15Regular(),
+                              ),
+                            ),
+                          ),
+                          Visibility(
+                            visible: isBackAvailable,
+                            child: SizedBox(height: SizeUtils().hp(2)),
+                          ),
                           InkWell(
                             onTap: isLoading
                                 ? null
                                 : () {
                                     if (checkValidation()) {
-                                      // Navigator.pushNamedAndRemoveUntil(
-                                      //     context,
-                                      //     Routes.dashboardScreen,
-                                      //     (route) => false);
                                       _verifyOtp(
                                         _verificationToken,
                                         _getCurrentPin(),
@@ -307,32 +320,39 @@ class _OtpScreenState extends State<OtpScreen> {
       await _databaseService
           .updateUserData(
         uid: value.user!.uid.toString(),
-        userName: widget.otpScreenParam!.userName,
-        userEmail: widget.otpScreenParam!.userEmail,
         userMobile: widget.otpScreenParam!.mobileNumber,
       )
           .then((value) {
         otpBloc.add(
-          FetchUserEvent(userEmail: widget.otpScreenParam!.userEmail),
+          FetchUserEvent(
+            userPhone: widget.otpScreenParam!.mobileNumber.substring(3),
+          ),
         );
-        // otpBloc.add(
-        //   SignUpEvent(
-        //     userName: widget.otpScreenParam!.userName,
-        //     userEmail: widget.otpScreenParam!.userEmail,
-        //     userPassword: "123456",
-        //     userMobileNumber: widget.otpScreenParam!.mobileNumber.substring(3),
-        //   ),
-        // );
-        // AppPreference().setBoolData(PreferencesKey.isLogin, true);
-        // Navigator.pushNamedAndRemoveUntil(
-        //     context, Routes.dashboardScreen, (route) => false);
       });
     }).onError((error, stackTrace) {
-      SnackbarWidget.showSnackbar(
-        context: context,
-        message: error.toString(),
-        duration: 1500,
-      );
+      if (error is FirebaseAuthException) {
+        FirebaseAuthException exception = error;
+        String? errorMsg;
+        switch (exception.code) {
+          case FirebaseErrorCodeString.sessionExpired:
+            errorMsg = FirebaseErrorMessageString.otpExpired;
+            break;
+          case FirebaseErrorCodeString.invalidCode:
+            errorMsg = FirebaseErrorMessageString.otpMismatch;
+            break;
+          case FirebaseErrorCodeString.networkFailed:
+            errorMsg = FirebaseErrorMessageString.noInternet;
+            break;
+          default:
+            errorMsg = exception.code;
+        }
+        SnackbarWidget.showSnackbar(
+          context: context,
+          duration: 1500,
+          message: errorMsg,
+        );
+        otpBloc.add(BackButtonEvent());
+      }
     });
     if (mounted) otpBloc.add(LoadingStoppedEvent());
   }
@@ -365,8 +385,7 @@ class _OtpScreenState extends State<OtpScreen> {
         if (mounted) otpBloc.add(LoadingStoppedEvent());
       },
       verificationFailed: (FirebaseAuthException exception) {
-        SnackbarWidget.showSnackbar(
-            context: context, message: exception.message);
+        SnackbarWidget.showSnackbar(context: context, message: exception.code);
         if (mounted) otpBloc.add(LoadingStoppedEvent());
       },
       codeSent: (String? verificationId, int? resendToken) {

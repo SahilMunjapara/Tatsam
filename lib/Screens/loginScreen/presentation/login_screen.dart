@@ -1,15 +1,18 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:tatsam/Navigation/routes_key.dart';
 import 'package:tatsam/Screens/loginScreen/bloc/bloc.dart';
+import 'package:tatsam/Screens/otpScreen/data/model/otp_screen_param.dart';
 import 'package:tatsam/Utils/app_preferences/app_preferences.dart';
 import 'package:tatsam/Utils/app_preferences/prefrences_key.dart';
 import 'package:tatsam/Utils/constants/colors.dart';
 import 'package:tatsam/Utils/constants/image.dart';
 import 'package:tatsam/Utils/constants/strings.dart';
 import 'package:tatsam/Utils/constants/textStyle.dart';
+import 'package:tatsam/Utils/log_utils/log_util.dart';
 import 'package:tatsam/Utils/size_utils/size_utils.dart';
 import 'package:tatsam/Utils/validation/validation.dart';
 import 'package:tatsam/commonWidget/custom_text_field.dart';
@@ -32,6 +35,8 @@ class _LoginScreenState extends State<LoginScreen> {
   late TextEditingController mobileNumberController;
   late FocusNode mobileNumberFocusNode;
   GlobalKey<FormState>? formKey;
+
+  FirebaseAuth auth = FirebaseAuth.instance;
 
   @override
   void initState() {
@@ -90,11 +95,14 @@ class _LoginScreenState extends State<LoginScreen> {
               }
               if (state is PhoneCheckState) {
                 if (state.responseModel.message! == "Yes") {
-                  loginBloc.add(
-                    LoginUserDetailEvent(
-                      phoneNumber: mobileNumberController.text,
-                    ),
+                  _phoneVerification(
+                    Strings.phoneCode.trim() + mobileNumberController.text,
                   );
+                  // loginBloc.add(
+                  //   LoginUserDetailEvent(
+                  //     phoneNumber: mobileNumberController.text,
+                  //   ),
+                  // );
                 } else {
                   SnackbarWidget.showSnackbar(
                     context: context,
@@ -209,12 +217,24 @@ class _LoginScreenState extends State<LoginScreen> {
                                 ),
                                 Positioned(
                                   bottom: 0,
-                                  child: SizedBox(
-                                    height: SizeUtils().hp(15),
-                                    width: SizeUtils().wp(40),
-                                    child: Image.asset(
-                                      ImageString.polygonBottomLeft,
-                                      fit: BoxFit.fill,
+                                  child: GestureDetector(
+                                    onTap: isLoading
+                                        ? null
+                                        : () {
+                                            if (checkValidation()) {
+                                              loginBloc.add(PhoneCheckEvent(
+                                                phoneNumber:
+                                                    mobileNumberController.text,
+                                              ));
+                                            }
+                                          },
+                                    child: SizedBox(
+                                      height: SizeUtils().hp(15),
+                                      width: SizeUtils().wp(40),
+                                      child: Image.asset(
+                                        ImageString.polygonBottomLeft,
+                                        fit: BoxFit.fill,
+                                      ),
                                     ),
                                   ),
                                 ),
@@ -254,13 +274,16 @@ class _LoginScreenState extends State<LoginScreen> {
                                   bottom: SizeUtils().hp(6),
                                   left: SizeUtils().wp(11),
                                   child: GestureDetector(
-                                    onTap: () {
-                                      if (checkValidation()) {
-                                        loginBloc.add(PhoneCheckEvent(
-                                            phoneNumber:
-                                                mobileNumberController.text));
-                                      }
-                                    },
+                                    onTap: isLoading
+                                        ? null
+                                        : () {
+                                            if (checkValidation()) {
+                                              loginBloc.add(PhoneCheckEvent(
+                                                  phoneNumber:
+                                                      mobileNumberController
+                                                          .text));
+                                            }
+                                          },
                                     child: SizedBox(
                                       height: SizeUtils().hp(3),
                                       width: SizeUtils().wp(6),
@@ -273,43 +296,44 @@ class _LoginScreenState extends State<LoginScreen> {
                                 Positioned(
                                   right: 0,
                                   bottom: 0,
-                                  child: Text.rich(
-                                    TextSpan(
-                                      children: [
+                                  child: GestureDetector(
+                                    onTap: isLoading
+                                        ? null
+                                        : () {
+                                            Navigator.pushNamedAndRemoveUntil(
+                                                context,
+                                                Routes.signupScreen,
+                                                (route) => false);
+                                          },
+                                    child: Padding(
+                                      padding: EdgeInsets.symmetric(
+                                        vertical: SizeUtils().hp(1),
+                                      ),
+                                      child: Text.rich(
                                         TextSpan(
-                                          text: Strings.newUser,
-                                          style: size18Regular(),
+                                          children: [
+                                            TextSpan(
+                                              text: Strings.newUser,
+                                              style: size18Regular(),
+                                            ),
+                                            TextSpan(
+                                              text: Strings.sign,
+                                              style: size18Regular(
+                                                decoration:
+                                                    TextDecoration.underline,
+                                              ),
+                                            ),
+                                            const TextSpan(text: ' '),
+                                            TextSpan(
+                                              text: Strings.up,
+                                              style: size18Regular(
+                                                decoration:
+                                                    TextDecoration.underline,
+                                              ),
+                                            ),
+                                          ],
                                         ),
-                                        TextSpan(
-                                          text: Strings.sign,
-                                          style: size18Regular(
-                                            decoration:
-                                                TextDecoration.underline,
-                                          ),
-                                          recognizer: TapGestureRecognizer()
-                                            ..onTap = () {
-                                              Navigator.pushNamedAndRemoveUntil(
-                                                  context,
-                                                  Routes.signupScreen,
-                                                  (route) => false);
-                                            },
-                                        ),
-                                        const TextSpan(text: ' '),
-                                        TextSpan(
-                                          text: Strings.up,
-                                          style: size18Regular(
-                                            decoration:
-                                                TextDecoration.underline,
-                                          ),
-                                          recognizer: TapGestureRecognizer()
-                                            ..onTap = () {
-                                              Navigator.pushNamedAndRemoveUntil(
-                                                  context,
-                                                  Routes.signupScreen,
-                                                  (route) => false);
-                                            },
-                                        ),
-                                      ],
+                                      ),
                                     ),
                                   ),
                                 ),
@@ -347,5 +371,45 @@ class _LoginScreenState extends State<LoginScreen> {
     } else {
       return true;
     }
+  }
+
+  void _phoneVerification(String phoneNumber) async {
+    loginBloc.add(LoginLoadingBeginEvent());
+    await auth
+        .verifyPhoneNumber(
+      phoneNumber: phoneNumber,
+      timeout: const Duration(seconds: 120),
+      verificationCompleted: (PhoneAuthCredential credential) {
+        if (mounted) loginBloc.add(LoginLoadingEndEvent());
+      },
+      verificationFailed: (FirebaseAuthException exception) {
+        if (mounted) loginBloc.add(LoginLoadingEndEvent());
+        LogUtils.showLogs(tag: 'EXCEPTION', message: exception.message!);
+      },
+      codeSent: (String? verificationId, int? resendToken) {
+        if (mounted) loginBloc.add(LoginLoadingEndEvent());
+        LogUtils.showLogs(
+            tag: 'VERIFICATION', message: verificationId ?? 'NO FOUND');
+        Navigator.of(context).pushNamedAndRemoveUntil(
+          Routes.otpScreen,
+          (route) => false,
+          arguments: OtpScreenParam(
+            tokenId: verificationId!,
+            mobileNumber: phoneNumber,
+          ),
+        );
+      },
+      codeAutoRetrievalTimeout: (String verificationId) {
+        if (mounted) loginBloc.add(LoginLoadingEndEvent());
+      },
+    )
+        .onError((error, stackTrace) {
+      if (mounted) loginBloc.add(LoginLoadingEndEvent());
+      SnackbarWidget.showSnackbar(
+        context: context,
+        duration: 2000,
+        message: error.toString(),
+      );
+    });
   }
 }

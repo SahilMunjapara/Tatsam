@@ -24,12 +24,13 @@ class Strings {
   static const String nameHint = 'Type Name...';
   static const String contactHint = 'Type Contact Number...';
   static const String emailHint = 'xyz@gmail.com';
+  static const String backToLogin = 'Back To Login';
 }
 
 class ValidatorString {
   static const String allFieldRequired = 'All fields are must be required.';
-  static const String mobileRequire = 'MobileNumber is required.';
-  static const String validName = 'Name must not contain special character.';
+  static const String mobileRequire = 'Please Enter Mobilenumber';
+  static const String validName = 'Enter valid Name.';
   static const String validMobile = 'Enter valid MobileNumber.';
   static const String validEmail = 'Enter valid Email.';
   static const String otpRequired = 'Otp is required.';
@@ -38,4 +39,16 @@ class ValidatorString {
 
 class FirebaseCollectionString {
   static const String users = 'Users';
+}
+
+class FirebaseErrorCodeString {
+  static const String sessionExpired = 'session-expired';
+  static const String invalidCode = 'invalid-verification-code';
+  static const String networkFailed = 'network-request-failed';
+}
+
+class FirebaseErrorMessageString {
+  static const String otpExpired = 'Otp Expired, Resend Otp.';
+  static const String otpMismatch = 'Otp Mismatch, Enter Correct Otp.';
+  static const String noInternet = 'No Internet Connection Available';
 }

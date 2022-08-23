@@ -46,15 +46,11 @@ class DatabaseService {
 
   Future<void> updateUserData({
     String? uid,
-    String? userName,
-    String? userEmail,
     String? userMobile,
     bool? isActive = true,
-}) async {
+  }) async {
     Map<String, dynamic> userData = {
       'userUID': uid,
-      'userName': userName,
-      'userEmail': userEmail,
       'userMobile': userMobile,
       'userIsActive': isActive,
     };

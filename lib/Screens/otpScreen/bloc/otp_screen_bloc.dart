@@ -26,6 +26,7 @@ class OtpBloc extends Bloc<OtpScreenEvent, OtpScreenState> {
         } else {
           timer.cancel();
           add(TimerStoppedEvent());
+          add(BackButtonEvent());
         }
       });
     }
@@ -61,6 +62,10 @@ class OtpBloc extends Bloc<OtpScreenEvent, OtpScreenState> {
         );
       }
       yield LoadingStoppedState(false);
+    }
+
+    if (event is BackButtonEvent) {
+      yield BackButtonState();
     }
 
     if (event is FetchUserEvent) {

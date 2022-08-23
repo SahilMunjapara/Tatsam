@@ -22,6 +22,8 @@ class TimerStartedState extends OtpScreenState {}
 
 class TimerStoppedState extends OtpScreenState {}
 
+class BackButtonState extends OtpScreenState {}
+
 class TimerTickedState extends OtpScreenState {
   String timeDetails;
   TimerTickedState(this.timeDetails);
