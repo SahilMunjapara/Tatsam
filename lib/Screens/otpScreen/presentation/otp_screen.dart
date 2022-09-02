@@ -428,6 +428,7 @@ class _OtpScreenState extends State<OtpScreen> {
                     right: SizeUtils().wp(3),
                   ),
                   child: TextFormField(
+                    enableInteractiveSelection: false,
                     controller: _textControllers[i],
                     focusNode: _focusNodes[i],
                     keyboardType: TextInputType.phone,
@@ -437,6 +438,32 @@ class _OtpScreenState extends State<OtpScreen> {
                     decoration: const InputDecoration(
                       border: InputBorder.none,
                     ),
+                    onTap: () {
+                      String otp = _getCurrentPin();
+                      switch (otp.length) {
+                        case 0:
+                          _focusNodes[0]!.requestFocus();
+                          break;
+                        case 1:
+                          _focusNodes[1]!.requestFocus();
+                          break;
+                        case 2:
+                          _focusNodes[2]!.requestFocus();
+                          break;
+                        case 3:
+                          _focusNodes[3]!.requestFocus();
+                          break;
+                        case 4:
+                          _focusNodes[4]!.requestFocus();
+                          break;
+                        case 5:
+                        case 6:
+                          _focusNodes[5]!.requestFocus();
+                          break;
+                        default:
+                          _focusNodes[i]!.requestFocus();
+                      }
+                    },
                     onChanged: (String str) {
                       if (str.length > 1) {
                         _handlePaste(str);
@@ -444,7 +471,10 @@ class _OtpScreenState extends State<OtpScreen> {
                       }
 
                       if (str.isEmpty) {
-                        if (i == 0) return;
+                        if (i == 0) {
+                          _pin[i] = str;
+                          return;
+                        }
                         _focusNodes[i]!.unfocus();
                         _focusNodes[i - 1]!.requestFocus();
                       }
