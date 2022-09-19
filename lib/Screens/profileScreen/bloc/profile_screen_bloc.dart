@@ -25,5 +25,20 @@ class ProfileBloc extends Bloc<ProfileScreenEvent, ProfileScreenState> {
       }
       yield ProfileLoadingStoppedState();
     }
+    if (event is ProfileImageFetchEvent) {
+      yield ProfileImageFetchState(event.pickedImage!);
+    }
+    if (event is ProfileDetailFetchEvent) {
+      yield ProfileLoadingStartedState();
+      Resource resource = await profileScreenRepository.getUserDetail(event);
+      if (resource.data != null) {
+        yield ProfileDetailFetchState(resource.data);
+      } else {
+        yield ProfileErrorState(
+          AppException.decodeExceptionData(jsonString: resource.error ?? ''),
+        );
+      }
+      yield ProfileLoadingStoppedState();
+    }
   }
 }

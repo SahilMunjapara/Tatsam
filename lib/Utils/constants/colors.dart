@@ -12,3 +12,5 @@ const Color transparentColor = Color(0X00000000);
 const Color profileButtonColor = Color(0XFF101E2D);
 const Color boxShadow = Color(0XA145EDF2);
 const Color hintTextColor = Color(0X4DC1C1C1);
+const Color shadow1Color = Color(0XFF45EDF2);
+const Color shadow2Color = Color(0XFF49299A);

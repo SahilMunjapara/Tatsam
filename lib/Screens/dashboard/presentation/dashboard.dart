@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tatsam/Navigation/routes_key.dart';
+import 'package:tatsam/Screens/contactScreen/presentation/contact_screen.dart';
 import 'package:tatsam/Screens/dashboard/presentation/widget/bottomNavigationBar/circular_bottom_navigation.dart';
 import 'package:tatsam/Screens/profileScreen/presentation/profile_screen.dart';
 import 'package:tatsam/Utils/app_preferences/app_preferences.dart';
@@ -81,7 +82,8 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
     String slogan;
     switch (selectedPos) {
       case 0:
-        return const ProfileScreen();
+        // return const ProfileScreen();
+        return const ContactScreen();
       case 1:
         slogan = "Log Out";
         break;

@@ -16,6 +16,7 @@ class Strings {
   static const String resendOtp = 'Resend Otp';
   static const String verify = 'Verify';
   static const String profile = 'Profile';
+  static const String contactsScreenHeader = 'Contacts';
   static const String resendOtpDetail = 'Resend Otp in ';
   static const String twoMinute = '2:00';
   static const String fullName = 'Full Name :';

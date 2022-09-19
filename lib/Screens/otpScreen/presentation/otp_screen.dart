@@ -101,6 +101,8 @@ class _OtpScreenState extends State<OtpScreen> {
                       state.responseModel.userData!.first.email!);
                   AppPreference().setStringData(PreferencesKey.userPhone,
                       state.responseModel.userData!.first.phoneNo!);
+                  AppPreference().setStringData(PreferencesKey.userImage,
+                      state.responseModel.userData!.first.imagePath!);
                   AppPreference().setStringData(PreferencesKey.userId,
                       state.responseModel.userData!.first.id!.toString());
                   Navigator.pushNamedAndRemoveUntil(

@@ -48,7 +48,7 @@ class NetworkAPICall {
           .timeout(const Duration(seconds: 30));
       LogUtils.showLogs(
           message: response.statusCode.toString(), tag: 'Response statusCode');
-      return checkResponse(response, isCallBackUrl: isCallBackUrl);
+      return checkResponse(response);
     } catch (exception) {
       client.close();
       throw AppException.exceptionHandler(exception);
@@ -144,6 +144,47 @@ class NetworkAPICall {
     }
   }
 
+  Future<dynamic> multiPartPatchrequest(
+      String url, Map<String, String> body, File image) async {
+    var client = http.Client();
+    try {
+      String fullURL = baseURL + url;
+      Map<String, String> header = {};
+
+      LogUtils.showLogs(message: fullURL, tag: 'API Url');
+      LogUtils.showLogs(message: header.toString(), tag: 'API header');
+      LogUtils.showLogs(message: body.toString(), tag: 'API body');
+
+      http.MultipartRequest request =
+          http.MultipartRequest('PATCH', Uri.parse(fullURL));
+
+      request.fields.addAll(body);
+
+      List<int> imageData = await image.readAsBytes();
+
+      request.files.add(
+        http.MultipartFile.fromBytes('file', imageData),
+      );
+
+      http.StreamedResponse streamedResponse = await request.send();
+
+      http.Response response = await http.Response.fromStream(streamedResponse);
+
+      LogUtils.showLogs(
+        message: streamedResponse.statusCode.toString(),
+        tag: 'Response statusCode',
+      );
+
+      LogUtils.showLogs(
+          message: response.body.toString(), tag: 'Response Body');
+
+      return checkResponse(response);
+    } catch (exception) {
+      client.close();
+      rethrow;
+    }
+  }
+
   Future<dynamic> multiPartPostRequest(
       String url, Map<String, String> body, File image) async {
     var client = http.Client();
@@ -188,7 +229,7 @@ class NetworkAPICall {
     }
   }
 
-  dynamic checkResponse(http.Response response, {bool isCallBackUrl = false}) {
+  dynamic checkResponse(http.Response response) {
     switch (response.statusCode) {
       case 200:
       case 201:

@@ -39,6 +39,7 @@ class UserData {
     this.email,
     this.password,
     this.phoneNo,
+    this.imagePath,
   });
 
   int? id;
@@ -46,6 +47,7 @@ class UserData {
   String? email;
   String? password;
   String? phoneNo;
+  String? imagePath;
 
   factory UserData.fromJson(Map<String, dynamic> json) => UserData(
         id: json["id"],
@@ -53,6 +55,7 @@ class UserData {
         email: json["email"],
         password: json["password"],
         phoneNo: json["phone_no"],
+        imagePath: json["image_path"] ?? '',
       );
 
   Map<String, dynamic> toJson() => {
@@ -61,5 +64,6 @@ class UserData {
         "email": email,
         "password": password,
         "phone_no": phoneNo,
+        "image_path": imagePath,
       };
 }

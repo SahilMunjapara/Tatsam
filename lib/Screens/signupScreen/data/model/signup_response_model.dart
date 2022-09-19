@@ -38,6 +38,7 @@ class SignupData {
     this.email,
     this.password,
     this.phoneNo,
+    this.imagePath,
     this.id,
   });
 
@@ -45,6 +46,7 @@ class SignupData {
   String? email;
   String? password;
   String? phoneNo;
+  String? imagePath;
   int? id;
 
   factory SignupData.fromJson(Map<String, dynamic> json) => SignupData(
@@ -52,6 +54,7 @@ class SignupData {
         email: json["email"],
         password: json["password"],
         phoneNo: json["phone_no"],
+        imagePath: json["image_path"] ?? '',
         id: json["id"],
       );
 
@@ -60,6 +63,7 @@ class SignupData {
         "email": email,
         "password": password,
         "phone_no": phoneNo,
+        "image_path": imagePath,
         "id": id,
       };
 }
