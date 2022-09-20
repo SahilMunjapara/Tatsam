@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tatsam/Navigation/routes_key.dart';
+import 'package:tatsam/Screens/businessScreen/presentation/business_screen.dart';
+import 'package:tatsam/Screens/contactProfileScreen/presentation/contact_profile_screen.dart';
 import 'package:tatsam/Screens/contactScreen/presentation/contact_screen.dart';
 import 'package:tatsam/Screens/dashboard/presentation/widget/bottomNavigationBar/circular_bottom_navigation.dart';
 import 'package:tatsam/Screens/profileScreen/presentation/profile_screen.dart';
@@ -85,11 +87,13 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
         // return const ProfileScreen();
         return const ContactScreen();
       case 1:
-        slogan = "Log Out";
-        break;
+        // slogan = "Log Out";
+        // break;
+        return const ContactProfileScreen();
       case 2:
-        slogan = "Log Out";
-        break;
+        // slogan = "Log Out";
+        // break;
+        return const BusinessScreen();
       case 3:
         slogan = "Log Out";
         break;

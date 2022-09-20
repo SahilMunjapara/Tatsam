@@ -28,4 +28,9 @@ class ImageString {
   static const String closeSvg = "assets/svg/close.svg";
   static const String checkSvg = "assets/svg/check.svg";
   static const String homeSvg = "assets/svg/home.svg";
+  static const String bagSvg = "assets/svg/bag.svg";
+  static const String callSvg = "assets/svg/call.svg";
+  static const String emailSvg = "assets/svg/email.svg";
+  static const String phoneSvg = "assets/svg/phone.svg";
+  static const String locationSvg = "assets/svg/location.svg";
 }

@@ -89,6 +89,34 @@ TextStyle size20Regular({
       decoration: decoration,
     );
 
+TextStyle size21Regular({
+  Color? textColor,
+  double? letterSpacing = 0.0,
+  TextDecoration? decoration = TextDecoration.none,
+}) =>
+    TextStyle(
+      fontFamily: Strings.secondFontFamily,
+      color: textColor ?? whiteColor,
+      fontSize: SizeUtils().sp(15.96),
+      letterSpacing: letterSpacing,
+      fontWeight: FontWeight.w400,
+      decoration: decoration,
+    );
+
+TextStyle size24Regular({
+  Color? textColor,
+  double? letterSpacing = 0.0,
+  TextDecoration? decoration = TextDecoration.none,
+}) =>
+    TextStyle(
+      fontFamily: Strings.secondFontFamily,
+      color: textColor ?? whiteColor,
+      fontSize: SizeUtils().sp(18.24),
+      letterSpacing: letterSpacing,
+      fontWeight: FontWeight.w700,
+      decoration: decoration,
+    );
+
 TextStyle size30Regular({
   Color? textColor,
   double? letterSpacing = 0.0,

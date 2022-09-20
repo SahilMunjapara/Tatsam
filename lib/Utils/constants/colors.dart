@@ -14,3 +14,5 @@ const Color boxShadow = Color(0XA145EDF2);
 const Color hintTextColor = Color(0X4DC1C1C1);
 const Color shadow1Color = Color(0XFF45EDF2);
 const Color shadow2Color = Color(0XFF49299A);
+const Color textGradient1Color = Color(0XFF45EDF2);
+const Color textGradient2Color = Color(0XFF8965E3);
