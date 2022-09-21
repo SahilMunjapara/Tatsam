@@ -17,6 +17,7 @@ class CustomTextField extends StatelessWidget {
   final bool isBorder;
   final String hintText;
   final bool enabled;
+  final Color cursorColor;
 
   // ignore: use_key_in_widget_constructors
   const CustomTextField({
@@ -33,6 +34,7 @@ class CustomTextField extends StatelessWidget {
     this.isBorder = true,
     this.hintText = '',
     this.enabled = true,
+    this.cursorColor = whiteColor,
   });
 
   @override
@@ -41,7 +43,7 @@ class CustomTextField extends StatelessWidget {
       enabled: enabled,
       keyboardType: textInputType,
       autocorrect: false,
-      cursorColor: whiteColor,
+      cursorColor: cursorColor,
       controller: controller,
       maxLength: maxLength,
       focusNode: focusNode,

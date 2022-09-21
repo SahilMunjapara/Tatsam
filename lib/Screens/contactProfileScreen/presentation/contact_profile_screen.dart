@@ -5,6 +5,8 @@ import 'package:tatsam/Utils/constants/image.dart';
 import 'package:tatsam/Utils/constants/strings.dart';
 import 'package:tatsam/Utils/constants/textStyle.dart';
 import 'package:tatsam/Utils/size_utils/size_utils.dart';
+import 'package:tatsam/commonWidget/custom_appbar.dart';
+import 'package:tatsam/commonWidget/drawer_screen.dart';
 import 'package:tatsam/commonWidget/gradient_text.dart';
 
 class ContactProfileScreen extends StatefulWidget {
@@ -15,18 +17,31 @@ class ContactProfileScreen extends StatefulWidget {
 }
 
 class _ContactProfileScreenState extends State<ContactProfileScreen> {
+  late GlobalKey<ScaffoldState> scaffoldState;
+
+  @override
+  void initState() {
+    super.initState();
+    scaffoldState = GlobalKey<ScaffoldState>();
+  }
+
   @override
   Widget build(BuildContext context) {
     SizeUtils().init(context);
     return SafeArea(
       child: Scaffold(
+        key: scaffoldState,
         backgroundColor: transparentColor,
+        drawer: const DrawerScreen(),
         body: Padding(
           padding: EdgeInsets.symmetric(horizontal: SizeUtils().wp(8)),
           child: Column(
             children: [
               SizedBox(height: SizeUtils().hp(2)),
-              _profileTitleWidgets(),
+              CustomAppBar(
+                title: Strings.profile,
+                onMenuTap: () => scaffoldState.currentState!.openDrawer(),
+              ),
               SizedBox(height: SizeUtils().hp(4)),
               Expanded(
                 child: Stack(
@@ -158,79 +173,6 @@ class _ContactProfileScreenState extends State<ContactProfileScreen> {
           colors: [textGradient1Color, textGradient2Color],
         ),
       ),
-    );
-  }
-
-  Widget _profileTitleWidgets() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Column(
-          children: [
-            SizedBox(height: SizeUtils().hp(2)),
-            Container(
-              height: SizeUtils().hp(6),
-              width: SizeUtils().wp(11),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(7),
-                color: profileButtonColor,
-                boxShadow: const [
-                  BoxShadow(
-                    blurRadius: 4,
-                    color: boxShadow,
-                    offset: Offset(2, 2),
-                  )
-                ],
-              ),
-              child: Padding(
-                padding: EdgeInsets.symmetric(
-                  horizontal: SizeUtils().wp(2.5),
-                  vertical: SizeUtils().hp(2),
-                ),
-                child: SvgPicture.asset(
-                  ImageString.menuSvg,
-                  fit: BoxFit.fill,
-                ),
-              ),
-            ),
-          ],
-        ),
-        Text(
-          Strings.profile,
-          style: size38Regular(),
-        ),
-        Column(
-          children: [
-            SizedBox(height: SizeUtils().hp(2)),
-            Container(
-              height: SizeUtils().hp(6),
-              width: SizeUtils().wp(11),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(7),
-                color: profileButtonColor,
-                boxShadow: const [
-                  BoxShadow(
-                    blurRadius: 4,
-                    color: boxShadow,
-                    offset: Offset(-2, 2),
-                  )
-                ],
-              ),
-              child: Padding(
-                padding: EdgeInsets.symmetric(
-                  horizontal: SizeUtils().wp(3.5),
-                  vertical: SizeUtils().hp(2),
-                ),
-                child: SvgPicture.asset(
-                  ImageString.searchSvg,
-                  fit: BoxFit.fill,
-                ),
-              ),
-            ),
-          ],
-        ),
-      ],
     );
   }
 }

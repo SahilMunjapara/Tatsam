@@ -20,6 +20,20 @@ TextStyle size12Regular({
       decoration: decoration,
     );
 
+TextStyle size14Regular({
+  Color? textColor,
+  double? letterSpacing = 0.0,
+  TextDecoration? decoration = TextDecoration.none,
+}) =>
+    TextStyle(
+      fontFamily: Strings.secondFontFamily,
+      color: textColor ?? whiteColor,
+      fontSize: SizeUtils().sp(10.64),
+      letterSpacing: letterSpacing,
+      fontWeight: FontWeight.w400,
+      decoration: decoration,
+    );
+
 TextStyle size15Regular({
   Color? textColor,
   double? letterSpacing = 0.0,

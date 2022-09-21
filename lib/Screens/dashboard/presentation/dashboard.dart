@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:tatsam/Navigation/routes_key.dart';
+import 'package:tatsam/Screens/businessFormScreen/presentation/business_form_screen.dart';
 import 'package:tatsam/Screens/businessScreen/presentation/business_screen.dart';
 import 'package:tatsam/Screens/contactProfileScreen/presentation/contact_profile_screen.dart';
 import 'package:tatsam/Screens/contactScreen/presentation/contact_screen.dart';
 import 'package:tatsam/Screens/dashboard/presentation/widget/bottomNavigationBar/circular_bottom_navigation.dart';
+import 'package:tatsam/Screens/instantScreen/presentation/instant_screen.dart';
 import 'package:tatsam/Screens/profileScreen/presentation/profile_screen.dart';
+import 'package:tatsam/Screens/utilitiesScreen/presentation/utilities_screen.dart';
 import 'package:tatsam/Utils/app_preferences/app_preferences.dart';
 import 'package:tatsam/Utils/constants/colors.dart';
 import 'package:tatsam/Utils/constants/image.dart';
@@ -89,14 +92,17 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
       case 1:
         // slogan = "Log Out";
         // break;
-        return const ContactProfileScreen();
+        // return const ContactProfileScreen();
+        return const InstantScreen();
       case 2:
         // slogan = "Log Out";
         // break;
         return const BusinessScreen();
       case 3:
-        slogan = "Log Out";
-        break;
+        // slogan = "Log Out";
+        // break;
+        return const BusinessFormScreen();
+      // return const UtilitiesScreen();
       default:
         slogan = "";
         break;

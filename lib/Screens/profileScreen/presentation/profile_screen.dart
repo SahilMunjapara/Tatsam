@@ -15,7 +15,9 @@ import 'package:tatsam/Utils/constants/textStyle.dart';
 import 'package:tatsam/Utils/log_utils/log_util.dart';
 import 'package:tatsam/Utils/size_utils/size_utils.dart';
 import 'package:tatsam/Utils/validation/validation.dart';
+import 'package:tatsam/commonWidget/custom_appbar.dart';
 import 'package:tatsam/commonWidget/custom_text_field.dart';
+import 'package:tatsam/commonWidget/drawer_screen.dart';
 import 'package:tatsam/commonWidget/progress_bar_round.dart';
 import 'package:tatsam/commonWidget/snackbar_widget.dart';
 import 'package:tatsam/service/exception/exception.dart';
@@ -36,6 +38,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
   late File profileFile;
   late ImagePicker _imagePicker;
   late String profileImageURL;
+  late GlobalKey<ScaffoldState> scaffoldState;
+
   bool isProfileEdit = false;
   bool isLoading = false;
 
@@ -44,6 +48,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     super.initState();
     profileFile = File('');
     _imagePicker = ImagePicker();
+    scaffoldState = GlobalKey<ScaffoldState>();
     nameController = TextEditingController(
       text: AppPreference().getStringData(PreferencesKey.userName) ?? '',
     );
@@ -140,8 +145,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
     SizeUtils().init(context);
     return SafeArea(
       child: Scaffold(
+        key: scaffoldState,
         backgroundColor: transparentColor,
         resizeToAvoidBottomInset: false,
+        drawer: const DrawerScreen(),
         body: BlocListener(
           bloc: profileBloc,
           listener: (context, state) {
@@ -214,7 +221,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     child: Column(
                       children: [
                         SizedBox(height: SizeUtils().hp(2)),
-                        _profileTitleWidgets(),
+                        CustomAppBar(
+                          title: Strings.profile,
+                          onMenuTap: () =>
+                              scaffoldState.currentState!.openDrawer(),
+                        ),
                         SizedBox(height: SizeUtils().hp(4)),
                         Visibility(
                           visible: isProfileEdit,
@@ -484,79 +495,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: SizeUtils().wp(6)),
       child: Text(title, style: size18Regular()),
-    );
-  }
-
-  Widget _profileTitleWidgets() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Column(
-          children: [
-            SizedBox(height: SizeUtils().hp(2)),
-            Container(
-              height: SizeUtils().hp(6),
-              width: SizeUtils().wp(11),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(7),
-                color: profileButtonColor,
-                boxShadow: const [
-                  BoxShadow(
-                    blurRadius: 4,
-                    color: boxShadow,
-                    offset: Offset(2, 2),
-                  )
-                ],
-              ),
-              child: Padding(
-                padding: EdgeInsets.symmetric(
-                  horizontal: SizeUtils().wp(2.5),
-                  vertical: SizeUtils().hp(2),
-                ),
-                child: SvgPicture.asset(
-                  ImageString.menuSvg,
-                  fit: BoxFit.fill,
-                ),
-              ),
-            ),
-          ],
-        ),
-        Text(
-          Strings.profile,
-          style: size38Regular(),
-        ),
-        Column(
-          children: [
-            SizedBox(height: SizeUtils().hp(2)),
-            Container(
-              height: SizeUtils().hp(6),
-              width: SizeUtils().wp(11),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(7),
-                color: profileButtonColor,
-                boxShadow: const [
-                  BoxShadow(
-                    blurRadius: 4,
-                    color: boxShadow,
-                    offset: Offset(-2, 2),
-                  )
-                ],
-              ),
-              child: Padding(
-                padding: EdgeInsets.symmetric(
-                  horizontal: SizeUtils().wp(3.5),
-                  vertical: SizeUtils().hp(2),
-                ),
-                child: SvgPicture.asset(
-                  ImageString.searchSvg,
-                  fit: BoxFit.fill,
-                ),
-              ),
-            ),
-          ],
-        ),
-      ],
     );
   }
 }

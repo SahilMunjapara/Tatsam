@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:tatsam/Utils/constants/colors.dart';
 import 'package:tatsam/Utils/constants/image.dart';
 import 'package:tatsam/Utils/constants/strings.dart';
 import 'package:tatsam/Utils/constants/textStyle.dart';
 import 'package:tatsam/Utils/size_utils/size_utils.dart';
+import 'package:tatsam/commonWidget/custom_appbar.dart';
+import 'package:tatsam/commonWidget/drawer_screen.dart';
 import 'package:tatsam/commonWidget/gradient_border.dart';
 import 'package:tatsam/commonWidget/gradient_text.dart';
 
@@ -16,18 +17,31 @@ class BusinessScreen extends StatefulWidget {
 }
 
 class _BusinessScreenState extends State<BusinessScreen> {
+  late GlobalKey<ScaffoldState> scaffoldState;
+
+  @override
+  void initState() {
+    super.initState();
+    scaffoldState = GlobalKey<ScaffoldState>();
+  }
+
   @override
   Widget build(BuildContext context) {
     SizeUtils().init(context);
     return SafeArea(
       child: Scaffold(
+        key: scaffoldState,
         backgroundColor: transparentColor,
+        drawer: const DrawerScreen(),
         body: Padding(
           padding: EdgeInsets.symmetric(horizontal: SizeUtils().wp(6)),
           child: Column(
             children: [
               SizedBox(height: SizeUtils().hp(2)),
-              _profileTitleWidgets(),
+              CustomAppBar(
+                title: Strings.businessScreenHeader,
+                onMenuTap: () => scaffoldState.currentState!.openDrawer(),
+              ),
               SizedBox(height: SizeUtils().hp(4)),
               Expanded(
                 child: NotificationListener<OverscrollIndicatorNotification>(
@@ -76,7 +90,12 @@ class _BusinessScreenState extends State<BusinessScreen> {
           decoration: BoxDecoration(
             border: const GradientBoxBorder(
               gradient: LinearGradient(
-                colors: [shadow2Color, shadow1Color],
+                colors: [
+                  shadow2Color,
+                  shadow3Color,
+                  shadow4Color,
+                  shadow1Color
+                ],
               ),
               width: 2,
             ),
@@ -133,79 +152,6 @@ class _BusinessScreenState extends State<BusinessScreen> {
           ),
         ),
       ),
-    );
-  }
-
-  Widget _profileTitleWidgets() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Column(
-          children: [
-            SizedBox(height: SizeUtils().hp(2)),
-            Container(
-              height: SizeUtils().hp(6),
-              width: SizeUtils().wp(11),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(7),
-                color: profileButtonColor,
-                boxShadow: const [
-                  BoxShadow(
-                    blurRadius: 4,
-                    color: boxShadow,
-                    offset: Offset(2, 2),
-                  )
-                ],
-              ),
-              child: Padding(
-                padding: EdgeInsets.symmetric(
-                  horizontal: SizeUtils().wp(2.5),
-                  vertical: SizeUtils().hp(2),
-                ),
-                child: SvgPicture.asset(
-                  ImageString.menuSvg,
-                  fit: BoxFit.fill,
-                ),
-              ),
-            ),
-          ],
-        ),
-        Text(
-          Strings.businessScreenHeader,
-          style: size38Regular(),
-        ),
-        Column(
-          children: [
-            SizedBox(height: SizeUtils().hp(2)),
-            Container(
-              height: SizeUtils().hp(6),
-              width: SizeUtils().wp(11),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(7),
-                color: profileButtonColor,
-                boxShadow: const [
-                  BoxShadow(
-                    blurRadius: 4,
-                    color: boxShadow,
-                    offset: Offset(-2, 2),
-                  )
-                ],
-              ),
-              child: Padding(
-                padding: EdgeInsets.symmetric(
-                  horizontal: SizeUtils().wp(3.5),
-                  vertical: SizeUtils().hp(2),
-                ),
-                child: SvgPicture.asset(
-                  ImageString.searchSvg,
-                  fit: BoxFit.fill,
-                ),
-              ),
-            ),
-          ],
-        ),
-      ],
     );
   }
 }

@@ -13,7 +13,9 @@ class ImageString {
   static const String bottomLeftCircle = "assets/png/bottomLeftCircle.png";
   static const String building = "assets/png/building.png";
   static const String textForm = "assets/png/textForm.png";
+  static const String textForm2 = "assets/png/textForm2.png";
   static const String person = "assets/png/person.png";
+  static const String drawerTopLeft = "assets/png/drawerTopLeft.png";
 
   static const String googleSvg = "assets/svg/google.svg";
   static const String facebookSvg = "assets/svg/facebook.svg";
@@ -33,4 +35,10 @@ class ImageString {
   static const String emailSvg = "assets/svg/email.svg";
   static const String phoneSvg = "assets/svg/phone.svg";
   static const String locationSvg = "assets/svg/location.svg";
+  static const String drawerBagSvg = "assets/svg/d_bag.svg";
+  static const String drawerBellSvg = "assets/svg/d_bell.svg";
+  static const String drawerCallSvg = "assets/svg/d_call.svg";
+  static const String drawerContactSvg = "assets/svg/d_contact.svg";
+  static const String drawerHomeSvg = "assets/svg/d_home.svg";
+  static const String drawerSosSvg = "assets/svg/d_sos.svg";
 }

@@ -1,0 +1,106 @@
+import 'dart:developer';
+
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:tatsam/Utils/constants/colors.dart';
+import 'package:tatsam/Utils/constants/image.dart';
+import 'package:tatsam/Utils/constants/strings.dart';
+import 'package:tatsam/Utils/constants/textStyle.dart';
+import 'package:tatsam/Utils/size_utils/size_utils.dart';
+
+class DrawerScreen extends StatefulWidget {
+  const DrawerScreen({Key? key}) : super(key: key);
+
+  @override
+  State<DrawerScreen> createState() => _DrawerScreenState();
+}
+
+class _DrawerScreenState extends State<DrawerScreen> {
+  @override
+  void initState() {
+    super.initState();
+    log('Swagat 6e Tamaru');
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    SizeUtils().init(context);
+    return SafeArea(
+      child: Drawer(
+        child: Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [drawerStartColor, drawerEndColor],
+            ),
+          ),
+          child: Stack(
+            children: [
+              Image.asset(ImageString.drawerTopLeft),
+              Padding(
+                padding: EdgeInsets.symmetric(
+                  vertical: SizeUtils().hp(5),
+                  horizontal: SizeUtils().wp(10),
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      Strings.appName,
+                      style: size48Regular(),
+                    ),
+                    SizedBox(height: SizeUtils().hp(8)),
+                    _drawerElementWidget(
+                        ImageString.drawerHomeSvg, Strings.drawerHome),
+                    _drawerElementWidget(
+                        ImageString.drawerContactSvg, Strings.drawerContacts),
+                    _drawerElementWidget(
+                        ImageString.drawerBagSvg, Strings.drawerBusiness),
+                    _drawerElementWidget(
+                        ImageString.drawerCallSvg, Strings.drawerUtilities),
+                    _drawerElementWidget(
+                        ImageString.drawerCallSvg, Strings.drawerInstant),
+                    _drawerElementWidget(
+                        ImageString.drawerBellSvg, Strings.drawerNotification),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _drawerElementWidget(String imageName, String pageName) {
+    return Column(
+      children: [
+        Padding(
+          padding: EdgeInsets.symmetric(
+              vertical: SizeUtils().hp(1.2), horizontal: SizeUtils().wp(2)),
+          child: Row(
+            children: [
+              SizedBox(
+                height: SizeUtils().hp(3),
+                width: SizeUtils().wp(6),
+                child: SvgPicture.asset(imageName),
+              ),
+              SizedBox(width: SizeUtils().wp(2.5)),
+              Text(
+                pageName,
+                style: size18Regular().copyWith(
+                  fontFamily: Strings.fontFamily,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+            ],
+          ),
+        ),
+        Divider(thickness: 2, color: whiteColor.withOpacity(0.32)),
+      ],
+    );
+  }
+}

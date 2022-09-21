@@ -5,7 +5,6 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:tatsam/Screens/dashboard/presentation/widget/bottomNavigationBar/tab_item.dart';
-import 'package:tatsam/Utils/constants/colors.dart';
 import 'package:tatsam/Utils/constants/strings.dart';
 import 'package:tatsam/Utils/size_utils/size_utils.dart';
 

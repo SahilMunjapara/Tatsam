@@ -18,15 +18,30 @@ class Strings {
   static const String profile = 'Profile';
   static const String businessScreenHeader = 'Business Page';
   static const String contactsScreenHeader = 'Contacts';
+  static const String businessFormScreenHeader = 'Business Form';
+  static const String utilitiesScreenHeader = 'Utilities';
+  static const String instantScreenHeader = 'Instant';
   static const String resendOtpDetail = 'Resend Otp in ';
   static const String twoMinute = '2:00';
   static const String fullName = 'Full Name :';
   static const String contactNum = 'Contact Num:';
   static const String emailId = 'Email :';
   static const String nameHint = 'Type Name...';
+  static const String workNameHint = 'Type Work Name...';
   static const String contactHint = 'Type Contact Number...';
   static const String emailHint = 'xyz@gmail.com';
   static const String backToLogin = 'Back To Login';
+  static const String workName = 'Work Name';
+  static const String submit = 'Submit';
+  static const String urgentHelp = 'Urgent Help';
+  static const String addPlus = 'Add  +';
+  static const String send = 'Send ➜';
+  static const String drawerHome = 'Home';
+  static const String drawerContacts = 'Contacts';
+  static const String drawerBusiness = 'Business';
+  static const String drawerUtilities = 'Utilites';
+  static const String drawerInstant = 'Instant';
+  static const String drawerNotification = 'Notification';
 }
 
 class ValidatorString {
