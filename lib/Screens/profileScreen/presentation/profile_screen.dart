@@ -217,7 +217,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 children: [
                   Padding(
                     padding:
-                        EdgeInsets.symmetric(horizontal: SizeUtils().wp(8)),
+                        EdgeInsets.symmetric(horizontal: SizeUtils().wp(6)),
                     child: Column(
                       children: [
                         SizedBox(height: SizeUtils().hp(2)),

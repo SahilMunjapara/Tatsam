@@ -87,12 +87,12 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
     String slogan;
     switch (selectedPos) {
       case 0:
-        // return const ProfileScreen();
-        return const ContactScreen();
+        return const ContactProfileScreen();
+      // return const ProfileScreen();
       case 1:
         // slogan = "Log Out";
         // break;
-        // return const ContactProfileScreen();
+        // return const BusinessFormScreen();
         return const InstantScreen();
       case 2:
         // slogan = "Log Out";
@@ -101,7 +101,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
       case 3:
         // slogan = "Log Out";
         // break;
-        return const BusinessFormScreen();
+        return const ContactScreen();
       // return const UtilitiesScreen();
       default:
         slogan = "";

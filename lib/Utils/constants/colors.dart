@@ -22,3 +22,5 @@ const Color boxGradient1 = Color(0XFF22616D);
 const Color boxGradient2 = Color(0XFF233058);
 const Color drawerStartColor = Color(0XFF241252);
 const Color drawerEndColor = Color(0XFF1A686A);
+const Color callBoxGradient1 = Color(0XFF007477);
+const Color callBoxGradient2 = Color(0XFF2F3746);

@@ -57,7 +57,7 @@ class _InstantScreenState extends State<InstantScreen> {
                       crossAxisCount: 2,
                       childAspectRatio: 1.8,
                     ),
-                    itemCount: 11,
+                    itemCount: 5,
                     itemBuilder: (context, index) {
                       return _contactDetailsWidget();
                     },

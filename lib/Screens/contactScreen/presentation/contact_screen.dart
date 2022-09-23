@@ -39,7 +39,7 @@ class _ContactScreenState extends State<ContactScreen> {
               SizedBox(height: SizeUtils().hp(2)),
               CustomAppBar(
                 title: Strings.contactsScreenHeader,
-                padding: 8.0,
+                padding: 6.0,
                 onMenuTap: () => scaffoldState.currentState!.openDrawer(),
               ),
               SizedBox(height: SizeUtils().hp(4)),

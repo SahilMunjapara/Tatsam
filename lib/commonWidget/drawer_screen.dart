@@ -1,6 +1,3 @@
-import 'dart:developer';
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:tatsam/Utils/constants/colors.dart';
@@ -17,12 +14,6 @@ class DrawerScreen extends StatefulWidget {
 }
 
 class _DrawerScreenState extends State<DrawerScreen> {
-  @override
-  void initState() {
-    super.initState();
-    log('Swagat 6e Tamaru');
-  }
-
   @override
   Widget build(BuildContext context) {
     SizeUtils().init(context);

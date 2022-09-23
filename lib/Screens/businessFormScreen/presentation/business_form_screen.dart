@@ -45,10 +45,11 @@ class _BusinessFormScreenState extends State<BusinessFormScreen> {
     return SafeArea(
       child: Scaffold(
         backgroundColor: transparentColor,
+        resizeToAvoidBottomInset: false,
         key: scaffoldState,
         drawer: const DrawerScreen(),
         body: Padding(
-          padding: EdgeInsets.symmetric(horizontal: SizeUtils().wp(8)),
+          padding: EdgeInsets.symmetric(horizontal: SizeUtils().wp(6)),
           child: Column(
             children: [
               SizedBox(height: SizeUtils().hp(2)),

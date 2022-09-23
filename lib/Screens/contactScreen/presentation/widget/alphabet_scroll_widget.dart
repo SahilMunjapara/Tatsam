@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:azlistview/azlistview.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -53,21 +55,72 @@ class _AlphabetScrollWidgetState extends State<AlphabetScrollWidget> {
       ),
       child: Slidable(
         key: const ValueKey(0),
-        endActionPane: const ActionPane(
-          motion: ScrollMotion(),
+        endActionPane: ActionPane(
+          motion: const ScrollMotion(),
           extentRatio: 0.3,
           children: [
-            SlidableAction(
-              onPressed: null,
-              backgroundColor: transparentColor,
-              foregroundColor: Colors.white,
-              icon: Icons.phone,
-            ),
-            SlidableAction(
-              onPressed: null,
-              backgroundColor: transparentColor,
-              foregroundColor: Colors.white,
-              icon: Icons.person,
+            Expanded(
+              child: Padding(
+                padding: EdgeInsets.only(left: SizeUtils().wp(1.5)),
+                child: Container(
+                  decoration: const BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [
+                        callBoxGradient1,
+                        callBoxGradient2,
+                      ],
+                    ),
+                    boxShadow: [
+                      BoxShadow(
+                        offset: Offset(-1, 1),
+                        color: shadow1Color,
+                        blurRadius: 5,
+                      )
+                    ],
+                    borderRadius: BorderRadius.only(
+                      bottomLeft: Radius.circular(20),
+                      topLeft: Radius.circular(20),
+                    ),
+                  ),
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(
+                      vertical: SizeUtils().hp(1.5),
+                      horizontal: SizeUtils().wp(2.5),
+                    ),
+                    child: Row(
+                      children: [
+                        GestureDetector(
+                          onTap: () {
+                            log('CALL NAVIGATION');
+                          },
+                          child: Icon(
+                            Icons.phone,
+                            size: SizeUtils().hp(2.5),
+                          ),
+                        ),
+                        SizedBox(width: SizeUtils().wp(1)),
+                        SizedBox(
+                          height: SizeUtils().hp(2.5),
+                          child: const VerticalDivider(
+                            color: whiteColor,
+                            thickness: 1.5,
+                          ),
+                        ),
+                        SizedBox(width: SizeUtils().wp(1)),
+                        GestureDetector(
+                          onTap: () {
+                            log('VIEW PROFILE');
+                          },
+                          child: Icon(
+                            Icons.person,
+                            size: SizeUtils().hp(2.5),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
             ),
           ],
         ),
