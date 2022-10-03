@@ -38,7 +38,7 @@ class Strings {
   static const String send = 'Send ➜';
   static const String drawerHome = 'Home';
   static const String drawerContacts = 'Contacts';
-  static const String drawerBusiness = 'Business';
+  static const String drawerBusiness = 'Business'; 
   static const String drawerUtilities = 'Utilites';
   static const String drawerInstant = 'Instant';
   static const String drawerNotification = 'Notification';
@@ -69,3 +69,32 @@ class FirebaseErrorMessageString {
   static const String otpMismatch = 'Otp Mismatch, Enter Correct Otp.';
   static const String noInternet = 'No Internet Connection Available';
 }
+
+List<String> userContactList = [
+  'arav patel',
+  'birav patel',
+  'cirav patel',
+  'dirav patel',
+  'eirav patel',
+  'firav patel',
+  'girav patel',
+  'hirav patel',
+  'irav patel',
+  'jirav patel',
+  'kirav patel',
+  'lirav patel',
+  'mirav patel',
+  'nirav patel',
+  'oirav patel',
+  'pirav patel',
+  'qirav patel',
+  'rirav patel',
+  'sirav patel',
+  'tirav patel',
+  'uirav patel',
+  'virav patel',
+  'wirav patel',
+  'xirav patel',
+  'yirav patel',
+  'zirav patel'
+];

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:tatsam/Utils/constants/colors.dart';
@@ -6,11 +8,19 @@ import 'package:tatsam/Utils/constants/textStyle.dart';
 import 'package:tatsam/Utils/size_utils/size_utils.dart';
 
 class CustomAppBar extends StatelessWidget {
-  const CustomAppBar({this.title, this.onMenuTap, this.padding = 0.0, Key? key})
-      : super(key: key);
+  const CustomAppBar({
+    this.title,
+    this.onMenuTap,
+    this.onSearchTap,
+    this.padding = 0.0,
+    this.isSearch = false,
+    Key? key,
+  }) : super(key: key);
   final String? title;
   final VoidCallback? onMenuTap;
+  final VoidCallback? onSearchTap;
   final double padding;
+  final bool isSearch;
 
   @override
   Widget build(BuildContext context) {
@@ -61,28 +71,39 @@ class CustomAppBar extends StatelessWidget {
           Column(
             children: [
               SizedBox(height: SizeUtils().hp(2)),
-              Container(
-                height: SizeUtils().hp(6),
-                width: SizeUtils().wp(11),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(7),
-                  color: profileButtonColor,
-                  boxShadow: const [
-                    BoxShadow(
-                      blurRadius: 4,
-                      color: boxShadow,
-                      offset: Offset(-2, 2),
-                    )
-                  ],
-                ),
-                child: Padding(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: SizeUtils().wp(3.5),
-                    vertical: SizeUtils().hp(2),
-                  ),
-                  child: SvgPicture.asset(
-                    ImageString.searchSvg,
-                    fit: BoxFit.fill,
+              GestureDetector(
+                onTap: onSearchTap ?? () => log('Search'),
+                child: Container(
+                  height: SizeUtils().hp(6),
+                  width: SizeUtils().wp(11),
+                  decoration: isSearch
+                      ? BoxDecoration(
+                          borderRadius: const BorderRadius.only(
+                            topLeft: Radius.circular(7),
+                            topRight: Radius.circular(7),
+                          ),
+                          color: otpBoxColor.withOpacity(0.49),
+                        )
+                      : BoxDecoration(
+                          borderRadius: BorderRadius.circular(7),
+                          color: profileButtonColor,
+                          boxShadow: const [
+                            BoxShadow(
+                              blurRadius: 4,
+                              color: boxShadow,
+                              offset: Offset(-2, 2),
+                            )
+                          ],
+                        ),
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: SizeUtils().wp(3.5),
+                      vertical: SizeUtils().hp(2),
+                    ),
+                    child: SvgPicture.asset(
+                      ImageString.searchSvg,
+                      fit: BoxFit.fill,
+                    ),
                   ),
                 ),
               ),

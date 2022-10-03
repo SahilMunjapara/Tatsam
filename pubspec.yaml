@@ -29,7 +29,6 @@ dependencies:
   firebase_core: ^1.2.0
   firebase_auth: ^3.3.8
   cloud_firestore: ^3.1.7
-  dio: ^4.0.6
 
 dependency_overrides:
   firebase_auth_platform_interface: 6.1.11

@@ -51,22 +51,21 @@ class _ContactProfileScreenState extends State<ContactProfileScreen> {
                       child: Container(
                         height: SizeUtils().hp(12),
                         width: SizeUtils().wp(22),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(50),
-                          boxShadow: const [
+                        decoration: const BoxDecoration(
+                          shape: BoxShape.circle,
+                          image: DecorationImage(
+                            image: AssetImage(
+                              ImageString.person,
+                            ),
+                            fit: BoxFit.fill,
+                          ),
+                          boxShadow: [
                             BoxShadow(
                               color: shadow1Color,
                               offset: Offset(0, 4),
                               blurRadius: 4,
                             )
                           ],
-                        ),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(50),
-                          child: Image.asset(
-                            ImageString.person,
-                            fit: BoxFit.fill,
-                          ),
                         ),
                       ),
                     ),

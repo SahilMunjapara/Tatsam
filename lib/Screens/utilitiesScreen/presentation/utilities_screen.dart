@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:tatsam/Screens/utilitiesScreen/bloc/bloc.dart';
 import 'package:tatsam/Utils/constants/colors.dart';
 import 'package:tatsam/Utils/constants/image.dart';
 import 'package:tatsam/Utils/constants/strings.dart';
@@ -6,6 +8,7 @@ import 'package:tatsam/Utils/constants/textStyle.dart';
 import 'package:tatsam/Utils/size_utils/size_utils.dart';
 import 'package:tatsam/commonWidget/custom_appbar.dart';
 import 'package:tatsam/commonWidget/drawer_screen.dart';
+import 'package:tatsam/commonWidget/search_box_widget.dart';
 
 class UtilitiesScreen extends StatefulWidget {
   const UtilitiesScreen({Key? key}) : super(key: key);
@@ -15,11 +18,15 @@ class UtilitiesScreen extends StatefulWidget {
 }
 
 class _UtilitiesScreenState extends State<UtilitiesScreen> {
+  final UtilitiesBloc utilitiesBloc = UtilitiesBloc();
   late GlobalKey<ScaffoldState> scaffoldState;
+  late TextEditingController searchController;
+  bool isSearching = false;
 
   @override
   void initState() {
     super.initState();
+    searchController = TextEditingController();
     scaffoldState = GlobalKey<ScaffoldState>();
   }
 
@@ -29,37 +36,61 @@ class _UtilitiesScreenState extends State<UtilitiesScreen> {
     return SafeArea(
       child: Scaffold(
         key: scaffoldState,
+        resizeToAvoidBottomInset: false,
         backgroundColor: transparentColor,
         drawer: const DrawerScreen(),
-        body: Padding(
-          padding: EdgeInsets.symmetric(horizontal: SizeUtils().wp(6)),
-          child: Column(
-            children: [
-              SizedBox(height: SizeUtils().hp(2)),
-              CustomAppBar(
-                title: Strings.utilitiesScreenHeader,
-                onMenuTap: () => scaffoldState.currentState!.openDrawer(),
-              ),
-              SizedBox(height: SizeUtils().hp(4)),
-              Expanded(
-                child: NotificationListener<OverscrollIndicatorNotification>(
-                  onNotification: (overScroll) {
-                    overScroll.disallowIndicator();
-                    return false;
-                  },
-                  child: Padding(
-                    padding: EdgeInsets.only(bottom: SizeUtils().hp(5)),
-                    child: ListView.builder(
-                      itemCount: 15,
-                      itemBuilder: (context, index) {
-                        return _utilitiesCardWidget();
+        body: BlocConsumer(
+          bloc: utilitiesBloc,
+          listener: (context, state) {
+            if (state is UtilitiesSearchState) {
+              isSearching = !isSearching;
+            }
+          },
+          builder: (context, state) {
+            return Padding(
+              padding: EdgeInsets.symmetric(horizontal: SizeUtils().wp(6)),
+              child: Column(
+                children: [
+                  SizedBox(height: SizeUtils().hp(2)),
+                  CustomAppBar(
+                    title: Strings.utilitiesScreenHeader,
+                    isSearch: isSearching,
+                    onMenuTap: () => scaffoldState.currentState!.openDrawer(),
+                    onSearchTap: () =>
+                        utilitiesBloc.add(UtilitiesSearchEvent()),
+                  ),
+                  Visibility(
+                    visible: isSearching,
+                    child: SearchBoxWidget(
+                      controller: searchController,
+                      onSubmitted: (char) {
+                        utilitiesBloc.add(UtilitiesSearchEvent());
                       },
                     ),
                   ),
-                ),
+                  SizedBox(height: SizeUtils().hp(4)),
+                  Expanded(
+                    child:
+                        NotificationListener<OverscrollIndicatorNotification>(
+                      onNotification: (overScroll) {
+                        overScroll.disallowIndicator();
+                        return false;
+                      },
+                      child: Padding(
+                        padding: EdgeInsets.only(bottom: SizeUtils().hp(5)),
+                        child: ListView.builder(
+                          itemCount: 15,
+                          itemBuilder: (context, index) {
+                            return _utilitiesCardWidget();
+                          },
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
-            ],
-          ),
+            );
+          },
         ),
       ),
     );

@@ -136,12 +136,12 @@ class _AlphabetScrollWidgetState extends State<AlphabetScrollWidget> {
                   child: Container(
                     height: SizeUtils().hp(8),
                     width: SizeUtils().wp(14),
-                    decoration: BoxDecoration(
-                      image: const DecorationImage(
+                    decoration: const BoxDecoration(
+                      shape: BoxShape.circle,
+                      image: DecorationImage(
                         image: AssetImage(ImageString.person),
                         fit: BoxFit.fill,
                       ),
-                      borderRadius: BorderRadius.circular(30),
                     ),
                   ),
                 ),

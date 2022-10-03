@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:tatsam/Screens/businessScreen/bloc/bloc.dart';
 import 'package:tatsam/Utils/constants/colors.dart';
 import 'package:tatsam/Utils/constants/image.dart';
 import 'package:tatsam/Utils/constants/strings.dart';
@@ -8,6 +10,7 @@ import 'package:tatsam/commonWidget/custom_appbar.dart';
 import 'package:tatsam/commonWidget/drawer_screen.dart';
 import 'package:tatsam/commonWidget/gradient_border.dart';
 import 'package:tatsam/commonWidget/gradient_text.dart';
+import 'package:tatsam/commonWidget/search_box_widget.dart';
 
 class BusinessScreen extends StatefulWidget {
   const BusinessScreen({Key? key}) : super(key: key);
@@ -17,11 +20,15 @@ class BusinessScreen extends StatefulWidget {
 }
 
 class _BusinessScreenState extends State<BusinessScreen> {
+  BusinessBloc businessBloc = BusinessBloc();
   late GlobalKey<ScaffoldState> scaffoldState;
+  late TextEditingController searchController;
+  bool isSearching = false;
 
   @override
   void initState() {
     super.initState();
+    searchController = TextEditingController();
     scaffoldState = GlobalKey<ScaffoldState>();
   }
 
@@ -31,43 +38,66 @@ class _BusinessScreenState extends State<BusinessScreen> {
     return SafeArea(
       child: Scaffold(
         key: scaffoldState,
+        resizeToAvoidBottomInset: false,
         backgroundColor: transparentColor,
         drawer: const DrawerScreen(),
-        body: Padding(
-          padding: EdgeInsets.symmetric(horizontal: SizeUtils().wp(6)),
-          child: Column(
-            children: [
-              SizedBox(height: SizeUtils().hp(2)),
-              CustomAppBar(
-                title: Strings.businessScreenHeader,
-                onMenuTap: () => scaffoldState.currentState!.openDrawer(),
-              ),
-              SizedBox(height: SizeUtils().hp(4)),
-              Expanded(
-                child: NotificationListener<OverscrollIndicatorNotification>(
-                  onNotification: (overScroll) {
-                    overScroll.disallowIndicator();
-                    return false;
-                  },
-                  child: Padding(
-                    padding: EdgeInsets.only(bottom: SizeUtils().hp(5)),
-                    child: ListView.builder(
-                      itemCount: 12,
-                      itemBuilder: (context, index) {
-                        return _businessProfileWidget(
-                          businessImage: 'BImage',
-                          userName: 'Twinkle N Patel',
-                          businessName: 'Ui designer',
-                          userPhoneNumber: '9988776655',
-                          userImage: 'UImage',
-                        );
+        body: BlocConsumer(
+          bloc: businessBloc,
+          listener: (context, state) {
+            if (state is BusinessSearchState) {
+              isSearching = !isSearching;
+            }
+          },
+          builder: (context, state) {
+            return Padding(
+              padding: EdgeInsets.symmetric(horizontal: SizeUtils().wp(6)),
+              child: Column(
+                children: [
+                  SizedBox(height: SizeUtils().hp(2)),
+                  CustomAppBar(
+                    title: Strings.businessScreenHeader,
+                    isSearch: isSearching,
+                    onMenuTap: () => scaffoldState.currentState!.openDrawer(),
+                    onSearchTap: () => businessBloc.add(BusinessSearchEvent()),
+                  ),
+                  Visibility(
+                    visible: isSearching,
+                    child: SearchBoxWidget(
+                      controller: searchController,
+                      onSubmitted: (char) {
+                        businessBloc.add(BusinessSearchEvent());
                       },
                     ),
                   ),
-                ),
+                  SizedBox(height: SizeUtils().hp(4)),
+                  Expanded(
+                    child:
+                        NotificationListener<OverscrollIndicatorNotification>(
+                      onNotification: (overScroll) {
+                        overScroll.disallowIndicator();
+                        return false;
+                      },
+                      child: Padding(
+                        padding: EdgeInsets.only(bottom: SizeUtils().hp(5)),
+                        child: ListView.builder(
+                          itemCount: 12,
+                          itemBuilder: (context, index) {
+                            return _businessProfileWidget(
+                              businessImage: 'BImage',
+                              userName: 'Twinkle N Patel',
+                              businessName: 'Ui designer',
+                              userPhoneNumber: '9988776655',
+                              userImage: 'UImage',
+                            );
+                          },
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
-            ],
-          ),
+            );
+          },
         ),
       ),
     );
@@ -139,11 +169,10 @@ class _BusinessScreenState extends State<BusinessScreen> {
               Container(
                 height: SizeUtils().hp(8),
                 width: SizeUtils().wp(14),
-                decoration: const BoxDecoration(shape: BoxShape.circle),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(30),
-                  child: Image.asset(
-                    ImageString.person,
+                decoration: const BoxDecoration(
+                  shape: BoxShape.circle,
+                  image: DecorationImage(
+                    image: AssetImage(ImageString.person),
                     fit: BoxFit.fill,
                   ),
                 ),

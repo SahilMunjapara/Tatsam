@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:tatsam/Screens/instantScreen/bloc/bloc.dart';
 import 'package:tatsam/Utils/constants/colors.dart';
 import 'package:tatsam/Utils/constants/image.dart';
 import 'package:tatsam/Utils/constants/strings.dart';
@@ -6,6 +8,7 @@ import 'package:tatsam/Utils/constants/textStyle.dart';
 import 'package:tatsam/Utils/size_utils/size_utils.dart';
 import 'package:tatsam/commonWidget/custom_appbar.dart';
 import 'package:tatsam/commonWidget/drawer_screen.dart';
+import 'package:tatsam/commonWidget/search_box_widget.dart';
 
 class InstantScreen extends StatefulWidget {
   const InstantScreen({Key? key}) : super(key: key);
@@ -15,11 +18,15 @@ class InstantScreen extends StatefulWidget {
 }
 
 class _InstantScreenState extends State<InstantScreen> {
+  InstantBloc instantBloc = InstantBloc();
   late GlobalKey<ScaffoldState> scaffoldState;
+  late TextEditingController searchController;
+  bool isSearching = false;
 
   @override
   void initState() {
     super.initState();
+    searchController = TextEditingController();
     scaffoldState = GlobalKey<ScaffoldState>();
   }
 
@@ -29,45 +36,68 @@ class _InstantScreenState extends State<InstantScreen> {
     return SafeArea(
       child: Scaffold(
         key: scaffoldState,
+        resizeToAvoidBottomInset: false,
         backgroundColor: transparentColor,
         drawer: const DrawerScreen(),
-        body: Padding(
-          padding: EdgeInsets.symmetric(horizontal: SizeUtils().wp(6)),
-          child: Column(
-            children: [
-              SizedBox(height: SizeUtils().hp(2)),
-              CustomAppBar(
-                title: Strings.instantScreenHeader,
-                onMenuTap: () => scaffoldState.currentState!.openDrawer(),
-              ),
-              SizedBox(height: SizeUtils().hp(4)),
-              _headerTwoOptionWidget(),
-              SizedBox(height: SizeUtils().hp(2)),
-              SizedBox(
-                width: SizeUtils().screenWidth,
-                height: SizeUtils().hp(55),
-                child: NotificationListener<OverscrollIndicatorNotification>(
-                  onNotification: (overScroll) {
-                    overScroll.disallowIndicator();
-                    return false;
-                  },
-                  child: GridView.builder(
-                    gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
-                      childAspectRatio: 1.8,
-                    ),
-                    itemCount: 5,
-                    itemBuilder: (context, index) {
-                      return _contactDetailsWidget();
-                    },
+        body: BlocConsumer(
+          bloc: instantBloc,
+          listener: (context, state) {
+            if (state is InstantSearchState) {
+              isSearching = !isSearching;
+            }
+          },
+          builder: (context, state) {
+            return Padding(
+              padding: EdgeInsets.symmetric(horizontal: SizeUtils().wp(6)),
+              child: ListView(
+                children: [
+                  SizedBox(height: SizeUtils().hp(2)),
+                  CustomAppBar(
+                    title: Strings.instantScreenHeader,
+                    isSearch: isSearching,
+                    onMenuTap: () => scaffoldState.currentState!.openDrawer(),
+                    onSearchTap: () => instantBloc.add(InstantSearchEvent()),
                   ),
-                ),
+                  Visibility(
+                    visible: isSearching,
+                    child: SearchBoxWidget(
+                      controller: searchController,
+                      onSubmitted: (char) {
+                        instantBloc.add(InstantSearchEvent());
+                      },
+                    ),
+                  ),
+                  SizedBox(height: SizeUtils().hp(4)),
+                  _headerTwoOptionWidget(),
+                  SizedBox(height: SizeUtils().hp(2)),
+                  SizedBox(
+                    width: SizeUtils().screenWidth,
+                    height: SizeUtils().hp(55),
+                    child:
+                        NotificationListener<OverscrollIndicatorNotification>(
+                      onNotification: (overScroll) {
+                        overScroll.disallowIndicator();
+                        return false;
+                      },
+                      child: GridView.builder(
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                          childAspectRatio: 1.8,
+                        ),
+                        itemCount: 5,
+                        itemBuilder: (context, index) {
+                          return _contactDetailsWidget();
+                        },
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: SizeUtils().hp(2)),
+                  _sendButton()
+                ],
               ),
-              SizedBox(height: SizeUtils().hp(2)),
-              _sendButton()
-            ],
-          ),
+            );
+          },
         ),
       ),
     );
