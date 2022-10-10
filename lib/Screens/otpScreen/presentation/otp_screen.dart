@@ -74,7 +74,7 @@ class _OtpScreenState extends State<OtpScreen> {
         child: Scaffold(
           resizeToAvoidBottomInset: false,
           backgroundColor: backgroundColor,
-          body: BlocListener(
+          body: BlocConsumer(
             bloc: otpBloc,
             listener: (context, state) {
               if (state is LoadingStartedState) {
@@ -145,166 +145,163 @@ class _OtpScreenState extends State<OtpScreen> {
                 );
               }
             },
-            child: BlocBuilder(
-              bloc: otpBloc,
-              builder: (context, state) {
-                return Stack(
-                  children: [
-                    Positioned(
-                      right: 0,
-                      child: Image.asset(ImageString.topRightCircle),
+            builder: (context, state) {
+              return Stack(
+                children: [
+                  Positioned(
+                    right: 0,
+                    child: Image.asset(ImageString.topRightCircle),
+                  ),
+                  Positioned(
+                    left: 0,
+                    bottom: 0,
+                    child: Image.asset(ImageString.bottomLeftCircle),
+                  ),
+                  Align(
+                    alignment: Alignment.bottomCenter,
+                    child: SizedBox(
+                      height: SizeUtils().hp(18),
+                      width: SizeUtils().screenWidth,
+                      child: Image.asset(
+                        ImageString.building,
+                        fit: BoxFit.fill,
+                      ),
                     ),
-                    Positioned(
-                      left: 0,
-                      bottom: 0,
-                      child: Image.asset(ImageString.bottomLeftCircle),
-                    ),
-                    Align(
-                      alignment: Alignment.bottomCenter,
-                      child: SizedBox(
-                        height: SizeUtils().hp(18),
-                        width: SizeUtils().screenWidth,
-                        child: Image.asset(
-                          ImageString.building,
-                          fit: BoxFit.fill,
+                  ),
+                  Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        SizedBox(height: SizeUtils().hp(3)),
+                        Padding(
+                          padding: EdgeInsets.symmetric(
+                              horizontal: SizeUtils().wp(8)),
+                          child: Text(
+                            Strings.appName,
+                            style: size48Regular(),
+                          ),
                         ),
-                      ),
-                    ),
-                    Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          SizedBox(height: SizeUtils().hp(3)),
-                          Padding(
-                            padding: EdgeInsets.symmetric(
-                                horizontal: SizeUtils().wp(8)),
-                            child: Text(
-                              Strings.appName,
-                              style: size48Regular(),
+                        SizedBox(height: SizeUtils().hp(2)),
+                        Padding(
+                          padding: EdgeInsets.symmetric(
+                              horizontal: SizeUtils().wp(8)),
+                          child: SizedBox(
+                            height: SizeUtils().hp(16),
+                            width: SizeUtils().wp(24),
+                            child: SvgPicture.asset(
+                              ImageString.otpVerificationSvg,
+                              fit: BoxFit.fill,
                             ),
                           ),
-                          SizedBox(height: SizeUtils().hp(2)),
-                          Padding(
-                            padding: EdgeInsets.symmetric(
-                                horizontal: SizeUtils().wp(8)),
-                            child: SizedBox(
-                              height: SizeUtils().hp(16),
-                              width: SizeUtils().wp(24),
-                              child: SvgPicture.asset(
-                                ImageString.otpVerificationSvg,
-                                fit: BoxFit.fill,
-                              ),
-                            ),
+                        ),
+                        SizedBox(height: SizeUtils().hp(7.5)),
+                        Padding(
+                          padding: EdgeInsets.symmetric(
+                              horizontal: SizeUtils().wp(8)),
+                          child: Text(
+                            Strings.otpScreenDetail,
+                            style: size20Regular(),
                           ),
-                          SizedBox(height: SizeUtils().hp(7.5)),
-                          Padding(
-                            padding: EdgeInsets.symmetric(
-                                horizontal: SizeUtils().wp(8)),
-                            child: Text(
-                              Strings.otpScreenDetail,
-                              style: size20Regular(),
-                            ),
+                        ),
+                        SizedBox(height: SizeUtils().hp(6)),
+                        Padding(
+                          padding: EdgeInsets.symmetric(
+                              horizontal: SizeUtils().wp(4)),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              _otpTextFillWidget(isUp: true, i: 0),
+                              _otpTextFillWidget(isUp: false, i: 1),
+                              _otpTextFillWidget(isUp: true, i: 2),
+                              _otpTextFillWidget(isUp: false, i: 3),
+                              _otpTextFillWidget(isUp: true, i: 4),
+                              _otpTextFillWidget(isUp: false, i: 5),
+                            ],
                           ),
-                          SizedBox(height: SizeUtils().hp(6)),
-                          Padding(
-                            padding: EdgeInsets.symmetric(
-                                horizontal: SizeUtils().wp(4)),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                _otpTextFillWidget(isUp: true, i: 0),
-                                _otpTextFillWidget(isUp: false, i: 1),
-                                _otpTextFillWidget(isUp: true, i: 2),
-                                _otpTextFillWidget(isUp: false, i: 3),
-                                _otpTextFillWidget(isUp: true, i: 4),
-                                _otpTextFillWidget(isUp: false, i: 5),
-                              ],
-                            ),
-                          ),
-                          SizedBox(height: SizeUtils().hp(6)),
-                          isResendAvailable
-                              ? GestureDetector(
-                                  onTap: isLoading
-                                      ? null
-                                      : () async {
-                                          // otpBloc.add(TimerStartEvent());
-                                          _resendOtp();
-                                        },
-                                  child: Text(
-                                    Strings.resendOtp,
-                                    style: size15Regular(),
-                                  ),
-                                )
-                              : Text.rich(
-                                  TextSpan(
-                                    children: [
-                                      TextSpan(
-                                        text: Strings.resendOtpDetail,
-                                        style: size15Regular(),
-                                      ),
-                                      TextSpan(
-                                        text: timerValue.isEmpty
-                                            ? Strings.twoMinute
-                                            : timerValue,
-                                        style: size15Regular(),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                          SizedBox(height: SizeUtils().hp(2)),
-                          Visibility(
-                            visible: isBackAvailable,
-                            child: GestureDetector(
-                              onTap: () {
-                                Navigator.of(context).pushNamedAndRemoveUntil(
-                                    Routes.loginScreen, (route) => false);
-                              },
-                              child: Text(
-                                Strings.backToLogin,
-                                style: size15Regular(),
-                              ),
-                            ),
-                          ),
-                          Visibility(
-                            visible: isBackAvailable,
-                            child: SizedBox(height: SizeUtils().hp(2)),
-                          ),
-                          InkWell(
-                            onTap: isLoading
-                                ? null
-                                : () {
-                                    if (checkValidation()) {
-                                      _verifyOtp(
-                                        _verificationToken,
-                                        _getCurrentPin(),
-                                      );
-                                    }
-                                  },
-                            child: Container(
-                              decoration: BoxDecoration(
-                                color: otpBoxColor,
-                                borderRadius: BorderRadius.circular(30),
-                              ),
-                              child: Padding(
-                                padding: EdgeInsets.symmetric(
-                                  horizontal: SizeUtils().hp(5),
-                                  vertical: SizeUtils().wp(3),
-                                ),
+                        ),
+                        SizedBox(height: SizeUtils().hp(6)),
+                        isResendAvailable
+                            ? GestureDetector(
+                                onTap: isLoading
+                                    ? null
+                                    : () async {
+                                        // otpBloc.add(TimerStartEvent());
+                                        _resendOtp();
+                                      },
                                 child: Text(
-                                  Strings.verify,
-                                  style: size19Regular(textColor: blackColor),
+                                  Strings.resendOtp,
+                                  style: size15Regular(),
                                 ),
+                              )
+                            : Text.rich(
+                                TextSpan(
+                                  children: [
+                                    TextSpan(
+                                      text: Strings.resendOtpDetail,
+                                      style: size15Regular(),
+                                    ),
+                                    TextSpan(
+                                      text: timerValue.isEmpty
+                                          ? Strings.twoMinute
+                                          : timerValue,
+                                      style: size15Regular(),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                        SizedBox(height: SizeUtils().hp(2)),
+                        Visibility(
+                          visible: isBackAvailable,
+                          child: GestureDetector(
+                            onTap: () {
+                              Navigator.of(context).pushNamedAndRemoveUntil(
+                                  Routes.loginScreen, (route) => false);
+                            },
+                            child: Text(
+                              Strings.backToLogin,
+                              style: size15Regular(),
+                            ),
+                          ),
+                        ),
+                        Visibility(
+                          visible: isBackAvailable,
+                          child: SizedBox(height: SizeUtils().hp(2)),
+                        ),
+                        InkWell(
+                          onTap: isLoading
+                              ? null
+                              : () {
+                                  if (checkValidation()) {
+                                    _verifyOtp(
+                                      _verificationToken,
+                                      _getCurrentPin(),
+                                    );
+                                  }
+                                },
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: otpBoxColor,
+                              borderRadius: BorderRadius.circular(30),
+                            ),
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(
+                                horizontal: SizeUtils().hp(5),
+                                vertical: SizeUtils().wp(3),
+                              ),
+                              child: Text(
+                                Strings.verify,
+                                style: size19Regular(textColor: blackColor),
                               ),
                             ),
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
-                    ProgressBarRound(isLoading: isLoading),
-                  ],
-                );
-              },
-            ),
+                  ),
+                  ProgressBarRound(isLoading: isLoading),
+                ],
+              );
+            },
           ),
         ),
       ),

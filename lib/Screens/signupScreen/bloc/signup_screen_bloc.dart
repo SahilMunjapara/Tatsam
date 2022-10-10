@@ -18,6 +18,10 @@ class SignupBloc extends Bloc<SignupScreenEvent, SignupScreenState> {
       yield SignupLoadingStoppedState(false);
     }
 
+    if (event is SignupPasswordEvent) {
+      yield SignupPasswordState();
+    }
+
     if (event is SignupUserEvent) {
       yield SignupLoadingStartedState(true);
       Resource resource = await signupScreenRepository.signup(event);

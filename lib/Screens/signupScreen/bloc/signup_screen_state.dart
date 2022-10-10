@@ -15,6 +15,8 @@ class SignupLoadingStoppedState extends SignupScreenState {
   SignupLoadingStoppedState(this.loaded);
 }
 
+class SignupPasswordState extends SignupScreenState {}
+
 class SignupUserState extends SignupScreenState {
   SignupResponseModel responseModel;
 

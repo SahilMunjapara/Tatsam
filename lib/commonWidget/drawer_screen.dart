@@ -13,7 +13,28 @@ class DrawerScreen extends StatefulWidget {
   State<DrawerScreen> createState() => _DrawerScreenState();
 }
 
-class _DrawerScreenState extends State<DrawerScreen> {
+class _DrawerScreenState extends State<DrawerScreen>
+    with SingleTickerProviderStateMixin {
+  Animation? animation;
+  AnimationController? animationController;
+
+  @override
+  void initState() {
+    super.initState();
+    animationController = AnimationController(
+        duration: const Duration(milliseconds: 900), vsync: this);
+    animation = Tween<double>(begin: -1.0, end: 0.0).animate(CurvedAnimation(
+        parent: animationController!, curve: Curves.fastOutSlowIn));
+
+    animationController!.forward();
+  }
+
+  @override
+  void dispose() {
+    animationController!.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     SizeUtils().init(context);
@@ -69,26 +90,36 @@ class _DrawerScreenState extends State<DrawerScreen> {
   Widget _drawerElementWidget(String imageName, String pageName) {
     return Column(
       children: [
-        Padding(
-          padding: EdgeInsets.symmetric(
-              vertical: SizeUtils().hp(1.2), horizontal: SizeUtils().wp(2)),
-          child: Row(
-            children: [
-              SizedBox(
-                height: SizeUtils().hp(3),
-                width: SizeUtils().wp(6),
-                child: SvgPicture.asset(imageName),
-              ),
-              SizedBox(width: SizeUtils().wp(2.5)),
-              Text(
-                pageName,
-                style: size18Regular().copyWith(
-                  fontFamily: Strings.fontFamily,
-                  fontWeight: FontWeight.w700,
+        AnimatedBuilder(
+          animation: animationController!,
+          builder: (BuildContext context, Widget? child) {
+            return Transform(
+              transform: Matrix4.translationValues(
+                  animation!.value * SizeUtils().screenWidth / 2, 0.0, 0.0),
+              child: Padding(
+                padding: EdgeInsets.symmetric(
+                    vertical: SizeUtils().hp(1.2),
+                    horizontal: SizeUtils().wp(2)),
+                child: Row(
+                  children: [
+                    SizedBox(
+                      height: SizeUtils().hp(3),
+                      width: SizeUtils().wp(6),
+                      child: SvgPicture.asset(imageName),
+                    ),
+                    SizedBox(width: SizeUtils().wp(2.5)),
+                    Text(
+                      pageName,
+                      style: size18Regular().copyWith(
+                        fontFamily: Strings.fontFamily,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ],
                 ),
               ),
-            ],
-          ),
+            );
+          },
         ),
         Divider(thickness: 2, color: whiteColor.withOpacity(0.32)),
       ],

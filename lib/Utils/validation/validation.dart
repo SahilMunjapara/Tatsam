@@ -43,4 +43,7 @@ class Validator {
       r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$');
 
   static final RegExp mobileCharacter = RegExp(r'(^(?:[+0]9)?[0-9]{10,12}$)');
+
+  static final RegExp passwordCharacter =
+      RegExp(r'(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*\W)');
 }

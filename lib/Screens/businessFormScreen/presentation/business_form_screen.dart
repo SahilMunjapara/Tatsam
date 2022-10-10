@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:tatsam/Screens/businessFormScreen/bloc/bloc.dart';
 import 'package:tatsam/Utils/constants/colors.dart';
 import 'package:tatsam/Utils/constants/image.dart';
 import 'package:tatsam/Utils/constants/strings.dart';
@@ -16,6 +18,7 @@ class BusinessFormScreen extends StatefulWidget {
 }
 
 class _BusinessFormScreenState extends State<BusinessFormScreen> {
+  BusinessFormBloc businessFormBloc = BusinessFormBloc();
   late TextEditingController nameController;
   late TextEditingController workNameController;
   late TextEditingController mobileNumberController;
@@ -48,79 +51,85 @@ class _BusinessFormScreenState extends State<BusinessFormScreen> {
         resizeToAvoidBottomInset: false,
         key: scaffoldState,
         drawer: const DrawerScreen(),
-        body: Padding(
-          padding: EdgeInsets.symmetric(horizontal: SizeUtils().wp(6)),
-          child: Column(
-            children: [
-              SizedBox(height: SizeUtils().hp(2)),
-              CustomAppBar(
-                title: Strings.businessFormScreenHeader,
-                onMenuTap: () => scaffoldState.currentState!.openDrawer(),
-              ),
-              SizedBox(height: SizeUtils().hp(4)),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+        body: BlocConsumer(
+          bloc: businessFormBloc,
+          listener: (context, state) {},
+          builder: (context, state) {
+            return Padding(
+              padding: EdgeInsets.symmetric(horizontal: SizeUtils().wp(6)),
+              child: Column(
                 children: [
-                  _textFormTitle(Strings.name),
-                  SizedBox(height: SizeUtils().hp(0.5)),
-                  _textFormBackground(
-                    child: CustomTextField(
-                      controller: nameController,
-                      cursorColor: blackColor,
-                      isBorder: false,
-                      textInputType: TextInputType.name,
-                      textInputAction: TextInputAction.done,
-                      style: size18Regular(textColor: blackColor),
-                    ),
-                  ),
                   SizedBox(height: SizeUtils().hp(2)),
-                  _textFormTitle(Strings.workName),
-                  SizedBox(height: SizeUtils().hp(0.5)),
-                  _textFormBackground(
-                    child: CustomTextField(
-                      controller: workNameController,
-                      cursorColor: blackColor,
-                      isBorder: false,
-                      textInputType: TextInputType.name,
-                      textInputAction: TextInputAction.done,
-                      style: size18Regular(textColor: blackColor),
-                    ),
+                  CustomAppBar(
+                    title: Strings.businessFormScreenHeader,
+                    onMenuTap: () => scaffoldState.currentState!.openDrawer(),
                   ),
-                  SizedBox(height: SizeUtils().hp(2)),
-                  _textFormTitle(Strings.mobileNo),
-                  SizedBox(height: SizeUtils().hp(0.5)),
-                  _textFormBackground(
-                    child: CustomTextField(
-                      controller: mobileNumberController,
-                      cursorColor: blackColor,
-                      isBorder: false,
-                      textInputType: TextInputType.phone,
-                      textInputAction: TextInputAction.done,
-                      style: size18Regular(textColor: blackColor),
-                    ),
-                  ),
-                  SizedBox(height: SizeUtils().hp(2)),
-                  Center(
-                    child: Container(
-                      decoration: BoxDecoration(
-                          color: whiteColor,
-                          borderRadius: BorderRadius.circular(30)),
-                      child: Padding(
-                        padding: EdgeInsets.symmetric(
-                          vertical: SizeUtils().hp(1),
-                          horizontal: SizeUtils().wp(3),
-                        ),
-                        child: Text(
-                          Strings.submit,
+                  SizedBox(height: SizeUtils().hp(4)),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _textFormTitle(Strings.name),
+                      SizedBox(height: SizeUtils().hp(0.5)),
+                      _textFormBackground(
+                        child: CustomTextField(
+                          controller: nameController,
+                          cursorColor: blackColor,
+                          isBorder: false,
+                          textInputType: TextInputType.name,
+                          textInputAction: TextInputAction.done,
                           style: size18Regular(textColor: blackColor),
                         ),
                       ),
-                    ),
-                  ),
+                      SizedBox(height: SizeUtils().hp(2)),
+                      _textFormTitle(Strings.workName),
+                      SizedBox(height: SizeUtils().hp(0.5)),
+                      _textFormBackground(
+                        child: CustomTextField(
+                          controller: workNameController,
+                          cursorColor: blackColor,
+                          isBorder: false,
+                          textInputType: TextInputType.name,
+                          textInputAction: TextInputAction.done,
+                          style: size18Regular(textColor: blackColor),
+                        ),
+                      ),
+                      SizedBox(height: SizeUtils().hp(2)),
+                      _textFormTitle(Strings.mobileNo),
+                      SizedBox(height: SizeUtils().hp(0.5)),
+                      _textFormBackground(
+                        child: CustomTextField(
+                          controller: mobileNumberController,
+                          cursorColor: blackColor,
+                          isBorder: false,
+                          textInputType: TextInputType.phone,
+                          textInputAction: TextInputAction.done,
+                          style: size18Regular(textColor: blackColor),
+                        ),
+                      ),
+                      SizedBox(height: SizeUtils().hp(2)),
+                      Center(
+                        child: Container(
+                          decoration: BoxDecoration(
+                              color: whiteColor,
+                              borderRadius: BorderRadius.circular(30)),
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(
+                              vertical: SizeUtils().hp(1),
+                              horizontal: SizeUtils().wp(3),
+                            ),
+                            child: Text(
+                              Strings.submit,
+                              style: size18Regular(textColor: blackColor),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  )
                 ],
-              )
-            ],
-          ),
+              ),
+            );
+          },
         ),
       ),
     );

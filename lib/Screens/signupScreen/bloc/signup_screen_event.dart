@@ -9,6 +9,8 @@ class SignupLoadingStartedEvent extends SignupScreenEvent {}
 
 class SignupLoadingStoppedEvent extends SignupScreenEvent {}
 
+class SignupPasswordEvent extends SignupScreenEvent {}
+
 class SignupUserEvent extends SignupScreenEvent {
   final String? userName;
   final String? userEmail;

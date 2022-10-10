@@ -29,10 +29,12 @@ dependencies:
   firebase_core: ^1.2.0
   firebase_auth: ^3.3.8
   cloud_firestore: ^3.1.7
+  firebase_messaging: ^11.2.7
 
 dependency_overrides:
   firebase_auth_platform_interface: 6.1.11
   cloud_firestore_platform_interface: 5.4.13
+  firebase_messaging_platform_interface: 3.1.6
 
 dev_dependencies:
   flutter_test:

@@ -28,6 +28,7 @@ class SignupScreenRepository implements ISignupScreenRepository {
       body['email'] = event.userEmail;
       body['password'] = event.userPassword;
       body['phone_no'] = event.userMobileNumber;
+      body['groupId'] = '1';
 
       var result = await NetworkAPICall().post(signupURL, body);
 

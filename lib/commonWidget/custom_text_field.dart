@@ -18,6 +18,9 @@ class CustomTextField extends StatelessWidget {
   final String hintText;
   final bool enabled;
   final Color cursorColor;
+  final bool obscureText;
+  final bool isObscureText;
+  final VoidCallback? onObscureTap;
 
   // ignore: use_key_in_widget_constructors
   const CustomTextField({
@@ -35,12 +38,16 @@ class CustomTextField extends StatelessWidget {
     this.hintText = '',
     this.enabled = true,
     this.cursorColor = whiteColor,
+    this.obscureText = false,
+    this.isObscureText = false,
+    this.onObscureTap,
   });
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
       enabled: enabled,
+      obscureText: obscureText,
       keyboardType: textInputType,
       autocorrect: false,
       cursorColor: cursorColor,
@@ -73,6 +80,15 @@ class CustomTextField extends StatelessWidget {
                 borderSide: BorderSide(color: Colors.white),
               )
             : InputBorder.none,
+        suffixIcon: isObscureText
+            ? GestureDetector(
+                onTap: onObscureTap,
+                child: obscureText
+                    ? const Icon(Icons.visibility_off,
+                        color: whiteColor, size: 18)
+                    : const Icon(Icons.visibility, color: whiteColor, size: 18),
+              )
+            : null,
       ),
       style: style,
     );

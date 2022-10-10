@@ -3,6 +3,9 @@ import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 import 'package:http/http.dart' as http;
+import 'package:tatsam/Utils/app_preferences/app_preferences.dart';
+import 'package:tatsam/Utils/app_preferences/prefrences_key.dart';
+import 'package:tatsam/Utils/constants/strings.dart';
 import 'package:tatsam/Utils/log_utils/log_util.dart';
 import 'package:tatsam/service/exception/exception.dart';
 import 'package:tatsam/service/network/network_string.dart';
@@ -29,12 +32,14 @@ class NetworkAPICall {
     try {
       late String fullURL;
       late Map<String, String> header;
+      late String token;
+      token = AppPreference().getStringData(PreferencesKey.userToken) ?? '';
       if (isBaseUrl) {
         fullURL = baseURL + url;
-        header = {};
+        header = {'Authorization': 'Bearer $token'};
       } else {
         fullURL = url;
-        header = headers!;
+        header = {'Authorization': 'Bearer $token'};
       }
 
       LogUtils.showLogs(message: fullURL, tag: 'API Url');
@@ -65,12 +70,14 @@ class NetworkAPICall {
     try {
       late String fullURL;
       late Map<String, String> header;
+      late String token;
+      token = AppPreference().getStringData(PreferencesKey.userToken) ?? '';
       if (isBaseUrl) {
         fullURL = baseURL + url;
-        header = {};
+        header = {'Authorization': 'Bearer $token'};
       } else {
         fullURL = url;
-        header = headers!;
+        header = {'Authorization': 'Bearer $token'};
       }
 
       LogUtils.showLogs(message: fullURL, tag: 'API Url');
@@ -95,10 +102,9 @@ class NetworkAPICall {
     final client = http.Client();
     try {
       String fullURL = baseURL + url;
-      Map<String, String> header = {
-        // 'Authorization': 'Bearer ',
-        // 'Content-Type': 'application/json'
-      };
+      late String token;
+      token = AppPreference().getStringData(PreferencesKey.userToken) ?? '';
+      Map<String, String> header = {'Authorization': 'Bearer $token'};
 
       LogUtils.showLogs(message: fullURL, tag: 'API Url');
       LogUtils.showLogs(message: '$header', tag: 'API header');
@@ -123,10 +129,9 @@ class NetworkAPICall {
     var client = http.Client();
     try {
       String fullURL = baseURL + url;
-      Map<String, String> header = {
-        // 'Authorization': 'Bearer ',
-        // 'Content-Type': 'application/json'
-      };
+      late String token;
+      token = AppPreference().getStringData(PreferencesKey.userToken) ?? '';
+      Map<String, String> header = {'Authorization': 'Bearer $token'};
 
       LogUtils.showLogs(message: fullURL, tag: 'API Url');
       LogUtils.showLogs(message: '$header', tag: 'API header');
@@ -149,7 +154,9 @@ class NetworkAPICall {
     var client = http.Client();
     try {
       String fullURL = baseURL + url;
-      Map<String, String> header = {};
+      late String token;
+      token = AppPreference().getStringData(PreferencesKey.userToken) ?? '';
+      Map<String, String> header = {'Authorization': 'Bearer $token'};
 
       LogUtils.showLogs(message: fullURL, tag: 'API Url');
       LogUtils.showLogs(message: header.toString(), tag: 'API header');
@@ -159,6 +166,8 @@ class NetworkAPICall {
           http.MultipartRequest('PATCH', Uri.parse(fullURL));
 
       request.fields.addAll(body);
+
+      request.headers.addAll(header);
 
       List<int> imageData = await image.readAsBytes();
 
@@ -190,9 +199,10 @@ class NetworkAPICall {
     var client = http.Client();
     try {
       String fullURL = baseURL + url;
-
+      late String token;
+      token = AppPreference().getStringData(PreferencesKey.userToken) ?? '';
       var header = {
-        'Authorization': 'Bearer ',
+        'Authorization': 'Bearer $token',
         'Content-Type': 'application/x-www-form-urlencoded'
       };
 
@@ -241,7 +251,14 @@ class NetworkAPICall {
           throw AppException.exceptionHandler(e, stackTrace);
         }
       case 400:
+        var json = jsonDecode(response.body);
+        throw AppException(
+            message: json['message'][1], errorCode: json['statusCode']);
       case 401:
+        throw AppException(
+          message: ResponseString.unauthorized,
+          errorCode: response.statusCode,
+        );
       case 500:
       case 502:
         throw AppException(

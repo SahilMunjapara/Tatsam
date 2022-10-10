@@ -1,72 +1,71 @@
 import 'dart:convert';
 
-SignupResponseModel signUpResponseModelFromJson(String str) =>
-    SignupResponseModel.fromJson(json.decode(str));
+LoginUserFetchResponseModel loginUserFetchResponseModelFromJson(String str) =>
+    LoginUserFetchResponseModel.fromJson(json.decode(str));
 
-String signUpResponseModelToJson(SignupResponseModel data) =>
+String loginUserFetchResponseModelToJson(LoginUserFetchResponseModel data) =>
     json.encode(data.toJson());
 
-class SignupResponseModel {
-  SignupResponseModel({
+class LoginUserFetchResponseModel {
+  LoginUserFetchResponseModel({
     this.status,
     this.message,
-    this.signupData,
+    this.loginUserData,
   });
 
   String? status;
   String? message;
-  List<SignupData>? signupData;
+  LoginUserData? loginUserData;
 
-  factory SignupResponseModel.fromJson(Map<String, dynamic> json) =>
-      SignupResponseModel(
+  factory LoginUserFetchResponseModel.fromJson(Map<String, dynamic> json) =>
+      LoginUserFetchResponseModel(
         status: json["status"],
         message: json["message"],
-        signupData: List<SignupData>.from(
-            json["data"].map((x) => SignupData.fromJson(x))),
+        loginUserData: LoginUserData.fromJson(json["data"]),
       );
 
   Map<String, dynamic> toJson() => {
         "status": status,
         "message": message,
-        "data": List<dynamic>.from(signupData!.map((x) => x.toJson())),
+        "data": loginUserData!.toJson(),
       };
 }
 
-class SignupData {
-  SignupData({
+class LoginUserData {
+  LoginUserData({
+    this.id,
     this.name,
     this.email,
     this.password,
     this.phoneNo,
-    this.groupId,
     this.imagePath,
-    this.id,
+    this.groupId,
     this.type,
     this.status,
     this.createdAt,
     this.updatedAt,
   });
 
+  int? id;
   String? name;
   String? email;
   String? password;
   String? phoneNo;
-  int? groupId;
   dynamic imagePath;
-  int? id;
+  int? groupId;
   String? type;
   String? status;
   DateTime? createdAt;
   DateTime? updatedAt;
 
-  factory SignupData.fromJson(Map<String, dynamic> json) => SignupData(
+  factory LoginUserData.fromJson(Map<String, dynamic> json) => LoginUserData(
+        id: json["id"],
         name: json["name"],
         email: json["email"],
         password: json["password"],
         phoneNo: json["phone_no"],
+        imagePath: json["image_path"] ?? '',
         groupId: json["groupId"],
-        imagePath: json["image_path"],
-        id: json["id"],
         type: json["type"],
         status: json["status"],
         createdAt: DateTime.parse(json["created_at"]),
@@ -74,13 +73,13 @@ class SignupData {
       );
 
   Map<String, dynamic> toJson() => {
+        "id": id,
         "name": name,
         "email": email,
         "password": password,
         "phone_no": phoneNo,
-        "groupId": groupId,
         "image_path": imagePath,
-        "id": id,
+        "groupId": groupId,
         "type": type,
         "status": status,
         "created_at": createdAt!.toIso8601String(),

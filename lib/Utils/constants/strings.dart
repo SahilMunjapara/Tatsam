@@ -7,6 +7,7 @@ class Strings {
   static const String newUser = 'New User? ';
   static const String mobileNo = 'Mobile No.';
   static const String email = 'Email';
+  static const String password = 'Password';
   static const String name = 'Name';
   static const String sign = 'Sign';
   static const String up = 'Up';
@@ -38,7 +39,7 @@ class Strings {
   static const String send = 'Send ➜';
   static const String drawerHome = 'Home';
   static const String drawerContacts = 'Contacts';
-  static const String drawerBusiness = 'Business'; 
+  static const String drawerBusiness = 'Business';
   static const String drawerUtilities = 'Utilites';
   static const String drawerInstant = 'Instant';
   static const String drawerNotification = 'Notification';
@@ -50,6 +51,8 @@ class ValidatorString {
   static const String validName = 'Enter valid Name.';
   static const String validMobile = 'Enter valid MobileNumber.';
   static const String validEmail = 'Enter valid Email.';
+  static const String validPassword =
+      'Enter valid Password.(Password must contain capital alphabets, digit and special character)';
   static const String otpRequired = 'Otp is required.';
   static const String validOtp = 'Enter Valid Otp.';
 }
@@ -68,6 +71,10 @@ class FirebaseErrorMessageString {
   static const String otpExpired = 'Otp Expired, Resend Otp.';
   static const String otpMismatch = 'Otp Mismatch, Enter Correct Otp.';
   static const String noInternet = 'No Internet Connection Available';
+}
+
+class ResponseString {
+  static const String unauthorized = 'Unauthorized';
 }
 
 List<String> userContactList = [
