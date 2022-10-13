@@ -1,4 +1,4 @@
-import 'package:tatsam/Screens/otpScreen/data/model/fetch_user_response_model.dart';
+import 'package:tatsam/Screens/loginScreen/data/model/login_user_fetch_response_model.dart';
 import 'package:tatsam/Screens/profileScreen/bloc/bloc.dart';
 import 'package:tatsam/Screens/profileScreen/data/model/profile_update_response_model.dart';
 import 'package:tatsam/service/network/model/resource_model.dart';
@@ -67,10 +67,10 @@ class ProfileScreenRepository implements IProfileScreenRepository {
     try {
       var body = <String, dynamic>{};
 
-      var result = await NetworkAPICall().get(userDetail + event.userPhone!);
+      var result = await NetworkAPICall().get(userDetail + event.userId!);
 
-      FetchUserResponseModel responseModel =
-          FetchUserResponseModel.fromJson(result);
+      LoginUserFetchResponseModel responseModel =
+          LoginUserFetchResponseModel.fromJson(result);
 
       resource = Resource(
         error: null,

@@ -104,6 +104,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     userId: state.responseModel.loginData!.id!.toString()));
               }
               if (state is LoginUserFetchState) {
+                log('SUCESSS');
                 _phoneVerification(
                   Strings.phoneCode.trim() +
                       state.responseModel.loginUserData!.phoneNo!,
@@ -476,6 +477,7 @@ class _LoginScreenState extends State<LoginScreen> {
           arguments: OtpScreenParam(
             tokenId: verificationId!,
             mobileNumber: phoneNumber,
+            userId: userId,
           ),
         );
       },

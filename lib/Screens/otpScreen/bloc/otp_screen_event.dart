@@ -35,6 +35,15 @@ class FetchUserEvent extends OtpScreenEvent {
   List<Object?> get props => [userPhone];
 }
 
+class UserDataFetchEvent extends OtpScreenEvent {
+  final String? userId;
+
+  UserDataFetchEvent({this.userId});
+
+  @override
+  List<Object?> get props => [userId];
+}
+
 class SignUpEvent extends OtpScreenEvent {
   final String? userName;
   final String? userEmail;

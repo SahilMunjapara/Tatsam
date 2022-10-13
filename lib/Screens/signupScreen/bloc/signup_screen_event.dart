@@ -16,15 +16,17 @@ class SignupUserEvent extends SignupScreenEvent {
   final String? userEmail;
   final String? userPassword;
   final String? userMobileNumber;
+  final String? deviceToken;
 
   SignupUserEvent({
     this.userName,
     this.userEmail,
     this.userPassword,
     this.userMobileNumber,
+    this.deviceToken,
   });
 
   @override
   List<Object?> get props =>
-      [userName, userEmail, userPassword, userMobileNumber];
+      [userName, userEmail, userPassword, userMobileNumber, deviceToken];
 }

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:tatsam/Screens/instantScreen/bloc/bloc.dart';
 import 'package:tatsam/Utils/constants/colors.dart';
 import 'package:tatsam/Utils/constants/image.dart';
@@ -110,46 +112,69 @@ class _InstantScreenState extends State<InstantScreen> {
         bottom: SizeUtils().hp(2),
         right: SizeUtils().wp(2),
       ),
-      child: Container(
-        decoration: BoxDecoration(
-          gradient: const LinearGradient(
-            colors: [boxGradient1, boxGradient2],
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-          ),
-          borderRadius: BorderRadius.circular(10),
-          border: Border.all(color: whiteColor),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      child: Slidable(
+        key: const ValueKey(0),
+        endActionPane: ActionPane(
+          motion: const ScrollMotion(),
+          extentRatio: 0.3,
           children: [
             Container(
-              height: SizeUtils().hp(8),
-              width: SizeUtils().wp(15),
+              height: SizeUtils().hp(9.5),
+              width: SizeUtils().wp(12),
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(5),
-                image: const DecorationImage(
-                  image: AssetImage(ImageString.person),
-                  fit: BoxFit.fill,
+                color: otpBoxColor.withOpacity(0.3),
+                borderRadius: const BorderRadius.only(
+                  topRight: Radius.circular(10),
+                  bottomRight: Radius.circular(10),
                 ),
               ),
-            ),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Nirav Patel',
-                  style: size14Regular(),
-                ),
-                SizedBox(height: SizeUtils().hp(1.5)),
-                Text(
-                  '9988665544',
-                  style: size12Regular(),
-                )
-              ],
+              child: Center(
+                child: SvgPicture.asset(ImageString.deleteSvg),
+              ),
             ),
           ],
+        ),
+        child: Container(
+          decoration: BoxDecoration(
+            gradient: const LinearGradient(
+              colors: [boxGradient1, boxGradient2],
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+            ),
+            borderRadius: BorderRadius.circular(10),
+            border: Border.all(color: whiteColor),
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Container(
+                height: SizeUtils().hp(8),
+                width: SizeUtils().wp(15),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(5),
+                  image: const DecorationImage(
+                    image: AssetImage(ImageString.person),
+                    fit: BoxFit.fill,
+                  ),
+                ),
+              ),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Nirav Patel',
+                    style: size14Regular(),
+                  ),
+                  SizedBox(height: SizeUtils().hp(1.5)),
+                  Text(
+                    '9988665544',
+                    style: size12Regular(),
+                  )
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );

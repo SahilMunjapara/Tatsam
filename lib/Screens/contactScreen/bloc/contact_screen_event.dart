@@ -5,4 +5,10 @@ abstract class ContactScreenEvent extends Equatable {
   List<Object?> get props => [];
 }
 
+class ContactLoadingStartEvent extends ContactScreenEvent {}
+
+class ContactLoadingEndEvent extends ContactScreenEvent {}
+
 class ContactSearchEvent extends ContactScreenEvent {}
+
+class ContactListEvent extends ContactScreenEvent {}

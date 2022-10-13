@@ -1,3 +1,4 @@
+import 'package:tatsam/Screens/loginScreen/data/model/login_user_fetch_response_model.dart';
 import 'package:tatsam/Screens/otpScreen/bloc/bloc.dart';
 import 'package:tatsam/Screens/otpScreen/data/model/fetch_user_response_model.dart';
 import 'package:tatsam/Screens/signupScreen/data/model/signup_response_model.dart';
@@ -9,6 +10,8 @@ abstract class IOtpScreenRepository {
   Future signup(SignUpEvent event);
 
   Future getUser(FetchUserEvent event);
+
+  Future userDataFetch(UserDataFetchEvent event);
 }
 
 class OtpScreenRepository implements IOtpScreenRepository {
@@ -65,6 +68,28 @@ class OtpScreenRepository implements IOtpScreenRepository {
       resource = Resource(
         error: null,
         data: responseModel,
+      );
+    } catch (e, stackTrace) {
+      resource = Resource(
+        error: e.toString(),
+        data: null,
+      );
+      print('ERROR: $e');
+      print('STACKTRACE: $stackTrace');
+    }
+    return resource;
+  }
+
+  @override
+  Future userDataFetch(UserDataFetchEvent event) async {
+    Resource? resource;
+    try {
+      var result = await NetworkAPICall().get(userFetchURL + event.userId!);
+      LoginUserFetchResponseModel responseModel =
+          LoginUserFetchResponseModel.fromJson(result);
+      resource = Resource(
+        data: responseModel,
+        error: null,
       );
     } catch (e, stackTrace) {
       resource = Resource(

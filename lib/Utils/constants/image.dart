@@ -43,4 +43,5 @@ class ImageString {
   static const String drawerContactSvg = "assets/svg/d_contact.svg";
   static const String drawerHomeSvg = "assets/svg/d_home.svg";
   static const String drawerSosSvg = "assets/svg/d_sos.svg";
+  static const String deleteSvg = "assets/svg/delete.svg";
 }

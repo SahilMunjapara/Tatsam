@@ -31,12 +31,12 @@ class ProfileEditEvent extends ProfileScreenEvent {
 }
 
 class ProfileDetailFetchEvent extends ProfileScreenEvent {
-  final String? userPhone;
+  final String? userId;
 
-  ProfileDetailFetchEvent({this.userPhone});
+  ProfileDetailFetchEvent({this.userId});
 
   @override
-  List<Object?> get props => [userPhone];
+  List<Object?> get props => [userId];
 }
 
 class ProfileupdatedEvent extends ProfileScreenEvent {

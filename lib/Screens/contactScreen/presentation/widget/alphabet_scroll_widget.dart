@@ -3,16 +3,18 @@ import 'dart:developer';
 import 'package:azlistview/azlistview.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:tatsam/Screens/contactScreen/data/model/user_response_model.dart';
 import 'package:tatsam/Screens/contactScreen/presentation/widget/inner_shadow.dart';
 import 'package:tatsam/Utils/constants/colors.dart';
 import 'package:tatsam/Utils/constants/image.dart';
 import 'package:tatsam/Utils/constants/textStyle.dart';
 import 'package:tatsam/Utils/size_utils/size_utils.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class AlphabetScrollWidget extends StatefulWidget {
   const AlphabetScrollWidget({required this.items, Key? key}) : super(key: key);
-  final List<String> items;
+  final List<UserResponseModel> items;
 
   @override
   State<AlphabetScrollWidget> createState() => _AlphabetScrollWidgetState();
@@ -27,9 +29,14 @@ class _AlphabetScrollWidgetState extends State<AlphabetScrollWidget> {
     initList(widget.items);
   }
 
-  void initList(List<String> items) {
+  void initList(List<UserResponseModel> items) {
     this.items = items
-        .map((item) => _AZItem(title: item, tag: item[0].toUpperCase()))
+        .map((item) => _AZItem(
+              title: item.name!,
+              tag: item.name![0].toUpperCase(),
+              phoneNumber: item.phoneNo!,
+              userId: item.id!.toString(),
+            ))
         .toList();
     SuspensionUtil.sortListBySuspensionTag(this.items);
     setState(() {});
@@ -91,7 +98,7 @@ class _AlphabetScrollWidgetState extends State<AlphabetScrollWidget> {
                       children: [
                         GestureDetector(
                           onTap: () {
-                            log('CALL NAVIGATION');
+                            launchUrl(Uri.parse('tel:${item.phoneNumber}'));
                           },
                           child: Icon(
                             Icons.phone,
@@ -161,7 +168,14 @@ class _AlphabetScrollWidgetState extends State<AlphabetScrollWidget> {
                 SizedBox(width: SizeUtils().wp(3)),
                 SvgPicture.asset(ImageString.homeSvg),
                 SizedBox(width: SizeUtils().wp(3)),
-                Text('1234', style: size18Regular()),
+                SizedBox(
+                  width: SizeUtils().wp(10),
+                  child: Text(
+                    item.phoneNumber,
+                    maxLines: 1,
+                    style: size18Regular(),
+                  ),
+                ),
                 SizedBox(width: SizeUtils().wp(5)),
               ],
             ),
@@ -175,10 +189,14 @@ class _AlphabetScrollWidgetState extends State<AlphabetScrollWidget> {
 class _AZItem extends ISuspensionBean {
   final String title;
   final String tag;
+  final String phoneNumber;
+  final String userId;
 
   _AZItem({
     required this.title,
     required this.tag,
+    required this.phoneNumber,
+    required this.userId,
   });
 
   @override

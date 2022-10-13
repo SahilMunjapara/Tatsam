@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tatsam/Navigation/routes_key.dart';
 import 'package:tatsam/Screens/businessFormScreen/presentation/business_form_screen.dart';
 import 'package:tatsam/Screens/businessScreen/presentation/business_screen.dart';
 import 'package:tatsam/Screens/contactProfileScreen/presentation/contact_profile_screen.dart';
 import 'package:tatsam/Screens/contactScreen/presentation/contact_screen.dart';
+import 'package:tatsam/Screens/dashboard/bloc/bloc.dart';
+import 'package:tatsam/Screens/dashboard/data/model/screen_enum.dart';
 import 'package:tatsam/Screens/dashboard/presentation/widget/bottomNavigationBar/circular_bottom_navigation.dart';
 import 'package:tatsam/Screens/instantScreen/presentation/instant_screen.dart';
 import 'package:tatsam/Screens/profileScreen/presentation/profile_screen.dart';
@@ -50,59 +53,81 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
       child: Scaffold(
         backgroundColor: backgroundColor,
         resizeToAvoidBottomInset: false,
-        body: Stack(
-          children: [
-            Positioned(
-              right: 0,
-              child: Image.asset(ImageString.topRightBlur),
-            ),
-            Positioned(
-              bottom: 0,
-              left: 0,
-              child: Image.asset(ImageString.bottomLeftBlur),
-            ),
-            Padding(
-              child: Column(children: [
-                Expanded(
-                  child: bodyContainer(),
+        body: BlocBuilder<DashboardBloc, DashboardState>(
+          builder: (context, state) {
+            return Stack(
+              children: [
+                Positioned(
+                  right: 0,
+                  child: Image.asset(ImageString.topRightBlur),
                 ),
-                Container(
-                  height: SizeUtils().hp(0.5),
-                  color: bottomBarColor,
+                Positioned(
+                  bottom: 0,
+                  left: 0,
+                  child: Image.asset(ImageString.bottomLeftBlur),
                 ),
-              ]),
-              padding: EdgeInsets.only(
-                bottom: SizeUtils().hp(8),
-              ),
-            ),
-            Align(alignment: Alignment.bottomCenter, child: bottomNav())
-          ],
+                Padding(
+                  child: Column(children: [
+                    Expanded(
+                      child: state is DashboardLandingScreenState
+                          ? bodyContainer(state.appScreens)
+                          : bodyContainer(
+                              context.read<DashboardBloc>().appScreens),
+                    ),
+                    Container(
+                      height: SizeUtils().hp(0.5),
+                      color: bottomBarColor,
+                    ),
+                  ]),
+                  padding: EdgeInsets.only(
+                    bottom: SizeUtils().hp(8),
+                  ),
+                ),
+                Align(alignment: Alignment.bottomCenter, child: bottomNav())
+              ],
+            );
+          },
         ),
       ),
     );
   }
 
-  Widget bodyContainer() {
+  Widget bodyContainer(AppScreens currentScreen) {
     Color? selectedColor = tabItems[selectedPos].circleColor;
     String slogan;
     switch (selectedPos) {
       case 0:
-        return const ContactProfileScreen();
-      // return const ProfileScreen();
+        switch (currentScreen) {
+          case AppScreens.profileScreen:
+            return const ProfileScreen();
+
+          case AppScreens.contactScreen:
+            return const ContactScreen();
+
+          case AppScreens.contactProfileScreen:
+            return const ContactProfileScreen();
+
+          case AppScreens.businessFormScreen:
+            return const BusinessFormScreen();
+
+          case AppScreens.utilitiesScreen:
+            return const UtilitiesScreen();
+
+          case AppScreens.instantScreen:
+            return const InstantScreen();
+
+          case AppScreens.businessScreen:
+            return const BusinessScreen();
+        }
       case 1:
-        // slogan = "Log Out";
-        // break;
-        // return const BusinessFormScreen();
-        return const InstantScreen();
+      // slogan = "Log Out";
+      // break;
       case 2:
-        // slogan = "Log Out";
-        // break;
-        return const BusinessScreen();
+      // slogan = "Log Out";
+      // break;
       case 3:
-        // slogan = "Log Out";
-        // break;
-        return const ContactScreen();
-      // return const UtilitiesScreen();
+      // slogan = "Log Out";
+      // break;
       default:
         slogan = "";
         break;

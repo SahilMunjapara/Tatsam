@@ -1,3 +1,4 @@
+import 'package:tatsam/Screens/loginScreen/data/model/login_user_fetch_response_model.dart';
 import 'package:tatsam/Screens/otpScreen/data/model/fetch_user_response_model.dart';
 import 'package:tatsam/Screens/signupScreen/data/model/signup_response_model.dart';
 import 'package:tatsam/service/exception/exception.dart';
@@ -33,6 +34,12 @@ class FetchUserState extends OtpScreenState {
   FetchUserResponseModel responseModel;
 
   FetchUserState(this.responseModel);
+}
+
+class UserDataFetchState extends OtpScreenState {
+  LoginUserFetchResponseModel responseModel;
+
+  UserDataFetchState(this.responseModel);
 }
 
 class SignupState extends OtpScreenState {

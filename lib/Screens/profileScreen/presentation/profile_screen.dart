@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -62,8 +63,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
         AppPreference().getStringData(PreferencesKey.userImage) ?? '';
 
     if (profileImageURL.isEmpty) {
-      profileBloc
-          .add(ProfileDetailFetchEvent(userPhone: mobileNumberController.text));
+      profileBloc.add(
+        ProfileDetailFetchEvent(
+          userId: AppPreference().getStringData(PreferencesKey.userId),
+        ),
+      );
     }
   }
 
@@ -170,29 +174,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
               }
             }
             if (state is ProfileDetailFetchState) {
-              if (state.responseModel.userData!.isEmpty) {
-                SnackbarWidget.showSnackbar(
-                  context: context,
-                  message: state.responseModel.message,
-                  duration: 1500,
-                );
-              } else {
-                _saveToLocalDB();
-                profileBloc.add(ProfileEditEvent(isProfileEdit: false));
-                AppPreference().setStringData(PreferencesKey.userImage,
-                    state.responseModel.userData!.first.imagePath!);
-                profileImageURL =
-                    state.responseModel.userData!.first.imagePath!;
-                if (state.responseModel.userData!.first.imagePath!.isEmpty) {
-                  profileFile = File('');
-                }
+              _saveToLocalDB();
+              profileBloc.add(ProfileEditEvent(isProfileEdit: false));
+              AppPreference().setStringData(PreferencesKey.userImage,
+                  state.responseModel.loginUserData!.imagePath!);
+              profileImageURL = state.responseModel.loginUserData!.imagePath!;
+              if (state.responseModel.loginUserData!.imagePath!.isEmpty) {
+                profileFile = File('');
               }
             }
             if (state is ProfileUpdatedState) {
               if (state.responseModel.status == 200) {
                 profileBloc.add(ProfileDetailFetchEvent(
-                  userPhone:
-                      AppPreference().getStringData(PreferencesKey.userPhone),
+                  userId: AppPreference().getStringData(PreferencesKey.userId),
                 ));
                 // _saveToLocalDB();
                 // profileBloc.add(ProfileEditEvent(isProfileEdit: false));

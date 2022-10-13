@@ -80,5 +80,18 @@ class OtpBloc extends Bloc<OtpScreenEvent, OtpScreenState> {
       }
       yield LoadingStoppedState(false);
     }
+
+    if (event is UserDataFetchEvent) {
+      yield LoadingStartedState(true);
+      Resource resource = await otpScreenRepository.userDataFetch(event);
+      if (resource.data != null) {
+        yield UserDataFetchState(resource.data);
+      } else {
+        yield OtpErrorState(
+          AppException.decodeExceptionData(jsonString: resource.error ?? ''),
+        );
+      }
+      yield LoadingStoppedState(false);
+    }
   }
 }

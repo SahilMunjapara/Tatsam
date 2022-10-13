@@ -86,6 +86,29 @@ class _OtpScreenState extends State<OtpScreen> {
               if (state is BackButtonState) {
                 isBackAvailable = true;
               }
+              if (state is UserDataFetchState) {
+                if (state.responseModel.status == 'success') {
+                  AppPreference().setBoolData(PreferencesKey.isLogin, true);
+                  AppPreference().setStringData(PreferencesKey.userName,
+                      state.responseModel.loginUserData!.name!);
+                  AppPreference().setStringData(PreferencesKey.userEmail,
+                      state.responseModel.loginUserData!.email!);
+                  AppPreference().setStringData(PreferencesKey.userPhone,
+                      state.responseModel.loginUserData!.phoneNo!);
+                  AppPreference().setStringData(PreferencesKey.userImage,
+                      state.responseModel.loginUserData!.imagePath!);
+                  AppPreference().setStringData(PreferencesKey.userId,
+                      state.responseModel.loginUserData!.id!.toString());
+                  Navigator.pushNamedAndRemoveUntil(
+                      context, Routes.dashboardScreen, (route) => false);
+                } else {
+                  SnackbarWidget.showSnackbar(
+                    context: context,
+                    message: state.responseModel.message,
+                    duration: 1500,
+                  );
+                }
+              }
               if (state is FetchUserState) {
                 if (state.responseModel.userData!.isEmpty) {
                   SnackbarWidget.showSnackbar(
@@ -105,21 +128,6 @@ class _OtpScreenState extends State<OtpScreen> {
                       state.responseModel.userData!.first.imagePath!);
                   AppPreference().setStringData(PreferencesKey.userId,
                       state.responseModel.userData!.first.id!.toString());
-                  Navigator.pushNamedAndRemoveUntil(
-                      context, Routes.dashboardScreen, (route) => false);
-                }
-              }
-              if (state is SignupState) {
-                if (state.responseModel.signupData!.isEmpty) {
-                  SnackbarWidget.showSnackbar(
-                    context: context,
-                    message: state.responseModel.message,
-                    duration: 1500,
-                  );
-                } else {
-                  AppPreference().setBoolData(PreferencesKey.isLogin, true);
-                  AppPreference().setStringData(PreferencesKey.userPhone,
-                      widget.otpScreenParam!.mobileNumber);
                   Navigator.pushNamedAndRemoveUntil(
                       context, Routes.dashboardScreen, (route) => false);
                 }
@@ -315,19 +323,20 @@ class _OtpScreenState extends State<OtpScreen> {
     );
     otpBloc.add(LoadingStartedEvent());
     await auth.signInWithCredential(credential).then((value) async {
-      final DatabaseService _databaseService = DatabaseService();
-      await _databaseService
-          .updateUserData(
-        uid: value.user!.uid.toString(),
-        userMobile: widget.otpScreenParam!.mobileNumber,
-      )
-          .then((value) {
-        otpBloc.add(
-          FetchUserEvent(
-            userPhone: widget.otpScreenParam!.mobileNumber.substring(3),
-          ),
-        );
-      });
+      otpBloc.add(UserDataFetchEvent(userId: widget.otpScreenParam!.userId));
+      // final DatabaseService _databaseService = DatabaseService();
+      // await _databaseService
+      //     .updateUserData(
+      //   uid: value.user!.uid.toString(),
+      //   userMobile: widget.otpScreenParam!.mobileNumber,
+      // )
+      //     .then((value) {
+      //   otpBloc.add(
+      //     FetchUserEvent(
+      //       userPhone: widget.otpScreenParam!.mobileNumber.substring(3),
+      //     ),
+      //   );
+      // });
     }).onError((error, stackTrace) {
       if (error is FirebaseAuthException) {
         FirebaseAuthException exception = error;

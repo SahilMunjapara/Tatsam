@@ -1,10 +1,13 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:tatsam/Navigation/routes_key.dart';
 import 'package:tatsam/Screens/otpScreen/data/model/otp_screen_param.dart';
 import 'package:tatsam/Screens/signupScreen/bloc/bloc.dart';
+import 'package:tatsam/Utils/app_preferences/app_preferences.dart';
+import 'package:tatsam/Utils/app_preferences/prefrences_key.dart';
 import 'package:tatsam/Utils/constants/colors.dart';
 import 'package:tatsam/Utils/constants/image.dart';
 import 'package:tatsam/Utils/constants/strings.dart';
@@ -28,6 +31,8 @@ class _SignupScreenState extends State<SignupScreen> {
   bool isLoading = false;
   bool obscureTextValue = true;
   SignupBloc signupBloc = SignupBloc();
+  late String deviceToken;
+  late String userId;
   late TextEditingController nameController;
   late TextEditingController mobileNumberController;
   late TextEditingController emailIdController;
@@ -44,6 +49,8 @@ class _SignupScreenState extends State<SignupScreen> {
 
   @override
   void initState() {
+    super.initState();
+    getDeviceToken();
     formKey = GlobalKey<FormState>();
     nameController = TextEditingController();
     mobileNumberController = TextEditingController();
@@ -53,7 +60,13 @@ class _SignupScreenState extends State<SignupScreen> {
     mobileNumberFocusNode = FocusNode();
     emailIdFocusNode = FocusNode();
     passwordFocusNode = FocusNode();
-    super.initState();
+  }
+
+  getDeviceToken() async {
+    deviceToken = '';
+    await FirebaseMessaging.instance.getToken().then((value) {
+      deviceToken = value!;
+    });
   }
 
   @override
@@ -92,15 +105,13 @@ class _SignupScreenState extends State<SignupScreen> {
                 obscureTextValue = !obscureTextValue;
               }
               if (state is SignupUserState) {
-                if (state.responseModel.signupData!.isEmpty) {
-                  SnackbarWidget.showSnackbar(
-                    context: context,
-                    message: state.responseModel.message,
-                    duration: 1500,
-                  );
-                } else {
+                if (state.responseModel.status == 'success') {
+                  AppPreference().setStringData(PreferencesKey.userToken,
+                      state.responseModel.signupData!.token!);
+                  userId = state.responseModel.signupData!.id!.toString();
                   _phoneVerification(
-                    Strings.phoneCode.trim() + mobileNumberController.text,
+                    Strings.phoneCode.trim() +
+                        state.responseModel.signupData!.phoneNo!,
                   );
                 }
               }
@@ -304,6 +315,7 @@ class _SignupScreenState extends State<SignupScreen> {
                                                             .trim(),
                                                     userPassword:
                                                         passwordController.text,
+                                                    deviceToken: deviceToken,
                                                   ),
                                                 );
                                               }
@@ -377,6 +389,7 @@ class _SignupScreenState extends State<SignupScreen> {
                                                       userPassword:
                                                           passwordController
                                                               .text,
+                                                      deviceToken: deviceToken,
                                                     ),
                                                   );
                                                 }
@@ -495,6 +508,7 @@ class _SignupScreenState extends State<SignupScreen> {
           arguments: OtpScreenParam(
             tokenId: verificationId!,
             mobileNumber: phoneNumber,
+            userId: userId,
           ),
         );
       },
