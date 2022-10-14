@@ -246,6 +246,13 @@ class NetworkAPICall {
         try {
           var json = jsonDecode(response.body);
           LogUtils.showLogs(message: '$json', tag: 'API RESPONSE');
+          if (json is List<dynamic>) {
+            return json;
+          }
+          if (json['status'] == 'error') {
+            throw AppException(
+                message: json['message'], errorCode: response.statusCode);
+          }
           return json;
         } catch (e, stackTrace) {
           throw AppException.exceptionHandler(e, stackTrace);

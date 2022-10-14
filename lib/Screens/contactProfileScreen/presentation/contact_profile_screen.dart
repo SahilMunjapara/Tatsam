@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:tatsam/Screens/contactProfileScreen/bloc/bloc.dart';
+import 'package:tatsam/Screens/dashboard/bloc/bloc.dart';
+import 'package:tatsam/Screens/loginScreen/data/model/login_user_fetch_response_model.dart';
 import 'package:tatsam/Utils/constants/colors.dart';
 import 'package:tatsam/Utils/constants/image.dart';
 import 'package:tatsam/Utils/constants/strings.dart';
@@ -8,6 +12,9 @@ import 'package:tatsam/Utils/size_utils/size_utils.dart';
 import 'package:tatsam/commonWidget/custom_appbar.dart';
 import 'package:tatsam/commonWidget/drawer_screen.dart';
 import 'package:tatsam/commonWidget/gradient_text.dart';
+import 'package:tatsam/commonWidget/progress_bar_round.dart';
+import 'package:tatsam/commonWidget/snackbar_widget.dart';
+import 'package:tatsam/service/exception/exception.dart';
 
 class ContactProfileScreen extends StatefulWidget {
   const ContactProfileScreen({Key? key}) : super(key: key);
@@ -17,11 +24,19 @@ class ContactProfileScreen extends StatefulWidget {
 }
 
 class _ContactProfileScreenState extends State<ContactProfileScreen> {
+  final ContactProfileBloc _contactProfileBloc = ContactProfileBloc();
   late GlobalKey<ScaffoldState> scaffoldState;
+  late LoginUserFetchResponseModel userProfileData;
+  bool isLoading = false;
 
   @override
   void initState() {
     super.initState();
+    userProfileData = LoginUserFetchResponseModel(status: 'blank');
+    _contactProfileBloc.add(
+      GetContactProfileEvent(
+          userId: context.read<DashboardBloc>().contactProfileSearchId),
+    );
     scaffoldState = GlobalKey<ScaffoldState>();
   }
 
@@ -33,91 +48,133 @@ class _ContactProfileScreenState extends State<ContactProfileScreen> {
         key: scaffoldState,
         backgroundColor: transparentColor,
         drawer: const DrawerScreen(),
-        body: Padding(
-          padding: EdgeInsets.symmetric(horizontal: SizeUtils().wp(6)),
-          child: Column(
-            children: [
-              SizedBox(height: SizeUtils().hp(2)),
-              CustomAppBar(
-                title: Strings.profile,
-                onMenuTap: () => scaffoldState.currentState!.openDrawer(),
-              ),
-              SizedBox(height: SizeUtils().hp(4)),
-              Expanded(
-                child: Stack(
-                  children: [
-                    Align(
-                      alignment: Alignment.topCenter,
-                      child: Container(
-                        height: SizeUtils().hp(12),
-                        width: SizeUtils().wp(22),
-                        decoration: const BoxDecoration(
-                          shape: BoxShape.circle,
-                          image: DecorationImage(
-                            image: AssetImage(
-                              ImageString.person,
-                            ),
-                            fit: BoxFit.fill,
-                          ),
-                          boxShadow: [
-                            BoxShadow(
-                              color: shadow1Color,
-                              offset: Offset(0, 4),
-                              blurRadius: 4,
-                            )
+        body: BlocConsumer(
+          bloc: _contactProfileBloc,
+          listener: (context, state) {
+            if (state is ContactProfileLoadingStartState) {
+              isLoading = true;
+            }
+            if (state is ContactProfileLoadingEndState) {
+              isLoading = false;
+            }
+            if (state is GetContactProfileState) {
+              userProfileData = state.responseModel;
+            }
+            if (state is ContactProfileErrorState) {
+              AppException exception = state.exception;
+              SnackbarWidget.showSnackbar(
+                context: context,
+                message: exception.message,
+                duration: 1500,
+              );
+            }
+          },
+          builder: (context, state) {
+            return Stack(
+              children: [
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: SizeUtils().wp(6)),
+                  child: Column(
+                    children: [
+                      SizedBox(height: SizeUtils().hp(2)),
+                      CustomAppBar(
+                        title: Strings.profile,
+                        onMenuTap: () =>
+                            scaffoldState.currentState!.openDrawer(),
+                      ),
+                      SizedBox(height: SizeUtils().hp(4)),
+                      Expanded(
+                        child: Stack(
+                          children: [
+                            userProfileData.status == 'blank'
+                                ? const SizedBox()
+                                : Align(
+                                    alignment: Alignment.topCenter,
+                                    child: Container(
+                                      height: SizeUtils().hp(12),
+                                      width: SizeUtils().wp(22),
+                                      decoration: const BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        image: DecorationImage(
+                                          image: AssetImage(
+                                            ImageString.person,
+                                          ),
+                                          fit: BoxFit.fill,
+                                        ),
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: shadow1Color,
+                                            offset: Offset(0, 4),
+                                            blurRadius: 4,
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                            userProfileData.status == 'blank'
+                                ? const SizedBox()
+                                : Padding(
+                                    padding: EdgeInsets.symmetric(
+                                      vertical: SizeUtils().hp(5),
+                                    ),
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        color: otpBoxColor.withOpacity(0.15),
+                                        borderRadius: BorderRadius.circular(30),
+                                      ),
+                                      child: Padding(
+                                        padding: EdgeInsets.symmetric(
+                                          horizontal: SizeUtils().wp(4),
+                                        ),
+                                        child: ListView(
+                                          physics:
+                                              const NeverScrollableScrollPhysics(),
+                                          children: [
+                                            SizedBox(height: SizeUtils().hp(9)),
+                                            _gradientTextWithShadow(
+                                              userProfileData
+                                                  .loginUserData!.name!,
+                                            ),
+                                            SizedBox(
+                                                height: SizeUtils().hp(4.5)),
+                                            _listComponentWidget(
+                                              ImageString.bagSvg,
+                                              'UI designer',
+                                            ),
+                                            _listComponentWidget(
+                                              ImageString.callSvg,
+                                              userProfileData
+                                                  .loginUserData!.phoneNo!,
+                                            ),
+                                            _listComponentWidget(
+                                              ImageString.emailSvg,
+                                              userProfileData
+                                                  .loginUserData!.email!,
+                                            ),
+                                            _listComponentWidget(
+                                              ImageString.phoneSvg,
+                                              userProfileData
+                                                  .loginUserData!.phoneNo!,
+                                            ),
+                                            _listComponentWidget(
+                                              ImageString.locationSvg,
+                                              '35, Tulshivan Row House',
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ),
                           ],
                         ),
                       ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.symmetric(
-                        vertical: SizeUtils().hp(5),
-                      ),
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: otpBoxColor.withOpacity(0.15),
-                          borderRadius: BorderRadius.circular(30),
-                        ),
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: SizeUtils().wp(4),
-                          ),
-                          child: ListView(
-                            physics: const NeverScrollableScrollPhysics(),
-                            children: [
-                              SizedBox(height: SizeUtils().hp(9)),
-                              _gradientTextWithShadow('Nirav Patel'),
-                              SizedBox(height: SizeUtils().hp(4.5)),
-                              _listComponentWidget(
-                                ImageString.bagSvg,
-                                'UI designer',
-                              ),
-                              _listComponentWidget(
-                                ImageString.callSvg,
-                                '9988776655',
-                              ),
-                              _listComponentWidget(
-                                ImageString.emailSvg,
-                                'niravp.divsinfotech@gmail.com',
-                              ),
-                              _listComponentWidget(
-                                ImageString.phoneSvg,
-                                '9988776655',
-                              ),
-                              _listComponentWidget(
-                                ImageString.locationSvg,
-                                '35, Tulshivan Row House',
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-            ],
-          ),
+                ProgressBarRound(isLoading: isLoading),
+              ],
+            );
+          },
         ),
       ),
     );
@@ -160,7 +217,7 @@ class _ContactProfileScreenState extends State<ContactProfileScreen> {
   Widget _gradientTextWithShadow(String name) {
     return Center(
       child: GradientText(
-        'Nirav patel',
+        name,
         style: size24Regular().copyWith(shadows: [
           Shadow(
             offset: const Offset(0, 4),

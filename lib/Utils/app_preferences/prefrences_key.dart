@@ -6,4 +6,6 @@ class PreferencesKey {
   static const String userImage = 'USER_IMAGE';
   static const String userId = 'USER_ID';
   static const String userToken = 'USER_TOKEN';
+  static const String groupId = 'GROUP_ID';
+  static const String userPassword = 'USER_PASSWORD';
 }

@@ -1,6 +1,8 @@
 import 'package:tatsam/Screens/loginScreen/data/model/login_user_fetch_response_model.dart';
 import 'package:tatsam/Screens/profileScreen/bloc/bloc.dart';
 import 'package:tatsam/Screens/profileScreen/data/model/profile_update_response_model.dart';
+import 'package:tatsam/Utils/app_preferences/app_preferences.dart';
+import 'package:tatsam/Utils/app_preferences/prefrences_key.dart';
 import 'package:tatsam/service/network/model/resource_model.dart';
 import 'package:tatsam/service/network/network.dart';
 import 'package:tatsam/service/network/network_string.dart';
@@ -29,8 +31,9 @@ class ProfileScreenRepository implements IProfileScreenRepository {
 
       body['name'] = event.userName!;
       body['email'] = event.userEmail!;
-      body['password'] = '111111';
+      body['password'] = AppPreference().getStringData(PreferencesKey.userPassword);
       body['phone_no'] = event.userPhone!;
+      body['groupId'] = event.groupId!;
 
       var result = event.userImage!.path.isNotEmpty
           ? await NetworkAPICall().multiPartPatchrequest(

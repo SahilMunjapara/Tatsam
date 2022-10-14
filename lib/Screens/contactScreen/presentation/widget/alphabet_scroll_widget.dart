@@ -2,9 +2,13 @@ import 'dart:developer';
 
 import 'package:azlistview/azlistview.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:tatsam/Screens/contactProfileScreen/bloc/bloc.dart';
 import 'package:tatsam/Screens/contactScreen/data/model/user_response_model.dart';
 import 'package:tatsam/Screens/contactScreen/presentation/widget/inner_shadow.dart';
+import 'package:tatsam/Screens/dashboard/bloc/bloc.dart';
+import 'package:tatsam/Screens/dashboard/data/model/screen_enum.dart';
 import 'package:tatsam/Utils/constants/colors.dart';
 import 'package:tatsam/Utils/constants/image.dart';
 import 'package:tatsam/Utils/constants/textStyle.dart';
@@ -49,12 +53,20 @@ class _AlphabetScrollWidgetState extends State<AlphabetScrollWidget> {
       itemCount: items.length,
       itemBuilder: (context, index) {
         final item = items[index];
-        return _buildListItem(item);
+        return _buildListItem(item, () {
+          DashboardBloc bloc = context.read<DashboardBloc>();
+          bloc.contactProfileSearchId = item.userId;
+          bloc.add(
+            DashboardLandingScreenEvent(
+              appScreens: AppScreens.contactProfileScreen,
+            ),
+          );
+        });
       },
     );
   }
 
-  Widget _buildListItem(_AZItem item) {
+  Widget _buildListItem(_AZItem item, VoidCallback onProfileTap) {
     return Padding(
       padding: EdgeInsets.symmetric(
         horizontal: SizeUtils().wp(5),
@@ -115,9 +127,7 @@ class _AlphabetScrollWidgetState extends State<AlphabetScrollWidget> {
                         ),
                         SizedBox(width: SizeUtils().wp(1)),
                         GestureDetector(
-                          onTap: () {
-                            log('VIEW PROFILE');
-                          },
+                          onTap: onProfileTap,
                           child: Icon(
                             Icons.person,
                             size: SizeUtils().hp(2.5),

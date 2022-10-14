@@ -11,7 +11,6 @@ import 'package:tatsam/Utils/constants/colors.dart';
 import 'package:tatsam/Utils/constants/image.dart';
 import 'package:tatsam/Utils/constants/strings.dart';
 import 'package:tatsam/Utils/constants/textStyle.dart';
-import 'package:tatsam/Utils/database/database_service.dart';
 import 'package:tatsam/Utils/log_utils/log_util.dart';
 import 'package:tatsam/Utils/size_utils/size_utils.dart';
 import 'package:tatsam/Utils/validation/validation.dart';
@@ -99,6 +98,10 @@ class _OtpScreenState extends State<OtpScreen> {
                       state.responseModel.loginUserData!.imagePath!);
                   AppPreference().setStringData(PreferencesKey.userId,
                       state.responseModel.loginUserData!.id!.toString());
+                  AppPreference().setStringData(PreferencesKey.groupId,
+                      state.responseModel.loginUserData!.groupId!.toString());
+                  AppPreference().setStringData(PreferencesKey.userPassword,
+                      widget.otpScreenParam!.password);
                   Navigator.pushNamedAndRemoveUntil(
                       context, Routes.dashboardScreen, (route) => false);
                 } else {

@@ -43,6 +43,7 @@ class Strings {
   static const String drawerUtilities = 'Utilites';
   static const String drawerInstant = 'Instant';
   static const String drawerNotification = 'Notification';
+  static const String drawerLogout = 'Log out';
 }
 
 class ValidatorString {

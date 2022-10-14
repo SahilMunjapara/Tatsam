@@ -44,6 +44,7 @@ class ProfileupdatedEvent extends ProfileScreenEvent {
   final String? userName;
   final String? userPhone;
   final String? userEmail;
+  final String? groupId;
   final File? userImage;
 
   ProfileupdatedEvent({
@@ -51,10 +52,11 @@ class ProfileupdatedEvent extends ProfileScreenEvent {
     this.userName,
     this.userPhone,
     this.userEmail,
+    this.groupId,
     this.userImage,
   });
 
   @override
   List<Object?> get props =>
-      [userId, userName, userPhone, userEmail, userImage];
+      [userId, userName, userPhone, userEmail, groupId, userImage];
 }

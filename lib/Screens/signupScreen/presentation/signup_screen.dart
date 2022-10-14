@@ -509,6 +509,7 @@ class _SignupScreenState extends State<SignupScreen> {
             tokenId: verificationId!,
             mobileNumber: phoneNumber,
             userId: userId,
+            password: passwordController.text,
           ),
         );
       },

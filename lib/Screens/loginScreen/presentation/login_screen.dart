@@ -477,6 +477,7 @@ class _LoginScreenState extends State<LoginScreen> {
           arguments: OtpScreenParam(
             tokenId: verificationId!,
             mobileNumber: phoneNumber,
+            password: passwordController.text,
             userId: userId,
           ),
         );

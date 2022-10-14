@@ -13,22 +13,21 @@ class ProfileUpdateResponseModel {
     this.profileData,
   });
 
-  int? status;
+  String? status;
   String? message;
-  List<ProfileData>? profileData;
+  ProfileData? profileData;
 
   factory ProfileUpdateResponseModel.fromJson(Map<String, dynamic> json) =>
       ProfileUpdateResponseModel(
         status: json["status"],
         message: json["message"],
-        profileData: List<ProfileData>.from(
-            json["data"].map((x) => ProfileData.fromJson(x))),
+        profileData: ProfileData.fromJson(json["data"]),
       );
 
   Map<String, dynamic> toJson() => {
         "status": status,
         "message": message,
-        "data": List<dynamic>.from(profileData!.map((x) => x.toJson())),
+        "data": profileData!.toJson(),
       };
 }
 

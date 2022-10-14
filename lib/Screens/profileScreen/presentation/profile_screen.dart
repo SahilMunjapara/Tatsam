@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -184,7 +183,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               }
             }
             if (state is ProfileUpdatedState) {
-              if (state.responseModel.status == 200) {
+              if (state.responseModel.status == 'success') {
                 profileBloc.add(ProfileDetailFetchEvent(
                   userId: AppPreference().getStringData(PreferencesKey.userId),
                 ));
@@ -257,6 +256,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                 AppPreference().getStringData(
                                               PreferencesKey.userId,
                                             ),
+                                            groupId: AppPreference()
+                                                .getStringData(
+                                                    PreferencesKey.groupId),
                                             userImage: profileFile,
                                           ),
                                         );

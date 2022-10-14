@@ -7,6 +7,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
       : super(DashboardLandingScreenState(AppScreens.profileScreen));
 
   AppScreens appScreens = AppScreens.profileScreen;
+  String contactProfileSearchId = '';
 
   @override
   Stream<DashboardState> mapEventToState(DashboardEvent event) async* {
