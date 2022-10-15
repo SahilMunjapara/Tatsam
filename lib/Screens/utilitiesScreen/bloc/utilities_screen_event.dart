@@ -6,3 +6,12 @@ abstract class UtilitiesScreenEvent extends Equatable {
 }
 
 class UtilitiesSearchEvent extends UtilitiesScreenEvent {}
+
+class UtilitiesListEvent extends UtilitiesScreenEvent {
+  final String? groupId;
+
+  UtilitiesListEvent({this.groupId});
+
+  @override
+  List<Object?> get props => [groupId];
+}

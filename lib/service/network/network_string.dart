@@ -8,3 +8,8 @@ const phoneCheckURL = 'user/phone/';
 const updateProfileURL = 'user/';
 const userFetchURL = 'user/';
 const getContactURL = 'user/';
+const getUtilitiesURL = 'utility/';
+
+class ApiResponse {
+  static const String success = 'success';
+}

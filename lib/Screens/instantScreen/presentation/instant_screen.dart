@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
@@ -11,6 +13,7 @@ import 'package:tatsam/Utils/size_utils/size_utils.dart';
 import 'package:tatsam/commonWidget/custom_appbar.dart';
 import 'package:tatsam/commonWidget/drawer_screen.dart';
 import 'package:tatsam/commonWidget/search_box_widget.dart';
+import 'package:tatsam/commonWidget/select_search_box_widget.dart';
 
 class InstantScreen extends StatefulWidget {
   const InstantScreen({Key? key}) : super(key: key);
@@ -24,6 +27,7 @@ class _InstantScreenState extends State<InstantScreen> {
   late GlobalKey<ScaffoldState> scaffoldState;
   late TextEditingController searchController;
   bool isSearching = false;
+  bool isSelectSearching = false;
 
   @override
   void initState() {
@@ -45,7 +49,10 @@ class _InstantScreenState extends State<InstantScreen> {
           bloc: instantBloc,
           listener: (context, state) {
             if (state is InstantSearchState) {
-              isSearching = !isSearching;
+              isSearching = state.isSearching;
+            }
+            if (state is InstantSelectSearchState) {
+              isSelectSearching = state.isSelectSearching;
             }
           },
           builder: (context, state) {
@@ -58,19 +65,25 @@ class _InstantScreenState extends State<InstantScreen> {
                     title: Strings.instantScreenHeader,
                     isSearch: isSearching,
                     onMenuTap: () => scaffoldState.currentState!.openDrawer(),
-                    onSearchTap: () => instantBloc.add(InstantSearchEvent()),
+                    onSearchTap: () => instantBloc
+                        .add(InstantSearchEvent(isSearching: !isSearching)),
                   ),
                   Visibility(
                     visible: isSearching,
                     child: SearchBoxWidget(
                       controller: searchController,
                       onSubmitted: (char) {
-                        instantBloc.add(InstantSearchEvent());
+                        instantBloc
+                            .add(InstantSearchEvent(isSearching: !isSearching));
                       },
                     ),
                   ),
                   SizedBox(height: SizeUtils().hp(4)),
                   _headerTwoOptionWidget(),
+                  Visibility(
+                    visible: isSelectSearching,
+                    child: const SelectSearchBoxWidget(),
+                  ),
                   SizedBox(height: SizeUtils().hp(2)),
                   SizedBox(
                     width: SizeUtils().screenWidth,
@@ -188,9 +201,28 @@ class _InstantScreenState extends State<InstantScreen> {
           Strings.urgentHelp,
           style: size20Regular(),
         ),
-        Text(
-          Strings.addPlus,
-          style: size20Regular(),
+        GestureDetector(
+          onTap: () {
+            instantBloc.add(
+              InstantSelectSearchEvent(isSelectSearching: !isSelectSearching),
+            );
+          },
+          child: isSelectSearching
+              ? Container(
+                  color: otpBoxColor.withOpacity(0.49),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 8.0, vertical: 2.0),
+                    child: Text(
+                      Strings.selectPlus,
+                      style: size20Regular(),
+                    ),
+                  ),
+                )
+              : Text(
+                  Strings.selectPlus,
+                  style: size20Regular(),
+                ),
         ),
       ],
     );

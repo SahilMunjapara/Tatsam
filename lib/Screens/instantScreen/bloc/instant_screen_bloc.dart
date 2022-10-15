@@ -7,7 +7,13 @@ class InstantBloc extends Bloc<InstantScreenEvent, InstantScreenState> {
   @override
   Stream<InstantScreenState> mapEventToState(InstantScreenEvent event) async* {
     if (event is InstantSearchEvent) {
-      yield InstantSearchState();
+      yield InstantSelectSearchState(false);
+      yield InstantSearchState(event.isSearching!);
+    }
+
+    if (event is InstantSelectSearchEvent) {
+      yield InstantSearchState(false);
+      yield InstantSelectSearchState(event.isSelectSearching!);
     }
   }
 }

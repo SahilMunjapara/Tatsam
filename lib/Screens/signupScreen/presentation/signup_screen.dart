@@ -19,6 +19,7 @@ import 'package:tatsam/commonWidget/custom_text_field.dart';
 import 'package:tatsam/commonWidget/progress_bar_round.dart';
 import 'package:tatsam/commonWidget/snackbar_widget.dart';
 import 'package:tatsam/service/exception/exception.dart';
+import 'package:tatsam/service/network/network_string.dart';
 
 class SignupScreen extends StatefulWidget {
   const SignupScreen({Key? key}) : super(key: key);
@@ -105,7 +106,7 @@ class _SignupScreenState extends State<SignupScreen> {
                 obscureTextValue = !obscureTextValue;
               }
               if (state is SignupUserState) {
-                if (state.responseModel.status == 'success') {
+                if (state.responseModel.status == ApiResponse.success) {
                   AppPreference().setStringData(PreferencesKey.userToken,
                       state.responseModel.signupData!.token!);
                   userId = state.responseModel.signupData!.id!.toString();
@@ -117,11 +118,7 @@ class _SignupScreenState extends State<SignupScreen> {
               }
               if (state is SignupErrorState) {
                 AppException exception = state.exception;
-                SnackbarWidget.showSnackbar(
-                  context: context,
-                  message: exception.message,
-                  duration: 1500,
-                );
+                SnackbarWidget.showBottomToast(message: exception.message);
               }
             },
             builder: (context, state) {

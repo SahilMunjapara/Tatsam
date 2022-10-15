@@ -5,4 +5,20 @@ abstract class InstantScreenEvent extends Equatable {
   List<Object?> get props => [];
 }
 
-class InstantSearchEvent extends InstantScreenEvent {}
+class InstantSearchEvent extends InstantScreenEvent {
+  final bool? isSearching;
+
+  InstantSearchEvent({this.isSearching});
+
+  @override
+  List<Object?> get props => [isSearching];
+}
+
+class InstantSelectSearchEvent extends InstantScreenEvent {
+  final bool? isSelectSearching;
+
+  InstantSelectSearchEvent({this.isSelectSearching});
+
+  @override
+  List<Object?> get props => [isSelectSearching];
+}

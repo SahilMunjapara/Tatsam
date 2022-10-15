@@ -151,11 +151,7 @@ class _LoginScreenState extends State<LoginScreen> {
               }
               if (state is LoginErrorState) {
                 AppException exception = state.exception;
-                SnackbarWidget.showSnackbar(
-                  context: context,
-                  message: exception.message,
-                  duration: 1500,
-                );
+                SnackbarWidget.showBottomToast(message: exception.message);
               }
             },
             builder: (context, state) {

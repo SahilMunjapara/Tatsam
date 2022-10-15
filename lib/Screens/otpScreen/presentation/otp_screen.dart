@@ -17,6 +17,7 @@ import 'package:tatsam/Utils/validation/validation.dart';
 import 'package:tatsam/commonWidget/progress_bar_round.dart';
 import 'package:tatsam/commonWidget/snackbar_widget.dart';
 import 'package:tatsam/service/exception/exception.dart';
+import 'package:tatsam/service/network/network_string.dart';
 
 class OtpScreen extends StatefulWidget {
   const OtpScreen({this.otpScreenParam, Key? key}) : super(key: key);
@@ -86,7 +87,7 @@ class _OtpScreenState extends State<OtpScreen> {
                 isBackAvailable = true;
               }
               if (state is UserDataFetchState) {
-                if (state.responseModel.status == 'success') {
+                if (state.responseModel.status == ApiResponse.success) {
                   AppPreference().setBoolData(PreferencesKey.isLogin, true);
                   AppPreference().setStringData(PreferencesKey.userName,
                       state.responseModel.loginUserData!.name!);
@@ -149,11 +150,7 @@ class _OtpScreenState extends State<OtpScreen> {
               }
               if (state is OtpErrorState) {
                 AppException exception = state.exception;
-                SnackbarWidget.showSnackbar(
-                  context: context,
-                  message: exception.message,
-                  duration: 1500,
-                );
+                SnackbarWidget.showBottomToast(message: exception.message);
               }
             },
             builder: (context, state) {

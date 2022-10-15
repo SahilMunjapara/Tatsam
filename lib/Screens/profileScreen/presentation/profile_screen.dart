@@ -21,6 +21,7 @@ import 'package:tatsam/commonWidget/drawer_screen.dart';
 import 'package:tatsam/commonWidget/progress_bar_round.dart';
 import 'package:tatsam/commonWidget/snackbar_widget.dart';
 import 'package:tatsam/service/exception/exception.dart';
+import 'package:tatsam/service/network/network_string.dart';
 import 'package:universal_io/io.dart' as IO;
 
 class ProfileScreen extends StatefulWidget {
@@ -183,7 +184,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               }
             }
             if (state is ProfileUpdatedState) {
-              if (state.responseModel.status == 'success') {
+              if (state.responseModel.status == ApiResponse.success) {
                 profileBloc.add(ProfileDetailFetchEvent(
                   userId: AppPreference().getStringData(PreferencesKey.userId),
                 ));
@@ -196,11 +197,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             }
             if (state is ProfileErrorState) {
               AppException exception = state.exception;
-              SnackbarWidget.showSnackbar(
-                context: context,
-                message: exception.message,
-                duration: 1500,
-              );
+              SnackbarWidget.showBottomToast(message: exception.message);
             }
           },
           child: BlocBuilder(

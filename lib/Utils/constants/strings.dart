@@ -35,7 +35,7 @@ class Strings {
   static const String workName = 'Work Name';
   static const String submit = 'Submit';
   static const String urgentHelp = 'Urgent Help';
-  static const String addPlus = 'Add  +';
+  static const String selectPlus = 'Select  +';
   static const String send = 'Send ➜';
   static const String drawerHome = 'Home';
   static const String drawerContacts = 'Contacts';

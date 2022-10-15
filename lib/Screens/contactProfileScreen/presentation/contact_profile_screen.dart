@@ -62,11 +62,8 @@ class _ContactProfileScreenState extends State<ContactProfileScreen> {
             }
             if (state is ContactProfileErrorState) {
               AppException exception = state.exception;
-              SnackbarWidget.showSnackbar(
-                context: context,
-                message: exception.message,
-                duration: 1500,
-              );
+
+              SnackbarWidget.showBottomToast(message: exception.message);
             }
           },
           builder: (context, state) {
