@@ -74,33 +74,39 @@ class _DrawerScreenState extends State<DrawerScreen>
                     _drawerElementWidget(
                       ImageString.drawerHomeSvg,
                       Strings.drawerHome,
-                      AppScreens.profileScreen,
+                      currentScreen: AppScreens.profileScreen,
                     ),
                     _drawerElementWidget(
                       ImageString.drawerContactSvg,
                       Strings.drawerContacts,
-                      AppScreens.contactScreen,
+                      currentScreen: AppScreens.contactScreen,
                     ),
                     _drawerElementWidget(
                       ImageString.drawerBagSvg,
                       Strings.drawerBusiness,
-                      AppScreens.businessScreen,
+                      currentScreen: AppScreens.businessScreen,
                     ),
                     _drawerElementWidget(
                       ImageString.drawerCallSvg,
                       Strings.drawerUtilities,
-                      AppScreens.utilitiesScreen,
+                      currentScreen: AppScreens.utilitiesScreen,
                     ),
                     _drawerElementWidget(
                       ImageString.drawerCallSvg,
                       Strings.drawerInstant,
-                      AppScreens.instantScreen,
+                      currentScreen: AppScreens.instantScreen,
                     ),
                     _drawerElementWidget(
                       ImageString.drawerBellSvg,
                       Strings.drawerNotification,
-                      AppScreens.contactProfileScreen,
+                      currentScreen: AppScreens.contactProfileScreen,
                     ),
+                    _drawerElementWidget(
+                      ImageString.drawerBagSvg,
+                      Strings.drawerLogout,
+                      tapOff: true,
+                      onTap: () => Navigator.pop(context),
+                    )
                   ],
                 ),
               ),
@@ -111,21 +117,23 @@ class _DrawerScreenState extends State<DrawerScreen>
     );
   }
 
-  Widget _drawerElementWidget(
-      String imageName, String pageName, AppScreens currentScreen) {
+  Widget _drawerElementWidget(String imageName, String pageName,
+      {AppScreens? currentScreen, VoidCallback? onTap, bool tapOff = false}) {
     return Column(
       children: [
         GestureDetector(
-          onTap: () {
-            if (context.read<DashboardBloc>().appScreens == currentScreen) {
-              Navigator.of(context).pop();
-            } else {
-              Navigator.of(context).pop();
-              context
-                  .read<DashboardBloc>()
-                  .add(DashboardLandingScreenEvent(appScreens: currentScreen));
-            }
-          },
+          onTap: tapOff
+              ? onTap
+              : () {
+                  if (context.read<DashboardBloc>().appScreens ==
+                      currentScreen) {
+                    Navigator.of(context).pop();
+                  } else {
+                    Navigator.of(context).pop();
+                    context.read<DashboardBloc>().add(
+                        DashboardLandingScreenEvent(appScreens: currentScreen));
+                  }
+                },
           child: AnimatedBuilder(
             animation: animationController!,
             builder: (BuildContext context, Widget? child) {

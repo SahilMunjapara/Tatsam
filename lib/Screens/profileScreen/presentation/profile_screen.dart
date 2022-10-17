@@ -16,6 +16,7 @@ import 'package:tatsam/Utils/log_utils/log_util.dart';
 import 'package:tatsam/Utils/size_utils/size_utils.dart';
 import 'package:tatsam/Utils/validation/validation.dart';
 import 'package:tatsam/commonWidget/custom_appbar.dart';
+import 'package:tatsam/commonWidget/custom_dialog_box_widget.dart';
 import 'package:tatsam/commonWidget/custom_text_field.dart';
 import 'package:tatsam/commonWidget/drawer_screen.dart';
 import 'package:tatsam/commonWidget/progress_bar_round.dart';
@@ -197,7 +198,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
             }
             if (state is ProfileErrorState) {
               AppException exception = state.exception;
-              SnackbarWidget.showBottomToast(message: exception.message);
+              if (ResponseString.unauthorized == exception.message) {
+                CustomDialog.showSessionExpiredDialog(context);
+              } else {
+                SnackbarWidget.showBottomToast(message: exception.message);
+              }
             }
           },
           child: BlocBuilder(

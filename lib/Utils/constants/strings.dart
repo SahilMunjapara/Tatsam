@@ -44,6 +44,9 @@ class Strings {
   static const String drawerInstant = 'Instant';
   static const String drawerNotification = 'Notification';
   static const String drawerLogout = 'Log out';
+  static const String sessionExpireTitle = 'Whoops, Your session has expired';
+  static const String sessionExpireSubtitle =
+      'Your session has expired due to your inactivity. No worry, simply login again';
 }
 
 class ValidatorString {

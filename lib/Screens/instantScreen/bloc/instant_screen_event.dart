@@ -22,3 +22,12 @@ class InstantSelectSearchEvent extends InstantScreenEvent {
   @override
   List<Object?> get props => [isSelectSearching];
 }
+
+class GetInstantEvent extends InstantScreenEvent {
+  final String? userId;
+
+  GetInstantEvent({this.userId});
+
+  @override
+  List<Object?> get props => [userId];
+}

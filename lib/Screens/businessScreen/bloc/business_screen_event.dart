@@ -6,3 +6,12 @@ abstract class BusinessScreenEvent extends Equatable {
 }
 
 class BusinessSearchEvent extends BusinessScreenEvent {}
+
+class GetBusinessEvent extends BusinessScreenEvent {
+  final String? groupId;
+
+  GetBusinessEvent({this.groupId});
+
+  @override
+  List<Object?> get props => [groupId];
+}

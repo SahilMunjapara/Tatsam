@@ -4,7 +4,6 @@ import 'package:azlistview/azlistview.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:tatsam/Screens/contactProfileScreen/bloc/bloc.dart';
 import 'package:tatsam/Screens/contactScreen/data/model/user_response_model.dart';
 import 'package:tatsam/Screens/contactScreen/presentation/widget/inner_shadow.dart';
 import 'package:tatsam/Screens/dashboard/bloc/bloc.dart';
@@ -40,6 +39,7 @@ class _AlphabetScrollWidgetState extends State<AlphabetScrollWidget> {
               tag: item.name![0].toUpperCase(),
               phoneNumber: item.phoneNo!,
               userId: item.id!.toString(),
+              userImage: item.imagePath!,
             ))
         .toList();
     SuspensionUtil.sortListBySuspensionTag(this.items);
@@ -153,12 +153,17 @@ class _AlphabetScrollWidgetState extends State<AlphabetScrollWidget> {
                   child: Container(
                     height: SizeUtils().hp(8),
                     width: SizeUtils().wp(14),
-                    decoration: const BoxDecoration(
+                    decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      image: DecorationImage(
-                        image: AssetImage(ImageString.person),
-                        fit: BoxFit.fill,
-                      ),
+                      image: item.userImage.isNotEmpty
+                          ? DecorationImage(
+                              image: NetworkImage(item.userImage),
+                              fit: BoxFit.fill,
+                            )
+                          : const DecorationImage(
+                              image: AssetImage(ImageString.person),
+                              fit: BoxFit.fill,
+                            ),
                     ),
                   ),
                 ),
@@ -201,12 +206,14 @@ class _AZItem extends ISuspensionBean {
   final String tag;
   final String phoneNumber;
   final String userId;
+  final String userImage;
 
   _AZItem({
     required this.title,
     required this.tag,
     required this.phoneNumber,
     required this.userId,
+    required this.userImage,
   });
 
   @override

@@ -14,6 +14,7 @@ import 'package:tatsam/Utils/constants/textStyle.dart';
 import 'package:tatsam/Utils/log_utils/log_util.dart';
 import 'package:tatsam/Utils/size_utils/size_utils.dart';
 import 'package:tatsam/Utils/validation/validation.dart';
+import 'package:tatsam/commonWidget/custom_dialog_box_widget.dart';
 import 'package:tatsam/commonWidget/progress_bar_round.dart';
 import 'package:tatsam/commonWidget/snackbar_widget.dart';
 import 'package:tatsam/service/exception/exception.dart';
@@ -150,7 +151,11 @@ class _OtpScreenState extends State<OtpScreen> {
               }
               if (state is OtpErrorState) {
                 AppException exception = state.exception;
-                SnackbarWidget.showBottomToast(message: exception.message);
+                if (exception.message == ResponseString.unauthorized) {
+                  CustomDialog.showSessionExpiredDialog(context);
+                } else {
+                  SnackbarWidget.showBottomToast(message: exception.message);
+                }
               }
             },
             builder: (context, state) {

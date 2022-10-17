@@ -7,9 +7,12 @@ import 'package:tatsam/Utils/constants/colors.dart';
 import 'package:tatsam/Utils/constants/strings.dart';
 import 'package:tatsam/Utils/size_utils/size_utils.dart';
 import 'package:tatsam/commonWidget/custom_appbar.dart';
+import 'package:tatsam/commonWidget/custom_dialog_box_widget.dart';
 import 'package:tatsam/commonWidget/drawer_screen.dart';
 import 'package:tatsam/commonWidget/progress_bar_round.dart';
 import 'package:tatsam/commonWidget/search_box_widget.dart';
+import 'package:tatsam/commonWidget/snackbar_widget.dart';
+import 'package:tatsam/service/exception/exception.dart';
 
 class ContactScreen extends StatefulWidget {
   const ContactScreen({Key? key}) : super(key: key);
@@ -57,7 +60,15 @@ class _ContactScreenState extends State<ContactScreen> {
               isLoading = false;
             }
             if (state is ContactListState) {
-              userList.addAll(state.responsemodel);
+              userList = state.responsemodel;
+            }
+            if (state is ContactErrorState) {
+              AppException exception = state.exception;
+              if (ResponseString.unauthorized == exception.message) {
+                CustomDialog.showSessionExpiredDialog(context);
+              } else {
+                SnackbarWidget.showBottomToast(message: exception.message);
+              }
             }
           },
           builder: (context, state) {

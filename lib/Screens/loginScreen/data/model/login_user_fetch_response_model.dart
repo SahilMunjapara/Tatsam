@@ -51,7 +51,7 @@ class LoginUserData {
   String? email;
   String? password;
   String? phoneNo;
-  dynamic imagePath;
+  String? imagePath;
   int? groupId;
   String? type;
   String? status;

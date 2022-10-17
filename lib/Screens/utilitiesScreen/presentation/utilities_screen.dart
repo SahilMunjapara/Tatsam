@@ -11,6 +11,7 @@ import 'package:tatsam/Utils/constants/strings.dart';
 import 'package:tatsam/Utils/constants/textStyle.dart';
 import 'package:tatsam/Utils/size_utils/size_utils.dart';
 import 'package:tatsam/commonWidget/custom_appbar.dart';
+import 'package:tatsam/commonWidget/custom_dialog_box_widget.dart';
 import 'package:tatsam/commonWidget/drawer_screen.dart';
 import 'package:tatsam/commonWidget/progress_bar_round.dart';
 import 'package:tatsam/commonWidget/search_box_widget.dart';
@@ -71,7 +72,11 @@ class _UtilitiesScreenState extends State<UtilitiesScreen> {
             }
             if (state is UtilitiesErrorState) {
               AppException exception = state.exception;
-              SnackbarWidget.showBottomToast(message: exception.message);
+              if (exception.message == ResponseString.unauthorized) {
+                CustomDialog.showSessionExpiredDialog(context);
+              } else {
+                SnackbarWidget.showBottomToast(message: exception.message);
+              }
             }
           },
           builder: (context, state) {

@@ -10,6 +10,7 @@ import 'package:tatsam/Utils/constants/strings.dart';
 import 'package:tatsam/Utils/constants/textStyle.dart';
 import 'package:tatsam/Utils/size_utils/size_utils.dart';
 import 'package:tatsam/commonWidget/custom_appbar.dart';
+import 'package:tatsam/commonWidget/custom_dialog_box_widget.dart';
 import 'package:tatsam/commonWidget/drawer_screen.dart';
 import 'package:tatsam/commonWidget/gradient_text.dart';
 import 'package:tatsam/commonWidget/progress_bar_round.dart';
@@ -63,7 +64,11 @@ class _ContactProfileScreenState extends State<ContactProfileScreen> {
             if (state is ContactProfileErrorState) {
               AppException exception = state.exception;
 
-              SnackbarWidget.showBottomToast(message: exception.message);
+              if (exception.message == ResponseString.unauthorized) {
+                CustomDialog.showSessionExpiredDialog(context);
+              } else {
+                SnackbarWidget.showBottomToast(message: exception.message);
+              }
             }
           },
           builder: (context, state) {
@@ -90,15 +95,24 @@ class _ContactProfileScreenState extends State<ContactProfileScreen> {
                                     child: Container(
                                       height: SizeUtils().hp(12),
                                       width: SizeUtils().wp(22),
-                                      decoration: const BoxDecoration(
+                                      decoration: BoxDecoration(
                                         shape: BoxShape.circle,
-                                        image: DecorationImage(
-                                          image: AssetImage(
-                                            ImageString.person,
-                                          ),
-                                          fit: BoxFit.fill,
-                                        ),
-                                        boxShadow: [
+                                        image: userProfileData.loginUserData!
+                                                .imagePath!.isNotEmpty
+                                            ? DecorationImage(
+                                                image: NetworkImage(
+                                                  userProfileData.loginUserData!
+                                                      .imagePath!,
+                                                ),
+                                                fit: BoxFit.fill,
+                                              )
+                                            : const DecorationImage(
+                                                image: AssetImage(
+                                                  ImageString.person,
+                                                ),
+                                                fit: BoxFit.fill,
+                                              ),
+                                        boxShadow: const [
                                           BoxShadow(
                                             color: shadow1Color,
                                             offset: Offset(0, 4),
