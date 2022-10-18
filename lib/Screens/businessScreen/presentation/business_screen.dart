@@ -31,13 +31,14 @@ class _BusinessScreenState extends State<BusinessScreen> {
   late GlobalKey<ScaffoldState> scaffoldState;
   late TextEditingController searchController;
   late List<BusinessData> businessList;
+  late List<BusinessData> searchBusinessList;
   bool isSearching = false;
   bool isLoading = true;
 
   @override
   void initState() {
     super.initState();
-    businessList = [];
+    businessList = searchBusinessList = [];
     businessBloc.add(
       GetBusinessEvent(
         groupId: AppPreference().getStringData(PreferencesKey.groupId),
@@ -45,6 +46,12 @@ class _BusinessScreenState extends State<BusinessScreen> {
     );
     searchController = TextEditingController();
     scaffoldState = GlobalKey<ScaffoldState>();
+  }
+
+  @override
+  void dispose() {
+    searchController.dispose();
+    super.dispose();
   }
 
   @override
@@ -70,6 +77,19 @@ class _BusinessScreenState extends State<BusinessScreen> {
             }
             if (state is GetBusinessState) {
               businessList = state.responseModel.businessData!;
+            }
+            if (state is BusinessSearchCharState) {
+              searchBusinessList.clear();
+              searchBusinessList = businessList
+                  .where((business) =>
+                      business.businessName!
+                          .toUpperCase()
+                          .contains(state.searchChar.toUpperCase()) ||
+                      business.user!.name!
+                          .toUpperCase()
+                          .contains(state.searchChar.toUpperCase()) ||
+                      business.user!.phoneNo!.contains(state.searchChar))
+                  .toList();
             }
             if (state is BusinessErrorState) {
               AppException exception = state.exception;
@@ -100,9 +120,12 @@ class _BusinessScreenState extends State<BusinessScreen> {
                         visible: isSearching,
                         child: SearchBoxWidget(
                           controller: searchController,
-                          onSubmitted: (char) {
-                            businessBloc.add(BusinessSearchEvent());
-                          },
+                          onChanged: (char) => businessBloc
+                              .add(BusinessSearchCharEvent(searchChar: char)),
+                          onSubmitted: (char) =>
+                              businessBloc.add(BusinessSearchEvent()),
+                          onSearchDoneTap: () =>
+                              businessBloc.add(BusinessSearchEvent()),
                         ),
                       ),
                       SizedBox(height: SizeUtils().hp(4)),
@@ -118,24 +141,53 @@ class _BusinessScreenState extends State<BusinessScreen> {
                                 child: Padding(
                                   padding: EdgeInsets.only(
                                       bottom: SizeUtils().hp(5)),
-                                  child: ListView.builder(
-                                    itemCount: businessList.length,
-                                    itemBuilder: (context, index) {
-                                      return _businessProfileWidget(
-                                        businessImage: businessList[index]
-                                            .businessType!
-                                            .imagePath,
-                                        userName:
-                                            businessList[index].user!.name,
-                                        businessName:
-                                            businessList[index].businessName,
-                                        userPhoneNumber:
-                                            businessList[index].user!.phoneNo,
-                                        userImage: businessList[index]
-                                            .businessImagePath!,
-                                      );
-                                    },
-                                  ),
+                                  child: searchBusinessList.isEmpty
+                                      ? ListView.builder(
+                                          itemCount: businessList.length,
+                                          itemBuilder: (context, index) {
+                                            return _businessProfileWidget(
+                                              businessImage: businessList[index]
+                                                  .businessType!
+                                                  .imagePath,
+                                              userName: businessList[index]
+                                                  .user!
+                                                  .name,
+                                              businessName: businessList[index]
+                                                  .businessName,
+                                              userPhoneNumber:
+                                                  businessList[index]
+                                                      .user!
+                                                      .phoneNo,
+                                              userImage: businessList[index]
+                                                  .businessImagePath!,
+                                            );
+                                          },
+                                        )
+                                      : ListView.builder(
+                                          itemCount: searchBusinessList.length,
+                                          itemBuilder: (context, index) {
+                                            return _businessProfileWidget(
+                                              businessImage:
+                                                  searchBusinessList[index]
+                                                      .businessType!
+                                                      .imagePath,
+                                              userName:
+                                                  searchBusinessList[index]
+                                                      .user!
+                                                      .name,
+                                              businessName:
+                                                  searchBusinessList[index]
+                                                      .businessName,
+                                              userPhoneNumber:
+                                                  businessList[index]
+                                                      .user!
+                                                      .phoneNo,
+                                              userImage:
+                                                  searchBusinessList[index]
+                                                      .businessImagePath!,
+                                            );
+                                          },
+                                        ),
                                 ),
                               ),
                             ),

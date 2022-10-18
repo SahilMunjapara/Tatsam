@@ -11,6 +11,7 @@ import 'package:tatsam/Utils/constants/image.dart';
 import 'package:tatsam/Utils/constants/strings.dart';
 import 'package:tatsam/Utils/constants/textStyle.dart';
 import 'package:tatsam/Utils/size_utils/size_utils.dart';
+import 'package:tatsam/commonWidget/custom_dialog_box_widget.dart';
 
 class DrawerScreen extends StatefulWidget {
   const DrawerScreen({Key? key}) : super(key: key);
@@ -105,7 +106,7 @@ class _DrawerScreenState extends State<DrawerScreen>
                       ImageString.drawerBagSvg,
                       Strings.drawerLogout,
                       tapOff: true,
-                      onTap: () => Navigator.pop(context),
+                      onTap: () => CustomDialog.displayDialog(context),
                     )
                   ],
                 ),

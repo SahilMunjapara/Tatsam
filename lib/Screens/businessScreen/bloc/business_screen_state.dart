@@ -16,6 +16,11 @@ class GetBusinessState extends BusinessScreenState {
   GetBusinessState(this.responseModel);
 }
 
+class BusinessSearchCharState extends BusinessScreenState {
+  String searchChar;
+  BusinessSearchCharState(this.searchChar);
+}
+
 class BusinessErrorState extends BusinessScreenState {
   AppException exception;
   BusinessErrorState(this.exception);

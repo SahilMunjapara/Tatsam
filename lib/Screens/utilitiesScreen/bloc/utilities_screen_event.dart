@@ -15,3 +15,12 @@ class UtilitiesListEvent extends UtilitiesScreenEvent {
   @override
   List<Object?> get props => [groupId];
 }
+
+class UtilitiesSearchCharEvent extends UtilitiesScreenEvent {
+  final String? searchChar;
+
+  UtilitiesSearchCharEvent({this.searchChar});
+
+  @override
+  List<Object?> get props => [searchChar];
+}

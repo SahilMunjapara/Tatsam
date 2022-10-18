@@ -11,6 +11,7 @@ const getContactURL = 'user/';
 const getUtilitiesURL = 'utility/';
 const getInstantURL = 'instant/';
 const getAllBusinessURL = 'business/';
+const deleteInstantURL = 'instant/delete/';
 
 class ApiResponse {
   static const String success = 'success';

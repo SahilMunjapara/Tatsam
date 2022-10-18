@@ -1,4 +1,7 @@
+import 'package:tatsam/Screens/contactScreen/data/model/user_response_model.dart';
+import 'package:tatsam/Screens/instantScreen/bloc/bloc.dart';
 import 'package:tatsam/Screens/instantScreen/bloc/instant_screen_event.dart';
+import 'package:tatsam/Screens/instantScreen/data/model/instant_delete_response_model.dart';
 import 'package:tatsam/Screens/instantScreen/data/model/instant_response_model.dart';
 import 'package:tatsam/service/network/model/resource_model.dart';
 import 'package:tatsam/service/network/network.dart';
@@ -6,6 +9,10 @@ import 'package:tatsam/service/network/network_string.dart';
 
 abstract class IInstantrepository {
   Future getInstantList(GetInstantEvent event) async {}
+
+  Future deleteInstant(InstantDeleteEvent event) async {}
+
+  Future getAllContact(GetAllContactEvent event) async {}
 }
 
 class InstantRepository implements IInstantrepository {
@@ -25,6 +32,49 @@ class InstantRepository implements IInstantrepository {
 
       InstantResponseModel responseModel =
           InstantResponseModel.fromJson(result);
+
+      resource = Resource(data: responseModel, error: null);
+    } catch (e, stackTrace) {
+      resource = Resource(
+        error: e.toString(),
+        data: null,
+      );
+      print('ERROR: $e');
+      print('STACKTRACE: $stackTrace');
+    }
+    return resource;
+  }
+
+  @override
+  Future deleteInstant(InstantDeleteEvent event) async {
+    Resource? resource;
+    try {
+      var result =
+          await NetworkAPICall().delete(deleteInstantURL + event.instantId!);
+
+      InstantDeleteResponseModel responseModel =
+          InstantDeleteResponseModel.fromJson(result);
+
+      resource = Resource(data: responseModel, error: null);
+    } catch (e, stackTrace) {
+      resource = Resource(
+        error: e.toString(),
+        data: null,
+      );
+      print('ERROR: $e');
+      print('STACKTRACE: $stackTrace');
+    }
+    return resource;
+  }
+
+  @override
+  Future getAllContact(GetAllContactEvent event) async {
+    Resource? resource;
+    try {
+      List<dynamic> result = await NetworkAPICall().get(userFetchURL);
+
+      List<UserResponseModel> responseModel =
+          result.map((user) => UserResponseModel.fromJson(user)).toList();
 
       resource = Resource(data: responseModel, error: null);
     } catch (e, stackTrace) {

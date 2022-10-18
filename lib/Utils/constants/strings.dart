@@ -3,6 +3,7 @@ class Strings {
   static const String fontFamily = 'AlegreyaSans';
   static const String secondFontFamily = 'JosefinSans';
   static const String login = 'Login';
+  static const String logout = 'Logout';
   static const String signup = 'Sign Up';
   static const String newUser = 'New User? ';
   static const String mobileNo = 'Mobile No.';
@@ -47,6 +48,14 @@ class Strings {
   static const String sessionExpireTitle = 'Whoops, Your session has expired';
   static const String sessionExpireSubtitle =
       'Your session has expired due to your inactivity. No worry, simply login again';
+  static const String logoutSubtitle = 'Are you sure, do you want to logout?';
+  static const String yes = 'Yes';
+  static const String no = 'No';
+  static const String instantDeleteMsg = 'Instant Deleted Successfully';
+  static const String only5InstnatAllow =
+      'At Time you can select only 5 Instant';
+  static const String alreadySelected =
+      'You Already Select this instant select another Instant';
 }
 
 class ValidatorString {

@@ -12,3 +12,12 @@ class ContactLoadingEndEvent extends ContactScreenEvent {}
 class ContactSearchEvent extends ContactScreenEvent {}
 
 class ContactListEvent extends ContactScreenEvent {}
+
+class ContactWithCharSearchEvent extends ContactScreenEvent {
+  final String? searchChar;
+
+  ContactWithCharSearchEvent({this.searchChar});
+
+  @override
+  List<Object?> get props => [searchChar];
+}

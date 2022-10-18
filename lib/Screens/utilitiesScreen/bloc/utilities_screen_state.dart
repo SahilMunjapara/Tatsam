@@ -16,6 +16,11 @@ class UtilitiesListState extends UtilitiesScreenState {
   UtilitiesListState(this.responseModel);
 }
 
+class UtilitiesSearchCharState extends UtilitiesScreenState {
+  String searchChar;
+  UtilitiesSearchCharState(this.searchChar);
+}
+
 class UtilitiesErrorState extends UtilitiesScreenState {
   AppException exception;
   UtilitiesErrorState(this.exception);

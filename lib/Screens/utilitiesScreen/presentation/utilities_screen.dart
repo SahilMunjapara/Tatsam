@@ -17,6 +17,7 @@ import 'package:tatsam/commonWidget/progress_bar_round.dart';
 import 'package:tatsam/commonWidget/search_box_widget.dart';
 import 'package:tatsam/commonWidget/snackbar_widget.dart';
 import 'package:tatsam/service/exception/exception.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class UtilitiesScreen extends StatefulWidget {
   const UtilitiesScreen({Key? key}) : super(key: key);
@@ -29,14 +30,15 @@ class _UtilitiesScreenState extends State<UtilitiesScreen> {
   final UtilitiesBloc utilitiesBloc = UtilitiesBloc();
   late GlobalKey<ScaffoldState> scaffoldState;
   late TextEditingController searchController;
-  late UtilitiesResponseModel utilitiesList;
+  late UtilitiesResponseModel utilitiesList, searchUtilitiesList;
   bool isSearching = false;
   bool isLoading = true;
 
   @override
   void initState() {
     super.initState();
-    utilitiesList = UtilitiesResponseModel(utilitiesData: []);
+    utilitiesList =
+        searchUtilitiesList = UtilitiesResponseModel(utilitiesData: []);
     utilitiesBloc.add(
       UtilitiesListEvent(
         groupId: AppPreference().getStringData(PreferencesKey.groupId),
@@ -44,6 +46,12 @@ class _UtilitiesScreenState extends State<UtilitiesScreen> {
     );
     searchController = TextEditingController();
     scaffoldState = GlobalKey<ScaffoldState>();
+  }
+
+  @override
+  void dispose() {
+    searchController.dispose();
+    super.dispose();
   }
 
   @override
@@ -69,6 +77,16 @@ class _UtilitiesScreenState extends State<UtilitiesScreen> {
             }
             if (state is UtilitiesLoadingEndState) {
               isLoading = false;
+            }
+            if (state is UtilitiesSearchCharState) {
+              searchUtilitiesList.utilitiesData!.clear();
+              searchUtilitiesList.utilitiesData = utilitiesList.utilitiesData!
+                  .where((utility) =>
+                      utility.name!
+                          .toUpperCase()
+                          .contains(state.searchChar.toUpperCase()) ||
+                      utility.phoneNo!.contains(state.searchChar))
+                  .toList();
             }
             if (state is UtilitiesErrorState) {
               AppException exception = state.exception;
@@ -99,9 +117,12 @@ class _UtilitiesScreenState extends State<UtilitiesScreen> {
                         visible: isSearching,
                         child: SearchBoxWidget(
                           controller: searchController,
-                          onSubmitted: (char) {
-                            utilitiesBloc.add(UtilitiesSearchEvent());
-                          },
+                          onChanged: (char) => utilitiesBloc
+                              .add(UtilitiesSearchCharEvent(searchChar: char)),
+                          onSubmitted: (char) =>
+                              utilitiesBloc.add(UtilitiesSearchEvent()),
+                          onSearchDoneTap: () =>
+                              utilitiesBloc.add(UtilitiesSearchEvent()),
                         ),
                       ),
                       SizedBox(height: SizeUtils().hp(4)),
@@ -114,14 +135,26 @@ class _UtilitiesScreenState extends State<UtilitiesScreen> {
                           },
                           child: Padding(
                             padding: EdgeInsets.only(bottom: SizeUtils().hp(5)),
-                            child: ListView.builder(
-                              itemCount: utilitiesList.utilitiesData!.length,
-                              itemBuilder: (context, index) {
-                                return _utilitiesCardWidget(
-                                  utilitiesList.utilitiesData![index],
-                                );
-                              },
-                            ),
+                            child: searchUtilitiesList.utilitiesData!.isEmpty
+                                ? ListView.builder(
+                                    itemCount:
+                                        utilitiesList.utilitiesData!.length,
+                                    itemBuilder: (context, index) {
+                                      return _utilitiesCardWidget(
+                                        utilitiesList.utilitiesData![index],
+                                      );
+                                    },
+                                  )
+                                : ListView.builder(
+                                    itemCount: searchUtilitiesList
+                                        .utilitiesData!.length,
+                                    itemBuilder: (context, index) {
+                                      return _utilitiesCardWidget(
+                                        searchUtilitiesList
+                                            .utilitiesData![index],
+                                      );
+                                    },
+                                  ),
                           ),
                         ),
                       ),
@@ -140,56 +173,59 @@ class _UtilitiesScreenState extends State<UtilitiesScreen> {
   Widget _utilitiesCardWidget(UtilitiesData utilitiesData) {
     return Padding(
       padding: EdgeInsets.symmetric(vertical: SizeUtils().hp(1)),
-      child: Container(
-        decoration: BoxDecoration(
-          gradient: const LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [boxGradient1, boxGradient2],
+      child: GestureDetector(
+        onTap: () => launchUrl(Uri.parse('tel:${utilitiesData.phoneNo}')),
+        child: Container(
+          decoration: BoxDecoration(
+            gradient: const LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [boxGradient1, boxGradient2],
+            ),
+            borderRadius: BorderRadius.circular(10),
+            border: Border.all(color: whiteColor, width: 0.8),
           ),
-          borderRadius: BorderRadius.circular(10),
-          border: Border.all(color: whiteColor, width: 0.8),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Column(
-              children: [
-                Row(
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.all(SizeUtils().wp(2.5)),
-                      child: SizedBox(
-                        height: SizeUtils().hp(8),
-                        width: SizeUtils().wp(15),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(5),
-                          child: Image.asset(
-                            ImageString.person,
-                            fit: BoxFit.fill,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Column(
+                children: [
+                  Row(
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.all(SizeUtils().wp(2.5)),
+                        child: SizedBox(
+                          height: SizeUtils().hp(8),
+                          width: SizeUtils().wp(15),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(5),
+                            child: Image.asset(
+                              ImageString.person,
+                              fit: BoxFit.fill,
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          utilitiesData.name!,
-                          style: size12Regular().copyWith(
-                            fontWeight: FontWeight.w600,
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            utilitiesData.name!,
+                            style: size12Regular().copyWith(
+                              fontWeight: FontWeight.w600,
+                            ),
                           ),
-                        ),
-                        SizedBox(height: SizeUtils().hp(3)),
-                        Text(utilitiesData.phoneNo!, style: size12Regular()),
-                      ],
-                    ),
-                  ],
-                ),
-              ],
-            ),
-            Column(),
-          ],
+                          SizedBox(height: SizeUtils().hp(3)),
+                          Text(utilitiesData.phoneNo!, style: size12Regular()),
+                        ],
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              Column(),
+            ],
+          ),
         ),
       ),
     );

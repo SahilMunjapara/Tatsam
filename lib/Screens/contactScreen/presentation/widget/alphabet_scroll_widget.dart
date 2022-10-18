@@ -48,6 +48,7 @@ class _AlphabetScrollWidgetState extends State<AlphabetScrollWidget> {
 
   @override
   Widget build(BuildContext context) {
+    initList(widget.items);
     return AzListView(
       data: items,
       itemCount: items.length,

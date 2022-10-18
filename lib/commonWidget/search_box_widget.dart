@@ -9,6 +9,8 @@ class SearchBoxWidget extends StatelessWidget {
   const SearchBoxWidget(
       {this.controller,
       this.onSubmitted,
+      this.onChanged,
+      this.onSearchDoneTap,
       this.leftPadding = 12.0,
       this.rightPadding = 0.0,
       Key? key})
@@ -16,6 +18,8 @@ class SearchBoxWidget extends StatelessWidget {
 
   final TextEditingController? controller;
   final Function(String)? onSubmitted;
+  final Function(String)? onChanged;
+  final VoidCallback? onSearchDoneTap;
   final double leftPadding;
   final double rightPadding;
 
@@ -59,14 +63,18 @@ class SearchBoxWidget extends StatelessWidget {
                     textInputAction: TextInputAction.done,
                     style: size14Regular(textColor: blackColor),
                     onFieldSubmitted: (value) => onSubmitted!(value),
+                    onChange: (value) => onChanged!(value),
                   ),
                 ),
               ),
             ),
-            Padding(
-              padding: EdgeInsets.symmetric(
-                  horizontal: SizeUtils().wp(2), vertical: SizeUtils().hp(2)),
-              child: Image.asset(ImageString.searchDone),
+            GestureDetector(
+              onTap: onSearchDoneTap,
+              child: Padding(
+                padding: EdgeInsets.symmetric(
+                    horizontal: SizeUtils().wp(2), vertical: SizeUtils().hp(2)),
+                child: Image.asset(ImageString.searchDone),
+              ),
             )
           ],
         ),

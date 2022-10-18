@@ -15,3 +15,12 @@ class GetBusinessEvent extends BusinessScreenEvent {
   @override
   List<Object?> get props => [groupId];
 }
+
+class BusinessSearchCharEvent extends BusinessScreenEvent {
+  final String? searchChar;
+
+  BusinessSearchCharEvent({this.searchChar});
+
+  @override
+  List<Object?> get props => [searchChar];
+}

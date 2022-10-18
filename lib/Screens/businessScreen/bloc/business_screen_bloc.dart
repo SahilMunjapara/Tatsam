@@ -16,6 +16,10 @@ class BusinessBloc extends Bloc<BusinessScreenEvent, BusinessScreenState> {
       yield BusinessSearchState();
     }
 
+    if (event is BusinessSearchCharEvent) {
+      yield BusinessSearchCharState(event.searchChar!);
+    }
+
     if (event is GetBusinessEvent) {
       yield BusinessLoadingStartState();
       Resource resource = await _businessRepository.getBusiness(event);

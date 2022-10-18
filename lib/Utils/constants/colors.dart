@@ -24,3 +24,4 @@ const Color drawerStartColor = Color(0XFF241252);
 const Color drawerEndColor = Color(0XFF1A686A);
 const Color callBoxGradient1 = Color(0XFF007477);
 const Color callBoxGradient2 = Color(0XFF2F3746);
+const Color dividerColor = Color(0XFF979292);

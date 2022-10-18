@@ -16,6 +16,11 @@ class ContactListState extends ContactScreenState {
   ContactListState(this.responsemodel);
 }
 
+class ContactWithCharSearchState extends ContactScreenState {
+  String searchChar;
+  ContactWithCharSearchState(this.searchChar);
+}
+
 class ContactErrorState extends ContactScreenState {
   AppException exception;
   ContactErrorState(this.exception);

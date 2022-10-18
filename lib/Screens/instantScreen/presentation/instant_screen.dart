@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_slidable/flutter_slidable.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:tatsam/Screens/contactScreen/data/model/user_response_model.dart';
 import 'package:tatsam/Screens/instantScreen/bloc/bloc.dart';
 import 'package:tatsam/Screens/instantScreen/data/model/instant_response_model.dart';
+import 'package:tatsam/Screens/instantScreen/presentation/widgets/instant_card_widget.dart';
 import 'package:tatsam/Utils/app_preferences/app_preferences.dart';
 import 'package:tatsam/Utils/app_preferences/prefrences_key.dart';
 import 'package:tatsam/Utils/constants/colors.dart';
-import 'package:tatsam/Utils/constants/image.dart';
 import 'package:tatsam/Utils/constants/strings.dart';
 import 'package:tatsam/Utils/constants/textStyle.dart';
 import 'package:tatsam/Utils/size_utils/size_utils.dart';
@@ -31,7 +30,8 @@ class _InstantScreenState extends State<InstantScreen> {
   InstantBloc instantBloc = InstantBloc();
   late GlobalKey<ScaffoldState> scaffoldState;
   late TextEditingController searchController;
-  late List<InstantData> instantUsers = [];
+  late List<InstantData> instantUsers, searchInstantUsers;
+  late List<UserResponseModel> allUserList, selectedUserList;
   bool isSearching = false;
   bool isSelectSearching = false;
   bool isLoading = true;
@@ -39,12 +39,20 @@ class _InstantScreenState extends State<InstantScreen> {
   @override
   void initState() {
     super.initState();
-    instantUsers = [];
+    instantUsers = searchInstantUsers = [];
+    allUserList = selectedUserList = [];
+    instantBloc.add(GetAllContactEvent());
     instantBloc.add(GetInstantEvent(
       userId: AppPreference().getStringData(PreferencesKey.userId),
     ));
     searchController = TextEditingController();
     scaffoldState = GlobalKey<ScaffoldState>();
+  }
+
+  @override
+  void dispose() {
+    searchController.dispose();
+    super.dispose();
   }
 
   @override
@@ -71,8 +79,35 @@ class _InstantScreenState extends State<InstantScreen> {
             if (state is InstantSelectSearchState) {
               isSelectSearching = state.isSelectSearching;
             }
+            if (state is GetAllContactState) {
+              allUserList = state.responseModel;
+            }
             if (state is GetInstantState) {
               instantUsers = state.responseModel.instantData!;
+            }
+            if (state is InstantSearchCharState) {
+              searchInstantUsers.clear();
+              searchInstantUsers = instantUsers
+                  .where((instant) =>
+                      instant.name!
+                          .toUpperCase()
+                          .contains(state.searchChar.toUpperCase()) ||
+                      instant.phoneNo!.contains(state.searchChar))
+                  .toList();
+            }
+            if (state is SelectedInstantUserState) {
+              selectedUserList.add(state.responseModel);
+            }
+            if (state is SelectedInstantRemoveState) {
+              selectedUserList
+                  .removeWhere((user) => user.id == state.responseModel.id);
+            }
+            if (state is InstantDeleteState) {
+              searchInstantUsers.removeWhere((instant) =>
+                  instant.instantId!.id == int.parse(state.response.userId!));
+              instantUsers.removeWhere((instant) =>
+                  instant.instantId!.id == int.parse(state.response.userId!));
+              SnackbarWidget.showBottomToast(message: Strings.instantDeleteMsg);
             }
             if (state is InstantErrorState) {
               AppException exception = state.exception;
@@ -88,65 +123,83 @@ class _InstantScreenState extends State<InstantScreen> {
               children: [
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: SizeUtils().wp(6)),
-                  child: ListView(
-                    children: [
-                      SizedBox(height: SizeUtils().hp(2)),
-                      CustomAppBar(
-                        title: Strings.instantScreenHeader,
-                        isSearch: isSearching,
-                        onMenuTap: () =>
-                            scaffoldState.currentState!.openDrawer(),
-                        onSearchTap: () => instantBloc
-                            .add(InstantSearchEvent(isSearching: !isSearching)),
-                      ),
-                      Visibility(
-                        visible: isSearching,
-                        child: SearchBoxWidget(
-                          controller: searchController,
-                          onSubmitted: (char) {
-                            instantBloc.add(
-                                InstantSearchEvent(isSearching: !isSearching));
-                          },
+                  child: NotificationListener<OverscrollIndicatorNotification>(
+                    onNotification: (overScroll) {
+                      overScroll.disallowIndicator();
+                      return false;
+                    },
+                    child: ListView(
+                      children: [
+                        SizedBox(height: SizeUtils().hp(2)),
+                        CustomAppBar(
+                          title: Strings.instantScreenHeader,
+                          isSearch: isSearching,
+                          onMenuTap: () =>
+                              scaffoldState.currentState!.openDrawer(),
+                          onSearchTap: () => instantBloc.add(
+                              InstantSearchEvent(isSearching: !isSearching)),
                         ),
-                      ),
-                      SizedBox(height: SizeUtils().hp(4)),
-                      _headerTwoOptionWidget(),
-                      Visibility(
-                        visible: isSelectSearching,
-                        child: const SelectSearchBoxWidget(),
-                      ),
-                      SizedBox(height: SizeUtils().hp(2)),
-                      instantUsers.isEmpty
-                          ? const SizedBox()
-                          : SizedBox(
-                              width: SizeUtils().screenWidth,
-                              height: SizeUtils().hp(55),
-                              child: NotificationListener<
-                                  OverscrollIndicatorNotification>(
-                                onNotification: (overScroll) {
-                                  overScroll.disallowIndicator();
-                                  return false;
-                                },
-                                child: GridView.builder(
-                                  gridDelegate:
-                                      const SliverGridDelegateWithFixedCrossAxisCount(
-                                    crossAxisCount: 2,
-                                    childAspectRatio: 1.8,
-                                  ),
-                                  itemCount: instantUsers.length,
-                                  itemBuilder: (context, index) {
-                                    return _contactDetailsWidget(
-                                        instantUsers[index]);
-                                  },
-                                ),
-                              ),
-                            ),
-                      SizedBox(height: SizeUtils().hp(2)),
-                      Visibility(
-                        visible: !isLoading && instantUsers.isNotEmpty,
-                        child: _sendButton(),
-                      )
-                    ],
+                        Visibility(
+                          visible: isSearching,
+                          child: SearchBoxWidget(
+                            controller: searchController,
+                            onChanged: (char) => instantBloc
+                                .add(InstantSearchCharEvent(searchChar: char)),
+                            onSubmitted: (char) => instantBloc.add(
+                                InstantSearchEvent(isSearching: !isSearching)),
+                            onSearchDoneTap: () => instantBloc.add(
+                                InstantSearchEvent(isSearching: !isSearching)),
+                          ),
+                        ),
+                        SizedBox(height: SizeUtils().hp(4)),
+                        _headerTwoOptionWidget(),
+                        Visibility(
+                          visible: isSelectSearching,
+                          child: SelectSearchBoxWidget(
+                            userList: allUserList,
+                            selectedUserList: selectedUserList,
+                            onAddTap: () {
+                              instantBloc.add(
+                                InstantSelectSearchEvent(
+                                    isSelectSearching: false),
+                              );
+                              if (selectedUserList.isNotEmpty) {}
+                            },
+                            onDeleteTap: (user) {
+                              instantBloc.add(
+                                SelectedInstantRemoveEvent(
+                                    userResponseModel: user),
+                              );
+                            },
+                            onUserTap: (user) {
+                              if (selectedUserList.length == 5) {
+                                SnackbarWidget.showBottomToast(
+                                  message: Strings.only5InstnatAllow,
+                                );
+                              } else {
+                                if (selectedUserList.contains(user)) {
+                                  SnackbarWidget.showBottomToast(
+                                    message: Strings.alreadySelected,
+                                  );
+                                } else {
+                                  instantBloc.add(
+                                    SelectedInstantUserEvent(
+                                        userResponseModel: user),
+                                  );
+                                }
+                              }
+                            },
+                          ),
+                        ),
+                        SizedBox(height: SizeUtils().hp(2)),
+                        _instantGridView(),
+                        SizedBox(height: SizeUtils().hp(2)),
+                        Visibility(
+                          visible: !isLoading && instantUsers.isNotEmpty,
+                          child: _sendButton(),
+                        )
+                      ],
+                    ),
                   ),
                 ),
                 ProgressBarRound(isLoading: isLoading),
@@ -158,81 +211,63 @@ class _InstantScreenState extends State<InstantScreen> {
     );
   }
 
-  Widget _contactDetailsWidget(InstantData instantData) {
-    return Padding(
-      padding: EdgeInsets.only(
-        top: SizeUtils().hp(2),
-        bottom: SizeUtils().hp(2),
-        right: SizeUtils().wp(2),
-      ),
-      child: Slidable(
-        key: const ValueKey(0),
-        endActionPane: ActionPane(
-          motion: const ScrollMotion(),
-          extentRatio: 0.3,
-          children: [
-            Container(
-              height: SizeUtils().hp(9.5),
-              width: SizeUtils().wp(12),
-              decoration: BoxDecoration(
-                color: otpBoxColor.withOpacity(0.3),
-                borderRadius: const BorderRadius.only(
-                  topRight: Radius.circular(10),
-                  bottomRight: Radius.circular(10),
-                ),
-              ),
-              child: Center(
-                child: SvgPicture.asset(ImageString.deleteSvg),
-              ),
+  Widget _instantGridView() {
+    return instantUsers.isEmpty
+        ? const SizedBox()
+        : SizedBox(
+            width: SizeUtils().screenWidth,
+            height: SizeUtils().hp(55),
+            child: NotificationListener<OverscrollIndicatorNotification>(
+              onNotification: (overScroll) {
+                overScroll.disallowIndicator();
+                return false;
+              },
+              child: searchInstantUsers.isEmpty
+                  ? GridView.builder(
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2,
+                        childAspectRatio: 1.8,
+                      ),
+                      itemCount: instantUsers.length,
+                      itemBuilder: (context, index) {
+                        return InstantCard(
+                            instantData: instantUsers[index],
+                            onDeleteTap: () {
+                              instantBloc.add(InstantDeleteEvent(
+                                instantId: instantUsers[index]
+                                    .instantId!
+                                    .id
+                                    .toString(),
+                              ));
+                            });
+                      },
+                    )
+                  : GridView.builder(
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2,
+                        childAspectRatio: 1.8,
+                      ),
+                      itemCount: searchInstantUsers.length,
+                      itemBuilder: (context, index) {
+                        return InstantCard(
+                          instantData: searchInstantUsers[index],
+                          onDeleteTap: () {
+                            instantBloc.add(
+                              InstantDeleteEvent(
+                                instantId: searchInstantUsers[index]
+                                    .instantId!
+                                    .id
+                                    .toString(),
+                              ),
+                            );
+                          },
+                        );
+                      },
+                    ),
             ),
-          ],
-        ),
-        child: Container(
-          decoration: BoxDecoration(
-            gradient: const LinearGradient(
-              colors: [boxGradient1, boxGradient2],
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-            ),
-            borderRadius: BorderRadius.circular(10),
-            border: Border.all(color: whiteColor),
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              Container(
-                height: SizeUtils().hp(8),
-                width: SizeUtils().wp(15),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(5),
-                  image: const DecorationImage(
-                    image: AssetImage(ImageString.person),
-                    fit: BoxFit.fill,
-                  ),
-                ),
-              ),
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    instantData.name!.length < 8
-                        ? instantData.name!
-                        : instantData.name!.substring(0, 8),
-                    style: size14Regular(),
-                  ),
-                  SizedBox(height: SizeUtils().hp(1.5)),
-                  Text(
-                    instantData.phoneNo!,
-                    style: size12Regular(),
-                  )
-                ],
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
+          );
   }
 
   Widget _headerTwoOptionWidget() {

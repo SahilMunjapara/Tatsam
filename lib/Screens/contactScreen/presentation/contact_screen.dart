@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tatsam/Screens/contactScreen/bloc/bloc.dart';
@@ -21,21 +23,27 @@ class ContactScreen extends StatefulWidget {
   State<ContactScreen> createState() => _ContactScreenState();
 }
 
-List<UserResponseModel> userList = [];
-
 class _ContactScreenState extends State<ContactScreen> {
   ContactBloc contactBloc = ContactBloc();
   late GlobalKey<ScaffoldState> scaffoldState;
   late TextEditingController searchController;
+  late List<UserResponseModel> userList, searchUserList;
   bool isSearching = false;
   bool isLoading = false;
 
   @override
   void initState() {
     super.initState();
-    if (userList.isEmpty) contactBloc.add(ContactListEvent());
+    userList = searchUserList = [];
+    contactBloc.add(ContactListEvent());
     searchController = TextEditingController();
     scaffoldState = GlobalKey<ScaffoldState>();
+  }
+
+  @override
+  void dispose() {
+    searchController.dispose();
+    super.dispose();
   }
 
   @override
@@ -61,6 +69,17 @@ class _ContactScreenState extends State<ContactScreen> {
             }
             if (state is ContactListState) {
               userList = state.responsemodel;
+            }
+            if (state is ContactWithCharSearchState) {
+              searchUserList.clear();
+              searchUserList = userList
+                  .where((user) =>
+                      user.name!
+                          .toUpperCase()
+                          .contains(state.searchChar.toUpperCase()) ||
+                      user.phoneNo!.contains(state.searchChar))
+                  .toList();
+              log(searchUserList.toString());
             }
             if (state is ContactErrorState) {
               AppException exception = state.exception;
@@ -96,9 +115,16 @@ class _ContactScreenState extends State<ContactScreen> {
                           controller: searchController,
                           rightPadding: 6.0,
                           leftPadding: 18.0,
+                          onChanged: (char) {
+                            contactBloc.add(
+                              ContactWithCharSearchEvent(searchChar: char),
+                            );
+                          },
                           onSubmitted: (char) {
                             contactBloc.add(ContactSearchEvent());
                           },
+                          onSearchDoneTap: () =>
+                              contactBloc.add(ContactSearchEvent()),
                         ),
                       ),
                       SizedBox(height: SizeUtils().hp(4)),
@@ -116,7 +142,10 @@ class _ContactScreenState extends State<ContactScreen> {
                             },
                             child: isLoading
                                 ? const SizedBox()
-                                : AlphabetScrollWidget(items: userList),
+                                : searchUserList.isEmpty
+                                    ? AlphabetScrollWidget(items: userList)
+                                    : AlphabetScrollWidget(
+                                        items: searchUserList),
                           ),
                         ),
                       ),

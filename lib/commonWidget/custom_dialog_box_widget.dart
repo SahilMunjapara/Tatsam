@@ -15,7 +15,58 @@ class CustomDialog {
         return WillPopScope(
           onWillPop: () async => await Future<bool>.value(false),
           child: Dialog(
-            child: Column(),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  SizedBox(height: SizeUtils().hp(2)),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Text(
+                        Strings.logout,
+                        style: size18Regular(),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: SizeUtils().hp(2)),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Text(
+                        Strings.logoutSubtitle,
+                        style: size15Regular(),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: SizeUtils().hp(3)),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      ElevatedButton(
+                        onPressed: () => Navigator.pop(context),
+                        style:
+                            ElevatedButton.styleFrom(primary: bottomBarColor),
+                        child: Text(Strings.no, style: size15Regular()),
+                      ),
+                      SizedBox(width: SizeUtils().wp(4)),
+                      ElevatedButton(
+                        onPressed: () async {
+                          await AppPreference().clearSharedPreferences();
+                          Navigator.pushNamedAndRemoveUntil(
+                              context, Routes.loginScreen, (route) => false);
+                        },
+                        style:
+                            ElevatedButton.styleFrom(primary: bottomBarColor),
+                        child: Text(Strings.yes, style: size15Regular()),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: SizeUtils().hp(2)),
+                ],
+              ),
+            ),
           ),
         );
       },

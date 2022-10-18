@@ -26,5 +26,10 @@ class ContactBloc extends Bloc<ContactScreenEvent, ContactScreenState> {
       }
       yield ContactLoadingEndState();
     }
+    if (event is ContactWithCharSearchEvent) {
+      yield ContactLoadingStartState();
+      yield ContactWithCharSearchState(event.searchChar!);
+      yield ContactLoadingEndState();
+    }
   }
 }

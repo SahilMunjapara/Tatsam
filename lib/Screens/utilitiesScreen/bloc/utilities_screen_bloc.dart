@@ -16,6 +16,10 @@ class UtilitiesBloc extends Bloc<UtilitiesScreenEvent, UtilitiesScreenState> {
       yield UtilitiesSearchState();
     }
 
+    if (event is UtilitiesSearchCharEvent) {
+      yield UtilitiesSearchCharState(event.searchChar!);
+    }
+
     if (event is UtilitiesListEvent) {
       yield UtilitiesLoadingStartState();
       Resource resource = await _utilitiesRepository.getUtilitiesList(event);
