@@ -18,6 +18,8 @@ class ImageString {
   static const String drawerTopLeft = "assets/png/drawerTopLeft.png";
   static const String searchDone = "assets/png/search_done.png";
   static const String searchForm = "assets/png/searchForm.png";
+  static const String uploadBackground = "assets/png/uploadBg.png";
+  static const String uploadBackgroundLine = "assets/png/uploadBgLine.png";
 
   static const String googleSvg = "assets/svg/google.svg";
   static const String facebookSvg = "assets/svg/facebook.svg";
@@ -44,4 +46,8 @@ class ImageString {
   static const String drawerHomeSvg = "assets/svg/d_home.svg";
   static const String drawerSosSvg = "assets/svg/d_sos.svg";
   static const String deleteSvg = "assets/svg/delete.svg";
+  static const String logoutSvg = "assets/svg/logout.svg";
+  static const String utilitiesSvg = "assets/svg/utilities.svg";
+  static const String uploadSvg = "assets/svg/upload.svg";
+  static const String editSvg = "assets/svg/edit.svg";
 }

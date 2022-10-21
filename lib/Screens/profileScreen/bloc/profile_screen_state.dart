@@ -1,6 +1,4 @@
 import 'package:tatsam/Screens/loginScreen/data/model/login_user_fetch_response_model.dart';
-import 'package:tatsam/Screens/otpScreen/data/model/fetch_user_response_model.dart';
-import 'package:tatsam/Screens/profileScreen/bloc/bloc.dart';
 import 'package:tatsam/Screens/profileScreen/data/model/profile_update_response_model.dart';
 import 'package:tatsam/service/exception/exception.dart';
 import 'package:universal_io/io.dart';

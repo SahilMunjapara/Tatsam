@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:tatsam/Screens/businessScreen/bloc/bloc.dart';
 import 'package:tatsam/Screens/businessScreen/data/model/business_response_model.dart';
 import 'package:tatsam/Utils/app_preferences/app_preferences.dart';
@@ -199,6 +201,24 @@ class _BusinessScreenState extends State<BusinessScreen> {
             );
           },
         ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {},
+          child: Container(
+            height: SizeUtils().hp(10),
+            width: SizeUtils().wp(20),
+            decoration: BoxDecoration(
+              color: whiteColor,
+              shape: BoxShape.circle,
+              boxShadow: const [
+                BoxShadow(
+                    blurRadius: 7, offset: Offset(0, 2), color: shadow1Color)
+              ],
+              border: Border.all(color: shadow1Color, width: 2),
+            ),
+            child: const Center(child: Icon(Icons.add)),
+          ),
+        ),
       ),
     );
   }
@@ -210,101 +230,136 @@ class _BusinessScreenState extends State<BusinessScreen> {
     String? businessName,
     String? userImage,
   }) {
-    return Padding(
-      padding: EdgeInsets.symmetric(
-        vertical: SizeUtils().hp(1),
-      ),
-      child: Stack(
+    return Slidable(
+      key: const ValueKey(0),
+      endActionPane: ActionPane(
+        motion: const ScrollMotion(),
+        extentRatio: 0.2,
         children: [
-          Padding(
-            padding: const EdgeInsets.all(2.0),
-            child: Container(
-              decoration: BoxDecoration(
-                border: const GradientBoxBorder(
-                  gradient: LinearGradient(
-                    colors: [
-                      shadow2Color,
-                      shadow3Color,
-                      shadow4Color,
-                      shadow1Color
-                    ],
-                  ),
-                  width: 2,
-                ),
-                color: whiteColor.withOpacity(0.15),
+          Container(
+            height: SizeUtils().hp(15.2),
+            width: SizeUtils().wp(15),
+            decoration: BoxDecoration(
+              color: otpBoxColor.withOpacity(0.3),
+              borderRadius: const BorderRadius.only(
+                topRight: Radius.circular(10),
+                bottomRight: Radius.circular(10),
               ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
+            ),
+            child: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  SizedBox(width: SizeUtils().wp(12)),
-                  SizedBox(
-                    width: SizeUtils().wp(42),
-                    child: Padding(
-                      padding:
-                          EdgeInsets.symmetric(vertical: SizeUtils().hp(2)),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          GradientText(
-                            userName!,
-                            style: size21Regular().copyWith(shadows: [
-                              Shadow(
-                                offset: const Offset(2, 4),
-                                blurRadius: 4,
-                                color: blackColor.withOpacity(0.4),
-                              ),
-                            ]),
-                            gradient: const LinearGradient(
-                              colors: [textGradient1Color, whiteColor],
-                            ),
-                          ),
-                          SizedBox(height: SizeUtils().hp(2)),
-                          Text(
-                            businessName!,
-                            maxLines: 1,
-                            style: size18Regular(),
-                          ),
-                          SizedBox(height: SizeUtils().hp(0.5)),
-                          Text(
-                            userPhoneNumber!,
-                            maxLines: 1,
-                            style: size18Regular(),
-                          ),
-                        ],
-                      ),
-                    ),
+                  GestureDetector(
+                    onTap: () {},
+                    child: SvgPicture.asset(ImageString.editSvg),
                   ),
-                  Container(
-                    height: SizeUtils().hp(8),
-                    width: SizeUtils().wp(14),
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      image: userImage!.isNotEmpty
-                          ? DecorationImage(
-                              image: NetworkImage(userImage),
-                              fit: BoxFit.fill,
-                            )
-                          : const DecorationImage(
-                              image: AssetImage(ImageString.person),
-                              fit: BoxFit.fill,
-                            ),
-                    ),
+                  GestureDetector(
+                    onTap: () {},
+                    child: SvgPicture.asset(ImageString.deleteSvg),
                   ),
                 ],
               ),
             ),
           ),
-          Positioned(
-            bottom: SizeUtils().hp(0.5),
-            left: SizeUtils().wp(1),
-            child: SizedBox(
-              height: SizeUtils().hp(10),
-              width: SizeUtils().wp(16),
-              child: Image.network(businessImage!, fit: BoxFit.fill),
-            ),
-          ),
         ],
+      ),
+      child: Padding(
+        padding: EdgeInsets.symmetric(
+          vertical: SizeUtils().hp(1),
+        ),
+        child: Stack(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(2.0),
+              child: Container(
+                decoration: BoxDecoration(
+                  border: const GradientBoxBorder(
+                    gradient: LinearGradient(
+                      colors: [
+                        shadow2Color,
+                        shadow3Color,
+                        shadow4Color,
+                        shadow1Color
+                      ],
+                    ),
+                    width: 2,
+                  ),
+                  color: whiteColor.withOpacity(0.15),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    SizedBox(width: SizeUtils().wp(12)),
+                    SizedBox(
+                      width: SizeUtils().wp(42),
+                      child: Padding(
+                        padding:
+                            EdgeInsets.symmetric(vertical: SizeUtils().hp(2)),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            GradientText(
+                              userName!,
+                              style: size21Regular().copyWith(shadows: [
+                                Shadow(
+                                  offset: const Offset(2, 4),
+                                  blurRadius: 4,
+                                  color: blackColor.withOpacity(0.4),
+                                ),
+                              ]),
+                              gradient: const LinearGradient(
+                                colors: [textGradient1Color, whiteColor],
+                              ),
+                            ),
+                            SizedBox(height: SizeUtils().hp(2)),
+                            Text(
+                              businessName!,
+                              maxLines: 1,
+                              style: size18Regular(),
+                            ),
+                            SizedBox(height: SizeUtils().hp(0.5)),
+                            Text(
+                              userPhoneNumber!,
+                              maxLines: 1,
+                              style: size18Regular(),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    Container(
+                      height: SizeUtils().hp(8),
+                      width: SizeUtils().wp(14),
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        image: userImage!.isNotEmpty
+                            ? DecorationImage(
+                                image: NetworkImage(userImage),
+                                fit: BoxFit.fill,
+                              )
+                            : const DecorationImage(
+                                image: AssetImage(ImageString.person),
+                                fit: BoxFit.fill,
+                              ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            Positioned(
+              bottom: SizeUtils().hp(0.5),
+              left: SizeUtils().wp(1),
+              child: SizedBox(
+                height: SizeUtils().hp(10),
+                width: SizeUtils().wp(16),
+                child: Image.network(businessImage!, fit: BoxFit.fill),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

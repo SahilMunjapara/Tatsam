@@ -7,5 +7,12 @@ class BusinessFormBloc
 
   @override
   Stream<BusinessFormScreenState> mapEventToState(
-      BusinessFormScreenEvent event) async* {}
+      BusinessFormScreenEvent event) async* {
+    if (event is BusinessTypeSelectEvent) {
+      yield BusinessTypeSelectState(event.businessType!);
+    }
+    if (event is BusinessImageFetchEvent) {
+      yield BusinessImageFetchState(event.pickedImage!);
+    }
+  }
 }

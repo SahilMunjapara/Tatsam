@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:equatable/equatable.dart';
-import 'package:tatsam/Screens/profileScreen/bloc/bloc.dart';
 
 abstract class ProfileScreenEvent extends Equatable {
   @override

@@ -1,10 +1,7 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:tatsam/Screens/dashboard/bloc/bloc.dart';
-import 'package:tatsam/Screens/dashboard/bloc/dashboard_bloc.dart';
 import 'package:tatsam/Screens/dashboard/data/model/screen_enum.dart';
 import 'package:tatsam/Utils/constants/colors.dart';
 import 'package:tatsam/Utils/constants/image.dart';
@@ -88,7 +85,7 @@ class _DrawerScreenState extends State<DrawerScreen>
                       currentScreen: AppScreens.businessScreen,
                     ),
                     _drawerElementWidget(
-                      ImageString.drawerCallSvg,
+                      ImageString.utilitiesSvg,
                       Strings.drawerUtilities,
                       currentScreen: AppScreens.utilitiesScreen,
                     ),
@@ -100,10 +97,10 @@ class _DrawerScreenState extends State<DrawerScreen>
                     _drawerElementWidget(
                       ImageString.drawerBellSvg,
                       Strings.drawerNotification,
-                      currentScreen: AppScreens.contactProfileScreen,
+                      currentScreen: AppScreens.businessFormScreen,
                     ),
                     _drawerElementWidget(
-                      ImageString.drawerBagSvg,
+                      ImageString.logoutSvg,
                       Strings.drawerLogout,
                       tapOff: true,
                       onTap: () => CustomDialog.displayDialog(context),
@@ -143,8 +140,9 @@ class _DrawerScreenState extends State<DrawerScreen>
                     animation!.value * SizeUtils().screenWidth / 2, 0.0, 0.0),
                 child: Padding(
                   padding: EdgeInsets.symmetric(
-                      vertical: SizeUtils().hp(1.2),
-                      horizontal: SizeUtils().wp(2)),
+                    vertical: SizeUtils().hp(1.2),
+                    horizontal: SizeUtils().wp(2),
+                  ),
                   child: Row(
                     children: [
                       SizedBox(

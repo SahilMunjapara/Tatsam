@@ -21,6 +21,8 @@ class Strings {
   static const String businessScreenHeader = 'Business Page';
   static const String contactsScreenHeader = 'Contacts';
   static const String businessFormScreenHeader = 'Business Form';
+  static const String businessType = 'Business Type';
+  static const String uploadLogo = 'Upload a logo';
   static const String utilitiesScreenHeader = 'Utilities';
   static const String instantScreenHeader = 'Instant';
   static const String resendOtpDetail = 'Resend Otp in ';
