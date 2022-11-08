@@ -1,3 +1,4 @@
+import 'package:tatsam/Screens/businessScreen/data/model/business_remove_response_model.dart';
 import 'package:tatsam/Screens/businessScreen/data/model/business_response_model.dart';
 import 'package:tatsam/service/exception/exception.dart';
 
@@ -19,6 +20,12 @@ class GetBusinessState extends BusinessScreenState {
 class BusinessSearchCharState extends BusinessScreenState {
   String searchChar;
   BusinessSearchCharState(this.searchChar);
+}
+
+class RemoveBusinessState extends BusinessScreenState {
+  BusinessRemoveResponseModel responseModel;
+  String removedBusinessId;
+  RemoveBusinessState(this.responseModel, this.removedBusinessId);
 }
 
 class BusinessErrorState extends BusinessScreenState {

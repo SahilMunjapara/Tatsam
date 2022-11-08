@@ -27,20 +27,22 @@ class NetworkAPICall {
     bool isBaseUrl = true,
     Map<String, String>? headers,
     bool isCallBackUrl = false,
+    bool isDecoded = false,
   }) async {
     var client = http.Client();
     try {
       late String fullURL;
       late Map<String, String> header;
       late String token;
+      late dynamic postBody;
+
       token = AppPreference().getStringData(PreferencesKey.userToken) ?? '';
-      if (isBaseUrl) {
-        fullURL = baseURL + url;
-        header = {'Authorization': 'Bearer $token'};
-      } else {
-        fullURL = url;
-        header = {'Authorization': 'Bearer $token'};
-      }
+
+      fullURL = isBaseUrl ? baseURL + url : url;
+
+      header = {'Authorization': 'Bearer $token'};
+
+      isDecoded ? postBody = json.encode(body) : postBody = body;
 
       LogUtils.showLogs(message: fullURL, tag: 'API Url');
       LogUtils.showLogs(message: '$header', tag: 'API header');
@@ -49,13 +51,14 @@ class NetworkAPICall {
       var uri = Uri.parse(fullURL);
 
       var response = await http
-          .post(uri, body: body, headers: header)
+          .post(uri, body: postBody, headers: header)
           .timeout(const Duration(seconds: 30));
       LogUtils.showLogs(
           message: response.statusCode.toString(), tag: 'Response statusCode');
       return checkResponse(response);
     } catch (exception) {
       client.close();
+      log(exception.toString());
       throw AppException.exceptionHandler(exception);
     }
   }
@@ -216,8 +219,11 @@ class NetworkAPICall {
 
       request.headers.addAll(header);
 
-      request.files
-          .add(await http.MultipartFile.fromPath('file', image.absolute.path));
+      List<int> imageData = await image.readAsBytes();
+
+      request.files.add(
+        http.MultipartFile.fromBytes('file', imageData),
+      );
 
       print("request.fields => ${request.fields}");
 
@@ -227,12 +233,12 @@ class NetworkAPICall {
 
       print("Response code of Login API ==> ${response.statusCode}");
 
-      if (response.statusCode == 200) {
-        print(response.body);
-        return checkResponse(response);
-      } else {
-        print(response.reasonPhrase);
-      }
+      // if (response.statusCode == 200) {
+      //   print(response.body);
+      return checkResponse(response);
+      // } else {
+      //   print(response.reasonPhrase);
+      // }
     } catch (exception) {
       client.close();
       rethrow;

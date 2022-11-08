@@ -32,5 +32,18 @@ class BusinessBloc extends Bloc<BusinessScreenEvent, BusinessScreenState> {
       }
       yield BusinessLoadingEndState();
     }
+
+    if (event is RemoveBusinessEvent) {
+      yield BusinessLoadingStartState();
+      Resource resource = await _businessRepository.removeBusiness(event);
+      if (resource.data != null) {
+        yield RemoveBusinessState(resource.data, event.businessId!);
+      } else {
+        yield BusinessErrorState(
+          AppException.decodeExceptionData(jsonString: resource.error ?? ''),
+        );
+      }
+      yield BusinessLoadingEndState();
+    }
   }
 }

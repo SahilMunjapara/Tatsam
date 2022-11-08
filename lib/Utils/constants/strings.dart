@@ -21,6 +21,7 @@ class Strings {
   static const String businessScreenHeader = 'Business Page';
   static const String contactsScreenHeader = 'Contacts';
   static const String businessFormScreenHeader = 'Business Form';
+  static const String businessFormEditScreenHeader = 'Business Edit';
   static const String businessType = 'Business Type';
   static const String uploadLogo = 'Upload a logo';
   static const String utilitiesScreenHeader = 'Utilities';
@@ -53,11 +54,21 @@ class Strings {
   static const String logoutSubtitle = 'Are you sure, do you want to logout?';
   static const String yes = 'Yes';
   static const String no = 'No';
+  static const String update = 'Update';
   static const String instantDeleteMsg = 'Instant Deleted Successfully';
-  static const String only5InstnatAllow =
-      'At Time you can select only 5 Instant';
+  static const String only5InstnatAllow = 'You can add only 5 Instant';
   static const String alreadySelected =
       'You Already Select this instant select another Instant';
+  static const String instantSuccessMSGSend = 'Message Send To Instants.';
+  static const String instantErrorSms =
+      'Somthing Went Wrong Please Send SMS Again.';
+  static const String architecture = 'Architecture';
+  static const String doctor = 'Doctor';
+  static const String plumber = 'Plumber';
+  static const String ui = 'Ui';
+
+  /// Message For Instant That Send By User Change SMS text here
+  static const String instantMSG = 'This is tatsam testing sms';
 }
 
 class ValidatorString {
@@ -70,6 +81,9 @@ class ValidatorString {
       'Enter valid Password.(Password must contain capital alphabets, digit and special character)';
   static const String otpRequired = 'Otp is required.';
   static const String validOtp = 'Enter Valid Otp.';
+  static const String validWorkName = 'Enter valid Workname.';
+  static const String businessImageRequired = 'Business Image Required.';
+  static const String smsPermissionRequired = 'SMS Permission Required.';
 }
 
 class FirebaseCollectionString {
@@ -92,31 +106,16 @@ class ResponseString {
   static const String unauthorized = 'Unauthorized';
 }
 
-List<String> userContactList = [
-  'arav patel',
-  'birav patel',
-  'cirav patel',
-  'dirav patel',
-  'eirav patel',
-  'firav patel',
-  'girav patel',
-  'hirav patel',
-  'irav patel',
-  'jirav patel',
-  'kirav patel',
-  'lirav patel',
-  'mirav patel',
-  'nirav patel',
-  'oirav patel',
-  'pirav patel',
-  'qirav patel',
-  'rirav patel',
-  'sirav patel',
-  'tirav patel',
-  'uirav patel',
-  'virav patel',
-  'wirav patel',
-  'xirav patel',
-  'yirav patel',
-  'zirav patel'
+class StringDigits {
+  static const String one = '1';
+  static const String two = '2';
+  static const String three = '3';
+  static const String four = '4';
+}
+
+List<String> businessTypeList = [
+  Strings.architecture,
+  Strings.doctor,
+  Strings.plumber,
+  Strings.ui,
 ];

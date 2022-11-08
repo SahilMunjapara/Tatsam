@@ -94,11 +94,11 @@ class _DrawerScreenState extends State<DrawerScreen>
                       Strings.drawerInstant,
                       currentScreen: AppScreens.instantScreen,
                     ),
-                    _drawerElementWidget(
-                      ImageString.drawerBellSvg,
-                      Strings.drawerNotification,
-                      currentScreen: AppScreens.businessFormScreen,
-                    ),
+                    // _drawerElementWidget(
+                    //   ImageString.drawerBellSvg,
+                    //   Strings.drawerNotification,
+                    //   currentScreen: AppScreens.businessFormScreen,
+                    // ),
                     _drawerElementWidget(
                       ImageString.logoutSvg,
                       Strings.drawerLogout,

@@ -74,5 +74,18 @@ class InstantBloc extends Bloc<InstantScreenEvent, InstantScreenState> {
       }
       yield InstantLoadingEndState();
     }
+
+    if (event is InstantAddEvent) {
+      yield InstantLoadingStartState();
+      Resource resource = await _instantRepository.instantAdd(event);
+      if (resource.data != null) {
+        yield InstantAddState(resource.data);
+      } else {
+        yield InstantErrorState(
+          AppException.decodeExceptionData(jsonString: resource.error ?? ''),
+        );
+      }
+      yield InstantLoadingEndState();
+    }
   }
 }

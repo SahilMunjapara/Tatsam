@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:tatsam/Screens/businessFormScreen/data/model/business_add_response_model.dart';
 import 'package:tatsam/service/exception/exception.dart';
 
 abstract class BusinessFormScreenState {}
@@ -18,6 +19,11 @@ class BusinessTypeSelectState extends BusinessFormScreenState {
 class BusinessImageFetchState extends BusinessFormScreenState {
   File pickedImage;
   BusinessImageFetchState(this.pickedImage);
+}
+
+class AddNewBusinessState extends BusinessFormScreenState {
+  BusinessAddResponseModel responseModel;
+  AddNewBusinessState(this.responseModel);
 }
 
 class BusinessFormErrorState extends BusinessFormScreenState {

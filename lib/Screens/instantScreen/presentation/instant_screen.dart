@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:tatsam/Screens/contactScreen/data/model/user_response_model.dart';
 import 'package:tatsam/Screens/instantScreen/bloc/bloc.dart';
 import 'package:tatsam/Screens/instantScreen/data/model/instant_response_model.dart';
@@ -18,6 +19,7 @@ import 'package:tatsam/commonWidget/search_box_widget.dart';
 import 'package:tatsam/commonWidget/select_search_box_widget.dart';
 import 'package:tatsam/commonWidget/snackbar_widget.dart';
 import 'package:tatsam/service/exception/exception.dart';
+import 'package:flutter_sms/flutter_sms.dart';
 
 class InstantScreen extends StatefulWidget {
   const InstantScreen({Key? key}) : super(key: key);
@@ -81,9 +83,20 @@ class _InstantScreenState extends State<InstantScreen> {
             }
             if (state is GetAllContactState) {
               allUserList = state.responseModel;
+              allUserList.removeWhere(
+                (user) =>
+                    user.id ==
+                    AppPreference().getStringData(PreferencesKey.userId),
+              );
             }
             if (state is GetInstantState) {
+              instantUsers.clear();
               instantUsers = state.responseModel.instantData!;
+            }
+            if (state is InstantAddState) {
+              instantBloc.add(GetInstantEvent(
+                userId: AppPreference().getStringData(PreferencesKey.userId),
+              ));
             }
             if (state is InstantSearchCharState) {
               searchInstantUsers.clear();
@@ -96,7 +109,17 @@ class _InstantScreenState extends State<InstantScreen> {
                   .toList();
             }
             if (state is SelectedInstantUserState) {
-              selectedUserList.add(state.responseModel);
+              bool isAlreadyAdded = false;
+              for (var item in instantUsers) {
+                item.id == state.responseModel.id
+                    ? isAlreadyAdded = true
+                    : isAlreadyAdded = false;
+              }
+              isAlreadyAdded
+                  ? SnackbarWidget.showBottomToast(
+                      message: Strings.alreadySelected,
+                    )
+                  : selectedUserList.add(state.responseModel);
             }
             if (state is SelectedInstantRemoveState) {
               selectedUserList
@@ -163,7 +186,15 @@ class _InstantScreenState extends State<InstantScreen> {
                                 InstantSelectSearchEvent(
                                     isSelectSearching: false),
                               );
-                              if (selectedUserList.isNotEmpty) {}
+                              if (selectedUserList.isNotEmpty) {
+                                List<String> newUserList = [];
+                                selectedUserList
+                                    .map(
+                                        (e) => newUserList.add(e.id.toString()))
+                                    .toList();
+                                instantBloc.add(
+                                    InstantAddEvent(instantIds: newUserList));
+                              }
                             },
                             onDeleteTap: (user) {
                               instantBloc.add(
@@ -172,7 +203,9 @@ class _InstantScreenState extends State<InstantScreen> {
                               );
                             },
                             onUserTap: (user) {
-                              if (selectedUserList.length == 5) {
+                              if (selectedUserList.length +
+                                      instantUsers.length >=
+                                  5) {
                                 SnackbarWidget.showBottomToast(
                                   message: Strings.only5InstnatAllow,
                                 );
@@ -196,7 +229,10 @@ class _InstantScreenState extends State<InstantScreen> {
                         SizedBox(height: SizeUtils().hp(2)),
                         Visibility(
                           visible: !isLoading && instantUsers.isNotEmpty,
-                          child: _sendButton(),
+                          child: GestureDetector(
+                            onTap: _sendSmsToInstant,
+                            child: _sendButton(),
+                          ),
                         )
                       ],
                     ),
@@ -209,6 +245,27 @@ class _InstantScreenState extends State<InstantScreen> {
         ),
       ),
     );
+  }
+
+  void _sendSmsToInstant() async {
+    PermissionStatus status = await Permission.sms.request();
+    if (status == PermissionStatus.granted) {
+      List<String> recipients = List<String>.from(
+          instantUsers.map((e) => Strings.phoneCode.trim() + e.phoneNo!));
+      await sendSMS(
+        message: Strings.instantMSG,
+        recipients: recipients,
+        sendDirect: true,
+      ).onError((error, stackTrace) {
+        SnackbarWidget.showBottomToast(message: Strings.instantErrorSms);
+        throw UnimplementedError();
+      }).then((value) {
+        SnackbarWidget.showBottomToast(message: Strings.instantSuccessMSGSend);
+      });
+    } else {
+      SnackbarWidget.showBottomToast(
+          message: ValidatorString.smsPermissionRequired);
+    }
   }
 
   Widget _instantGridView() {

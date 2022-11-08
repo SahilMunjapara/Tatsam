@@ -1,4 +1,5 @@
 import 'package:tatsam/Screens/contactScreen/data/model/user_response_model.dart';
+import 'package:tatsam/Screens/instantScreen/data/model/instant_add_response_model.dart';
 import 'package:tatsam/Screens/instantScreen/data/model/instant_delete_state_response.dart';
 import 'package:tatsam/Screens/instantScreen/data/model/instant_response_model.dart';
 import 'package:tatsam/service/exception/exception.dart';
@@ -49,6 +50,11 @@ class SelectedInstantUserState extends InstantScreenState {
 class SelectedInstantRemoveState extends InstantScreenState {
   UserResponseModel responseModel;
   SelectedInstantRemoveState(this.responseModel);
+}
+
+class InstantAddState extends InstantScreenState {
+  InstantAddResponseModel responseModel;
+  InstantAddState(this.responseModel);
 }
 
 class InstantErrorState extends InstantScreenState {

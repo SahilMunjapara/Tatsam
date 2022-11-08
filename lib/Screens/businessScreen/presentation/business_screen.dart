@@ -4,6 +4,8 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:tatsam/Screens/businessScreen/bloc/bloc.dart';
 import 'package:tatsam/Screens/businessScreen/data/model/business_response_model.dart';
+import 'package:tatsam/Screens/dashboard/bloc/bloc.dart';
+import 'package:tatsam/Screens/dashboard/data/model/screen_enum.dart';
 import 'package:tatsam/Utils/app_preferences/app_preferences.dart';
 import 'package:tatsam/Utils/app_preferences/prefrences_key.dart';
 import 'package:tatsam/Utils/constants/colors.dart';
@@ -32,8 +34,7 @@ class _BusinessScreenState extends State<BusinessScreen> {
   BusinessBloc businessBloc = BusinessBloc();
   late GlobalKey<ScaffoldState> scaffoldState;
   late TextEditingController searchController;
-  late List<BusinessData> businessList;
-  late List<BusinessData> searchBusinessList;
+  late List<BusinessData> businessList, searchBusinessList;
   bool isSearching = false;
   bool isLoading = true;
 
@@ -93,6 +94,14 @@ class _BusinessScreenState extends State<BusinessScreen> {
                       business.user!.phoneNo!.contains(state.searchChar))
                   .toList();
             }
+            if (state is RemoveBusinessState) {
+              businessList.removeWhere((element) =>
+                  element.id == int.parse(state.removedBusinessId));
+              searchBusinessList.removeWhere((element) =>
+                  element.id == int.parse(state.removedBusinessId));
+              SnackbarWidget.showBottomToast(
+                  message: state.responseModel.message);
+            }
             if (state is BusinessErrorState) {
               AppException exception = state.exception;
               if (ResponseString.unauthorized == exception.message) {
@@ -148,6 +157,8 @@ class _BusinessScreenState extends State<BusinessScreen> {
                                           itemCount: businessList.length,
                                           itemBuilder: (context, index) {
                                             return _businessProfileWidget(
+                                              businessId:
+                                                  businessList[index].id,
                                               businessImage: businessList[index]
                                                   .businessType!
                                                   .imagePath,
@@ -169,6 +180,8 @@ class _BusinessScreenState extends State<BusinessScreen> {
                                           itemCount: searchBusinessList.length,
                                           itemBuilder: (context, index) {
                                             return _businessProfileWidget(
+                                              businessId:
+                                                  searchBusinessList[index].id,
                                               businessImage:
                                                   searchBusinessList[index]
                                                       .businessType!
@@ -203,7 +216,10 @@ class _BusinessScreenState extends State<BusinessScreen> {
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
         floatingActionButton: FloatingActionButton(
-          onPressed: () {},
+          onPressed: () {
+            context.read<DashboardBloc>().add(DashboardLandingScreenEvent(
+                appScreens: AppScreens.businessFormScreen));
+          },
           child: Container(
             height: SizeUtils().hp(10),
             width: SizeUtils().wp(20),
@@ -224,6 +240,7 @@ class _BusinessScreenState extends State<BusinessScreen> {
   }
 
   Widget _businessProfileWidget({
+    int? businessId,
     String? businessImage,
     String? userName,
     String? userPhoneNumber,
@@ -251,11 +268,25 @@ class _BusinessScreenState extends State<BusinessScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   GestureDetector(
-                    onTap: () {},
+                    onTap: () {
+                      context.read<DashboardBloc>().editBusinessData =
+                          businessList
+                              .where((element) => element.id == businessId)
+                              .toList()
+                              .first;
+                      context.read<DashboardBloc>().add(
+                            DashboardLandingScreenEvent(
+                                appScreens: AppScreens.businessFormEditScreen),
+                          );
+                    },
                     child: SvgPicture.asset(ImageString.editSvg),
                   ),
                   GestureDetector(
-                    onTap: () {},
+                    onTap: () {
+                      businessBloc.add(RemoveBusinessEvent(
+                        businessId: businessId.toString(),
+                      ));
+                    },
                     child: SvgPicture.asset(ImageString.deleteSvg),
                   ),
                 ],

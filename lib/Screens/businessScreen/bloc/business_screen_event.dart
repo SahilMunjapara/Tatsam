@@ -24,3 +24,12 @@ class BusinessSearchCharEvent extends BusinessScreenEvent {
   @override
   List<Object?> get props => [searchChar];
 }
+
+class RemoveBusinessEvent extends BusinessScreenEvent {
+  final String? businessId;
+
+  RemoveBusinessEvent({this.businessId});
+
+  @override
+  List<Object?> get props => [businessId];
+}

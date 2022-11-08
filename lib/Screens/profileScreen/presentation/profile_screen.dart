@@ -440,30 +440,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
     if (mobileNumberController.text.isEmpty ||
         emailIdController.text.isEmpty ||
         nameController.text.isEmpty) {
-      SnackbarWidget.showSnackbar(
-        context: context,
-        message: ValidatorString.allFieldRequired,
-      );
+      SnackbarWidget.showBottomToast(message: ValidatorString.allFieldRequired);
       return false;
     } else {
       if (!Validator.validCharacters.hasMatch(nameController.text)) {
-        SnackbarWidget.showSnackbar(
-          context: context,
-          message: ValidatorString.validName,
-        );
+        SnackbarWidget.showBottomToast(message: ValidatorString.validName);
         return false;
       } else if (!Validator.emailCharacter.hasMatch(emailIdController.text)) {
-        SnackbarWidget.showSnackbar(
-          context: context,
-          message: ValidatorString.validEmail,
-        );
+        SnackbarWidget.showBottomToast(message: ValidatorString.validEmail);
         return false;
       } else if (!Validator.mobileCharacter
           .hasMatch(mobileNumberController.text)) {
-        SnackbarWidget.showSnackbar(
-          context: context,
-          message: ValidatorString.validMobile,
-        );
+        SnackbarWidget.showBottomToast(message: ValidatorString.validMobile);
         return false;
       } else {
         return true;

@@ -12,6 +12,10 @@ const getUtilitiesURL = 'utility/';
 const getInstantURL = 'instant/';
 const getAllBusinessURL = 'business/';
 const deleteInstantURL = 'instant/delete/';
+const addNewInstantURL = 'instant/addNew';
+const removeBusinessURL = 'business/';
+const addBusinessURL = 'business/';
+const updateBusinessURL = 'business/';
 
 class ApiResponse {
   static const String success = 'success';

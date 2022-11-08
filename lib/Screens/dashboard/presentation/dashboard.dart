@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tatsam/Navigation/routes_key.dart';
+import 'package:tatsam/Screens/businessFormEditScreen/presentation/business_form_edit_screen.dart';
 import 'package:tatsam/Screens/businessFormScreen/presentation/business_form_screen.dart';
 import 'package:tatsam/Screens/businessScreen/presentation/business_screen.dart';
 import 'package:tatsam/Screens/contactProfileScreen/presentation/contact_profile_screen.dart';
@@ -50,43 +51,57 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
   Widget build(BuildContext context) {
     SizeUtils().init(context);
     return SafeArea(
-      child: Scaffold(
-        backgroundColor: backgroundColor,
-        resizeToAvoidBottomInset: false,
-        body: BlocBuilder<DashboardBloc, DashboardState>(
-          builder: (context, state) {
-            return Stack(
-              children: [
-                Positioned(
-                  right: 0,
-                  child: Image.asset(ImageString.topRightBlur),
-                ),
-                Positioned(
-                  bottom: 0,
-                  left: 0,
-                  child: Image.asset(ImageString.bottomLeftBlur),
-                ),
-                Padding(
-                  child: Column(children: [
-                    Expanded(
-                      child: state is DashboardLandingScreenState
-                          ? bodyContainer(state.appScreens)
-                          : bodyContainer(
-                              context.read<DashboardBloc>().appScreens),
-                    ),
-                    Container(
-                      height: SizeUtils().hp(0.5),
-                      color: bottomBarColor,
-                    ),
-                  ]),
-                  padding: EdgeInsets.only(
-                    bottom: SizeUtils().hp(8),
+      child: WillPopScope(
+        onWillPop: () async {
+          AppScreens currentScreen = context.read<DashboardBloc>().appScreens;
+          if (currentScreen == AppScreens.businessFormScreen ||
+              currentScreen == AppScreens.businessFormEditScreen) {
+            context.read<DashboardBloc>().add(DashboardLandingScreenEvent(
+                appScreens: AppScreens.businessScreen));
+          } else if (currentScreen == AppScreens.contactProfileScreen) {
+            context.read<DashboardBloc>().add(DashboardLandingScreenEvent(
+                appScreens: AppScreens.contactScreen));
+          }
+          return false;
+        },
+        child: Scaffold(
+          backgroundColor: backgroundColor,
+          resizeToAvoidBottomInset: false,
+          body: BlocBuilder<DashboardBloc, DashboardState>(
+            builder: (context, state) {
+              return Stack(
+                children: [
+                  Positioned(
+                    right: 0,
+                    child: Image.asset(ImageString.topRightBlur),
                   ),
-                ),
-                Align(alignment: Alignment.bottomCenter, child: bottomNav())
-              ],
-            );
-          },
+                  Positioned(
+                    bottom: 0,
+                    left: 0,
+                    child: Image.asset(ImageString.bottomLeftBlur),
+                  ),
+                  Padding(
+                    child: Column(children: [
+                      Expanded(
+                        child: state is DashboardLandingScreenState
+                            ? bodyContainer(state.appScreens)
+                            : bodyContainer(
+                                context.read<DashboardBloc>().appScreens),
+                      ),
+                      Container(
+                        height: SizeUtils().hp(0.5),
+                        color: bottomBarColor,
+                      ),
+                    ]),
+                    padding: EdgeInsets.only(
+                      bottom: SizeUtils().hp(8),
+                    ),
+                  ),
+                  Align(alignment: Alignment.bottomCenter, child: bottomNav())
+                ],
+              );
+            },
+          ),
         ),
       ),
     );
@@ -118,6 +133,9 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
 
           case AppScreens.businessScreen:
             return const BusinessScreen();
+
+          case AppScreens.businessFormEditScreen:
+            return const BusinessFormEditScreen();
         }
       case 1:
       // slogan = "Log Out";

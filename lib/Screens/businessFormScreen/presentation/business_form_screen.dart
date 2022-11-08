@@ -6,12 +6,14 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:tatsam/Screens/businessFormScreen/bloc/bloc.dart';
+import 'package:tatsam/Screens/dashboard/bloc/bloc.dart';
+import 'package:tatsam/Screens/dashboard/data/model/screen_enum.dart';
 import 'package:tatsam/Utils/constants/colors.dart';
 import 'package:tatsam/Utils/constants/image.dart';
 import 'package:tatsam/Utils/constants/strings.dart';
 import 'package:tatsam/Utils/constants/textStyle.dart';
-import 'package:tatsam/Utils/log_utils/log_util.dart';
 import 'package:tatsam/Utils/size_utils/size_utils.dart';
+import 'package:tatsam/Utils/validation/validation.dart';
 import 'package:tatsam/commonWidget/custom_appbar.dart';
 import 'package:tatsam/commonWidget/custom_dialog_box_widget.dart';
 import 'package:tatsam/commonWidget/custom_text_field.dart';
@@ -37,22 +39,16 @@ class _BusinessFormScreenState extends State<BusinessFormScreen> {
   late GlobalKey<ScaffoldState> scaffoldState;
   late String dropdownvalue;
   bool isLoading = false;
-  var items = [
-    'Item 1',
-    'Item 2',
-    'Item 3',
-    'Item 4',
-    'Item 5',
-    'Item 6',
-    'Item 7',
-  ];
+  late String businessTypeId;
+  List<String> items = businessTypeList;
 
   @override
   void initState() {
     super.initState();
     businessLogoImage = File('');
     _imagePicker = ImagePicker();
-    dropdownvalue = 'Item 1';
+    dropdownvalue = Strings.architecture;
+    businessTypeId = StringDigits.one;
     nameController = TextEditingController();
     workNameController = TextEditingController();
     mobileNumberController = TextEditingController();
@@ -126,6 +122,29 @@ class _BusinessFormScreenState extends State<BusinessFormScreen> {
             }
             if (state is BusinessTypeSelectState) {
               dropdownvalue = state.businessType;
+              switch (dropdownvalue) {
+                case Strings.architecture:
+                  businessTypeId = StringDigits.one;
+                  break;
+                case Strings.doctor:
+                  businessTypeId = StringDigits.two;
+                  break;
+                case Strings.plumber:
+                  businessTypeId = StringDigits.three;
+                  break;
+                case Strings.ui:
+                  businessTypeId = StringDigits.four;
+                  break;
+                default:
+              }
+            }
+            if (state is AddNewBusinessState) {
+              SnackbarWidget.showBottomToast(
+                  message: state.responseModel.message);
+              context.read<DashboardBloc>().add(
+                    DashboardLandingScreenEvent(
+                        appScreens: AppScreens.businessScreen),
+                  );
             }
             if (state is BusinessImageFetchState) {
               businessLogoImage = state.pickedImage;
@@ -278,18 +297,43 @@ class _BusinessFormScreenState extends State<BusinessFormScreen> {
                         ),
                         SizedBox(height: SizeUtils().hp(2)),
                         Center(
-                          child: Container(
-                            decoration: BoxDecoration(
-                                color: whiteColor,
-                                borderRadius: BorderRadius.circular(30)),
-                            child: Padding(
-                              padding: EdgeInsets.symmetric(
-                                vertical: SizeUtils().hp(1),
-                                horizontal: SizeUtils().wp(3),
-                              ),
-                              child: Text(
-                                Strings.submit,
-                                style: size18Regular(textColor: blackColor),
+                          child: GestureDetector(
+                            onTap: isLoading
+                                ? null
+                                : () {
+                                    if (checkValidation()) {
+                                      if (businessLogoImage.path.isEmpty) {
+                                        SnackbarWidget.showBottomToast(
+                                            message: ValidatorString
+                                                .businessImageRequired);
+                                      } else {
+                                        businessFormBloc.add(
+                                          AddNewBusinessEvent(
+                                            businessName: nameController.text,
+                                            businessAddress:
+                                                workNameController.text,
+                                            businessPhoneNumber:
+                                                mobileNumberController.text,
+                                            businessTypeId: businessTypeId,
+                                            businessImage: businessLogoImage,
+                                          ),
+                                        );
+                                      }
+                                    }
+                                  },
+                            child: Container(
+                              decoration: BoxDecoration(
+                                  color: whiteColor,
+                                  borderRadius: BorderRadius.circular(30)),
+                              child: Padding(
+                                padding: EdgeInsets.symmetric(
+                                  vertical: SizeUtils().hp(1),
+                                  horizontal: SizeUtils().wp(3),
+                                ),
+                                child: Text(
+                                  Strings.submit,
+                                  style: size18Regular(textColor: blackColor),
+                                ),
                               ),
                             ),
                           ),
@@ -358,5 +402,28 @@ class _BusinessFormScreenState extends State<BusinessFormScreen> {
         child: child,
       ),
     );
+  }
+
+  bool checkValidation() {
+    if (mobileNumberController.text.isEmpty ||
+        workNameController.text.isEmpty ||
+        nameController.text.isEmpty) {
+      SnackbarWidget.showBottomToast(message: ValidatorString.allFieldRequired);
+      return false;
+    } else {
+      if (!Validator.validCharacters.hasMatch(nameController.text)) {
+        SnackbarWidget.showBottomToast(message: ValidatorString.validName);
+        return false;
+      } else if (!Validator.validCharacters.hasMatch(workNameController.text)) {
+        SnackbarWidget.showBottomToast(message: ValidatorString.validWorkName);
+        return false;
+      } else if (!Validator.mobileCharacter
+          .hasMatch(mobileNumberController.text)) {
+        SnackbarWidget.showBottomToast(message: ValidatorString.validMobile);
+        return false;
+      } else {
+        return true;
+      }
+    }
   }
 }

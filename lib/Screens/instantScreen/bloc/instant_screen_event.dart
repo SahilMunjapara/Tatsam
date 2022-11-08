@@ -53,6 +53,15 @@ class InstantDeleteEvent extends InstantScreenEvent {
   List<Object?> get props => [instantId];
 }
 
+class InstantAddEvent extends InstantScreenEvent {
+  final List<String>? instantIds;
+
+  InstantAddEvent({this.instantIds});
+
+  @override
+  List<Object?> get props => [instantIds];
+}
+
 class SelectedInstantUserEvent extends InstantScreenEvent {
   final UserResponseModel userResponseModel;
 

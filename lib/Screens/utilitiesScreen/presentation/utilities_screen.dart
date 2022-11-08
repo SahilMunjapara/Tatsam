@@ -199,10 +199,15 @@ class _UtilitiesScreenState extends State<UtilitiesScreen> {
                           width: SizeUtils().wp(15),
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(5),
-                            child: Image.asset(
-                              ImageString.person,
-                              fit: BoxFit.fill,
-                            ),
+                            child: utilitiesData.imagePath!.isEmpty
+                                ? Image.asset(
+                                    ImageString.person,
+                                    fit: BoxFit.fill,
+                                  )
+                                : Image.network(
+                                    utilitiesData.imagePath!,
+                                    fit: BoxFit.fill,
+                                  ),
                           ),
                         ),
                       ),
