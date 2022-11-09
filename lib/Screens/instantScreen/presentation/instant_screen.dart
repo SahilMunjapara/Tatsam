@@ -91,6 +91,7 @@ class _InstantScreenState extends State<InstantScreen> {
             }
             if (state is GetInstantState) {
               instantUsers.clear();
+              selectedUserList.clear();
               instantUsers = state.responseModel.instantData!;
             }
             if (state is InstantAddState) {

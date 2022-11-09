@@ -40,7 +40,12 @@ class NetworkAPICall {
 
       fullURL = isBaseUrl ? baseURL + url : url;
 
-      header = {'Authorization': 'Bearer $token'};
+      header = isDecoded
+          ? {
+              'Authorization': 'Bearer $token',
+              'Content-Type': 'application/json'
+            }
+          : {'Authorization': 'Bearer $token'};
 
       isDecoded ? postBody = json.encode(body) : postBody = body;
 
@@ -204,10 +209,7 @@ class NetworkAPICall {
       String fullURL = baseURL + url;
       late String token;
       token = AppPreference().getStringData(PreferencesKey.userToken) ?? '';
-      var header = {
-        'Authorization': 'Bearer $token',
-        'Content-Type': 'application/x-www-form-urlencoded'
-      };
+      var header = {'Authorization': 'Bearer $token'};
 
       LogUtils.showLogs(message: fullURL, tag: 'API Url');
       log('API body: $body');

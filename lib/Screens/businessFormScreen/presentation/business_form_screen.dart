@@ -154,7 +154,11 @@ class _BusinessFormScreenState extends State<BusinessFormScreen> {
               if (ResponseString.unauthorized == exception.message) {
                 CustomDialog.showSessionExpiredDialog(context);
               } else {
-                SnackbarWidget.showBottomToast(message: exception.message);
+                SnackbarWidget.showBottomToast(
+                  message: exception.errorCode == 201
+                      ? ValidatorString.alreadyBusinessTypeSelected
+                      : exception.message,
+                );
               }
             }
           },

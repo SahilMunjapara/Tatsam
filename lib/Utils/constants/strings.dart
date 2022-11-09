@@ -84,6 +84,8 @@ class ValidatorString {
   static const String validWorkName = 'Enter valid Workname.';
   static const String businessImageRequired = 'Business Image Required.';
   static const String smsPermissionRequired = 'SMS Permission Required.';
+  static const String alreadyBusinessTypeSelected =
+      'Business Type Already Selected';
 }
 
 class FirebaseCollectionString {
