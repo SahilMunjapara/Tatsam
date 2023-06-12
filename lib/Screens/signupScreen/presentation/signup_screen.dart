@@ -122,250 +122,179 @@ class _SignupScreenState extends State<SignupScreen> {
               }
             },
             builder: (context, state) {
-              return Stack(
-                children: [
-                  Positioned(
-                    right: 0,
-                    child: Image.asset(ImageString.topRightBlur),
-                  ),
-                  Positioned(
-                    bottom: 0,
-                    left: 0,
-                    child: Image.asset(ImageString.bottomLeftBlur),
-                  ),
-                  Align(
-                    alignment: Alignment.bottomCenter,
-                    child: SizedBox(
-                      height: SizeUtils().hp(18),
-                      width: SizeUtils().screenWidth,
-                      child: Image.asset(
-                        ImageString.building,
-                        fit: BoxFit.fill,
+              return GestureDetector(
+                onTap: () => FocusScope.of(context).unfocus(),
+                child: Stack(
+                  children: [
+                    Positioned(
+                      right: 0,
+                      child: Image.asset(ImageString.topRightBlur),
+                    ),
+                    Positioned(
+                      bottom: 0,
+                      left: 0,
+                      child: Image.asset(ImageString.bottomLeftBlur),
+                    ),
+                    Align(
+                      alignment: Alignment.bottomCenter,
+                      child: SizedBox(
+                        height: SizeUtils().hp(18),
+                        width: SizeUtils().screenWidth,
+                        child: Image.asset(
+                          ImageString.building,
+                          fit: BoxFit.fill,
+                        ),
                       ),
                     ),
-                  ),
-                  Center(
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: SizeUtils().wp(8),
-                      ),
-                      child:
-                          NotificationListener<OverscrollIndicatorNotification>(
-                        onNotification: (overScroll) {
-                          overScroll.disallowIndicator();
-                          return false;
-                        },
-                        child: SingleChildScrollView(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              SizedBox(height: SizeUtils().hp(3)),
-                              Text(
-                                Strings.appName,
-                                style: size48Regular(),
-                              ),
-                              SizedBox(height: SizeUtils().hp(2)),
-                              Stack(
-                                children: [
-                                  Padding(
-                                    padding: EdgeInsets.only(
-                                      top: SizeUtils().hp(3),
-                                      bottom: SizeUtils().hp(6),
-                                    ),
-                                    child: SizedBox(
-                                      height: SizeUtils().hp(70),
-                                      width: SizeUtils().wp(150),
-                                      child: Image.asset(
-                                        ImageString.signupRectangle,
-                                        fit: BoxFit.fill,
+                    Center(
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: SizeUtils().wp(8),
+                        ),
+                        child:
+                            NotificationListener<OverscrollIndicatorNotification>(
+                          onNotification: (overScroll) {
+                            overScroll.disallowIndicator();
+                            return false;
+                          },
+                          child: SingleChildScrollView(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                SizedBox(height: SizeUtils().hp(3)),
+                                Text(
+                                  Strings.appName,
+                                  style: size48Regular(),
+                                ),
+                                SizedBox(height: SizeUtils().hp(2)),
+                                Stack(
+                                  children: [
+                                    Padding(
+                                      padding: EdgeInsets.only(
+                                        top: SizeUtils().hp(3),
+                                        bottom: SizeUtils().hp(6),
                                       ),
-                                    ),
-                                  ),
-                                  Positioned(
-                                    top: SizeUtils().hp(10),
-                                    right: SizeUtils().wp(7),
-                                    child: Text(
-                                      Strings.signup,
-                                      style: size38Regular(),
-                                    ),
-                                  ),
-                                  Positioned(
-                                    top: SizeUtils().hp(19.5),
-                                    left: SizeUtils().wp(7),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        SizedBox(height: SizeUtils().hp(0.6)),
-                                        Text(
-                                          Strings.name,
-                                          style: size18Regular(),
-                                        ),
-                                        SizedBox(
-                                          width: SizeUtils().wp(70),
-                                          height: SizeUtils().hp(4),
-                                          child: CustomTextField(
-                                            controller: nameController,
-                                            focusNode: nameFocusNode,
-                                            textInputType: TextInputType.name,
-                                            textInputAction:
-                                                TextInputAction.next,
-                                            style: size15Regular(
-                                                letterSpacing: 1.25),
-                                          ),
-                                        ),
-                                        SizedBox(height: SizeUtils().hp(2.8)),
-                                        Text(
-                                          Strings.email,
-                                          style: size18Regular(),
-                                        ),
-                                        SizedBox(
-                                          width: SizeUtils().wp(70),
-                                          height: SizeUtils().hp(4),
-                                          child: CustomTextField(
-                                            controller: emailIdController,
-                                            focusNode: emailIdFocusNode,
-                                            textInputType:
-                                                TextInputType.emailAddress,
-                                            textInputAction:
-                                                TextInputAction.next,
-                                            style: size15Regular(
-                                                letterSpacing: 1.25),
-                                          ),
-                                        ),
-                                        SizedBox(height: SizeUtils().hp(2.8)),
-                                        Text(
-                                          Strings.mobileNo,
-                                          style: size18Regular(),
-                                        ),
-                                        SizedBox(
-                                          width: SizeUtils().wp(70),
-                                          height: SizeUtils().hp(4),
-                                          child: CustomTextField(
-                                            prefix: Strings.phoneCode,
-                                            maxLength: 10,
-                                            controller: mobileNumberController,
-                                            focusNode: mobileNumberFocusNode,
-                                            textInputType: TextInputType.phone,
-                                            textInputAction:
-                                                TextInputAction.next,
-                                            style: size15Regular(
-                                                letterSpacing: 1.25),
-                                          ),
-                                        ),
-                                        SizedBox(height: SizeUtils().hp(2.8)),
-                                        Text(
-                                          Strings.password,
-                                          style: size18Regular(),
-                                        ),
-                                        SizedBox(
-                                          width: SizeUtils().wp(70),
-                                          height: SizeUtils().hp(4),
-                                          child: CustomTextField(
-                                            isObscureText: true,
-                                            obscureText: obscureTextValue,
-                                            onObscureTap: () => signupBloc
-                                                .add(SignupPasswordEvent()),
-                                            controller: passwordController,
-                                            focusNode: passwordFocusNode,
-                                            textInputType:
-                                                TextInputType.emailAddress,
-                                            textInputAction:
-                                                TextInputAction.done,
-                                            style: size15Regular(
-                                                letterSpacing: 1.25),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  Positioned(
-                                    left: 0,
-                                    child: SizedBox(
-                                      height: SizeUtils().hp(15),
-                                      width: SizeUtils().wp(40),
-                                      child: Image.asset(
-                                        ImageString.polygonTopLeft,
-                                        fit: BoxFit.fill,
-                                      ),
-                                    ),
-                                  ),
-                                  Positioned(
-                                    bottom: 0,
-                                    right: 0,
-                                    child: GestureDetector(
-                                      onTap: isLoading
-                                          ? null
-                                          : () {
-                                              if (checkValidation()) {
-                                                signupBloc.add(
-                                                  SignupUserEvent(
-                                                    userEmail: emailIdController
-                                                        .text
-                                                        .trim(),
-                                                    userName: nameController
-                                                        .text
-                                                        .trim(),
-                                                    userMobileNumber:
-                                                        mobileNumberController
-                                                            .text
-                                                            .trim(),
-                                                    userPassword:
-                                                        passwordController.text,
-                                                    deviceToken: deviceToken,
-                                                  ),
-                                                );
-                                              }
-                                            },
                                       child: SizedBox(
-                                        height: SizeUtils().hp(15),
-                                        width: SizeUtils().wp(40),
+                                        height: SizeUtils().hp(70),
+                                        width: SizeUtils().wp(150),
                                         child: Image.asset(
-                                          ImageString.polygonBottomRight,
+                                          ImageString.signupRectangle,
                                           fit: BoxFit.fill,
                                         ),
                                       ),
                                     ),
-                                  ),
-                                  Positioned(
-                                    bottom: SizeUtils().hp(17.5),
-                                    right: SizeUtils().wp(0.5),
-                                    child: SizedBox(
-                                      height: SizeUtils().hp(3.3),
-                                      width: SizeUtils().wp(6),
-                                      child: SvgPicture.asset(
-                                        ImageString.instagramSvg,
+                                    Positioned(
+                                      top: SizeUtils().hp(10),
+                                      right: SizeUtils().wp(7),
+                                      child: Text(
+                                        Strings.signup,
+                                        style: size38Regular(),
                                       ),
                                     ),
-                                  ),
-                                  Positioned(
-                                    bottom: SizeUtils().hp(14),
-                                    right: SizeUtils().wp(17.5),
-                                    child: SizedBox(
-                                      height: SizeUtils().hp(3.5),
-                                      width: SizeUtils().wp(6),
-                                      child: SvgPicture.asset(
-                                        ImageString.googleSvg,
+                                    Positioned(
+                                      top: SizeUtils().hp(19.5),
+                                      left: SizeUtils().wp(7),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          SizedBox(height: SizeUtils().hp(0.6)),
+                                          Text(
+                                            Strings.name,
+                                            style: size18Regular(),
+                                          ),
+                                          SizedBox(
+                                            width: SizeUtils().wp(70),
+                                            height: SizeUtils().hp(4),
+                                            child: CustomTextField(
+                                              controller: nameController,
+                                              focusNode: nameFocusNode,
+                                              textInputType: TextInputType.name,
+                                              textInputAction:
+                                                  TextInputAction.next,
+                                              style: size15Regular(
+                                                  letterSpacing: 1.25),
+                                            ),
+                                          ),
+                                          SizedBox(height: SizeUtils().hp(2.8)),
+                                          Text(
+                                            Strings.email,
+                                            style: size18Regular(),
+                                          ),
+                                          SizedBox(
+                                            width: SizeUtils().wp(70),
+                                            height: SizeUtils().hp(4),
+                                            child: CustomTextField(
+                                              controller: emailIdController,
+                                              focusNode: emailIdFocusNode,
+                                              textInputType:
+                                                  TextInputType.emailAddress,
+                                              textInputAction:
+                                                  TextInputAction.next,
+                                              style: size15Regular(
+                                                  letterSpacing: 1.25),
+                                            ),
+                                          ),
+                                          SizedBox(height: SizeUtils().hp(2.8)),
+                                          Text(
+                                            Strings.mobileNo,
+                                            style: size18Regular(),
+                                          ),
+                                          SizedBox(
+                                            width: SizeUtils().wp(70),
+                                            height: SizeUtils().hp(4),
+                                            child: CustomTextField(
+                                              prefix: Strings.phoneCode,
+                                              maxLength: 10,
+                                              controller: mobileNumberController,
+                                              focusNode: mobileNumberFocusNode,
+                                              textInputType: TextInputType.phone,
+                                              textInputAction:
+                                                  TextInputAction.next,
+                                              style: size15Regular(
+                                                  letterSpacing: 1.25),
+                                            ),
+                                          ),
+                                          SizedBox(height: SizeUtils().hp(2.8)),
+                                          Text(
+                                            Strings.password,
+                                            style: size18Regular(),
+                                          ),
+                                          SizedBox(
+                                            width: SizeUtils().wp(70),
+                                            height: SizeUtils().hp(4),
+                                            child: CustomTextField(
+                                              isObscureText: true,
+                                              obscureText: obscureTextValue,
+                                              onObscureTap: () => signupBloc
+                                                  .add(SignupPasswordEvent()),
+                                              controller: passwordController,
+                                              focusNode: passwordFocusNode,
+                                              textInputType:
+                                                  TextInputType.emailAddress,
+                                              textInputAction:
+                                                  TextInputAction.done,
+                                              style: size15Regular(
+                                                  letterSpacing: 1.25),
+                                            ),
+                                          ),
+                                        ],
                                       ),
                                     ),
-                                  ),
-                                  Positioned(
-                                    bottom: SizeUtils().hp(10.8),
-                                    right: SizeUtils().wp(37),
-                                    child: SizedBox(
-                                      height: SizeUtils().hp(3.5),
-                                      width: SizeUtils().wp(3.5),
-                                      child: SvgPicture.asset(
-                                        ImageString.facebookSvg,
+                                    Positioned(
+                                      left: 0,
+                                      child: SizedBox(
+                                        height: SizeUtils().hp(15),
+                                        width: SizeUtils().wp(40),
+                                        child: Image.asset(
+                                          ImageString.polygonTopLeft,
+                                          fit: BoxFit.fill,
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                  Positioned(
-                                    bottom: SizeUtils().hp(6.5),
-                                    right: SizeUtils().wp(11),
-                                    child: SizedBox(
-                                      height: SizeUtils().hp(3),
-                                      width: SizeUtils().wp(6),
+                                    Positioned(
+                                      bottom: 0,
+                                      right: 0,
                                       child: GestureDetector(
                                         onTap: isLoading
                                             ? null
@@ -373,9 +302,9 @@ class _SignupScreenState extends State<SignupScreen> {
                                                 if (checkValidation()) {
                                                   signupBloc.add(
                                                     SignupUserEvent(
-                                                      userEmail:
-                                                          emailIdController.text
-                                                              .trim(),
+                                                      userEmail: emailIdController
+                                                          .text
+                                                          .trim(),
                                                       userName: nameController
                                                           .text
                                                           .trim(),
@@ -384,54 +313,128 @@ class _SignupScreenState extends State<SignupScreen> {
                                                               .text
                                                               .trim(),
                                                       userPassword:
-                                                          passwordController
-                                                              .text,
+                                                          passwordController.text,
                                                       deviceToken: deviceToken,
                                                     ),
                                                   );
                                                 }
                                               },
-                                        child: SvgPicture.asset(
-                                          ImageString.signupSvg,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  Positioned(
-                                    bottom: 0,
-                                    child: InkWell(
-                                      onTap: isLoading
-                                          ? null
-                                          : () {
-                                              Navigator.pushNamedAndRemoveUntil(
-                                                  context,
-                                                  Routes.loginScreen,
-                                                  (route) => false);
-                                            },
-                                      child: Padding(
-                                        padding: EdgeInsets.symmetric(
-                                          vertical: SizeUtils().hp(1),
-                                        ),
-                                        child: Text(
-                                          Strings.login,
-                                          style: size18Regular(
-                                            decoration:
-                                                TextDecoration.underline,
+                                        child: SizedBox(
+                                          height: SizeUtils().hp(15),
+                                          width: SizeUtils().wp(40),
+                                          child: Image.asset(
+                                            ImageString.polygonBottomRight,
+                                            fit: BoxFit.fill,
                                           ),
                                         ),
                                       ),
                                     ),
-                                  ),
-                                ],
-                              ),
-                            ],
+                                    Positioned(
+                                      bottom: SizeUtils().hp(17.5),
+                                      right: SizeUtils().wp(0.5),
+                                      child: SizedBox(
+                                        height: SizeUtils().hp(3.3),
+                                        width: SizeUtils().wp(6),
+                                        child: SvgPicture.asset(
+                                          ImageString.instagramSvg,
+                                        ),
+                                      ),
+                                    ),
+                                    Positioned(
+                                      bottom: SizeUtils().hp(14),
+                                      right: SizeUtils().wp(17.5),
+                                      child: SizedBox(
+                                        height: SizeUtils().hp(3.5),
+                                        width: SizeUtils().wp(6),
+                                        child: SvgPicture.asset(
+                                          ImageString.googleSvg,
+                                        ),
+                                      ),
+                                    ),
+                                    Positioned(
+                                      bottom: SizeUtils().hp(10.8),
+                                      right: SizeUtils().wp(37),
+                                      child: SizedBox(
+                                        height: SizeUtils().hp(3.5),
+                                        width: SizeUtils().wp(3.5),
+                                        child: SvgPicture.asset(
+                                          ImageString.facebookSvg,
+                                        ),
+                                      ),
+                                    ),
+                                    Positioned(
+                                      bottom: SizeUtils().hp(6.5),
+                                      right: SizeUtils().wp(11),
+                                      child: SizedBox(
+                                        height: SizeUtils().hp(3),
+                                        width: SizeUtils().wp(6),
+                                        child: GestureDetector(
+                                          onTap: isLoading
+                                              ? null
+                                              : () {
+                                                  if (checkValidation()) {
+                                                    signupBloc.add(
+                                                      SignupUserEvent(
+                                                        userEmail:
+                                                            emailIdController.text
+                                                                .trim(),
+                                                        userName: nameController
+                                                            .text
+                                                            .trim(),
+                                                        userMobileNumber:
+                                                            mobileNumberController
+                                                                .text
+                                                                .trim(),
+                                                        userPassword:
+                                                            passwordController
+                                                                .text,
+                                                        deviceToken: deviceToken,
+                                                      ),
+                                                    );
+                                                  }
+                                                },
+                                          child: SvgPicture.asset(
+                                            ImageString.signupSvg,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    Positioned(
+                                      bottom: 0,
+                                      child: InkWell(
+                                        onTap: isLoading
+                                            ? null
+                                            : () {
+                                                Navigator.pushNamedAndRemoveUntil(
+                                                    context,
+                                                    Routes.loginScreen,
+                                                    (route) => false);
+                                              },
+                                        child: Padding(
+                                          padding: EdgeInsets.symmetric(
+                                            vertical: SizeUtils().hp(1),
+                                          ),
+                                          child: Text(
+                                            Strings.login,
+                                            style: size18Regular(
+                                              decoration:
+                                                  TextDecoration.underline,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       ),
                     ),
-                  ),
-                  ProgressBarRound(isLoading: isLoading),
-                ],
+                    ProgressBarRound(isLoading: isLoading),
+                  ],
+                ),
               );
             },
           ),

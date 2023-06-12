@@ -182,234 +182,237 @@ class _BusinessFormEditScreenState extends State<BusinessFormEditScreen> {
             }
           },
           builder: (context, state) {
-            return Stack(
-              children: [
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: SizeUtils().wp(6)),
-                  child: SingleChildScrollView(
-                    child: Column(
-                      children: [
-                        SizedBox(height: SizeUtils().hp(2)),
-                        CustomAppBar(
-                          title: Strings.businessFormEditScreenHeader,
-                          onMenuTap: () =>
-                              scaffoldState.currentState!.openDrawer(),
-                        ),
-                        SizedBox(height: SizeUtils().hp(4)),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            _textFormTitle(Strings.name),
-                            SizedBox(height: SizeUtils().hp(0.5)),
-                            _textFormBackground(
-                              child: CustomTextField(
-                                controller: nameController,
-                                cursorColor: blackColor,
-                                isBorder: false,
-                                textInputType: TextInputType.name,
-                                textInputAction: TextInputAction.done,
-                                style: size18Regular(textColor: blackColor),
-                              ),
-                            ),
-                            SizedBox(height: SizeUtils().hp(2)),
-                            _textFormTitle(Strings.workName),
-                            SizedBox(height: SizeUtils().hp(0.5)),
-                            _textFormBackground(
-                              child: CustomTextField(
-                                controller: workNameController,
-                                cursorColor: blackColor,
-                                isBorder: false,
-                                textInputType: TextInputType.name,
-                                textInputAction: TextInputAction.done,
-                                style: size18Regular(textColor: blackColor),
-                              ),
-                            ),
-                            SizedBox(height: SizeUtils().hp(2)),
-                            _textFormTitle(Strings.mobileNo),
-                            SizedBox(height: SizeUtils().hp(0.5)),
-                            _textFormBackground(
-                              child: CustomTextField(
-                                controller: mobileNumberController,
-                                cursorColor: blackColor,
-                                isBorder: false,
-                                textInputType: TextInputType.phone,
-                                textInputAction: TextInputAction.done,
-                                style: size18Regular(textColor: blackColor),
-                              ),
-                            ),
-                            SizedBox(height: SizeUtils().hp(2)),
-                            _textFormTitle(Strings.businessType),
-                            SizedBox(height: SizeUtils().hp(0.5)),
-                            _textFormBackground(
-                              child: DropdownButtonHideUnderline(
-                                child: DropdownButton(
-                                  isExpanded: true,
-                                  value: dropdownvalue,
-                                  dropdownColor: whiteColor,
-                                  icon: Icon(
-                                    Icons.arrow_drop_down_rounded,
-                                    color: blackColor,
-                                    size: SizeUtils().wp(8),
-                                  ),
-                                  items: items.map((String items) {
-                                    return DropdownMenuItem(
-                                      value: items,
-                                      child: Text(
-                                        items,
-                                        style: size18Regular(
-                                            textColor: blackColor),
-                                      ),
-                                    );
-                                  }).toList(),
-                                  onChanged: (type) {
-                                    businessFormEditBloc.add(
-                                      BusinessTypeChangeEvent(
-                                        businessType: type.toString(),
-                                      ),
-                                    );
-                                  },
+            return GestureDetector(
+              onTap: () => FocusScope.of(context).unfocus(),
+              child: Stack(
+                children: [
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: SizeUtils().wp(6)),
+                    child: SingleChildScrollView(
+                      child: Column(
+                        children: [
+                          SizedBox(height: SizeUtils().hp(2)),
+                          CustomAppBar(
+                            title: Strings.businessFormEditScreenHeader,
+                            onMenuTap: () =>
+                                scaffoldState.currentState!.openDrawer(),
+                          ),
+                          SizedBox(height: SizeUtils().hp(4)),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              _textFormTitle(Strings.name),
+                              SizedBox(height: SizeUtils().hp(0.5)),
+                              _textFormBackground(
+                                child: CustomTextField(
+                                  controller: nameController,
+                                  cursorColor: blackColor,
+                                  isBorder: false,
+                                  textInputType: TextInputType.name,
+                                  textInputAction: TextInputAction.done,
+                                  style: size18Regular(textColor: blackColor),
                                 ),
                               ),
-                            ),
-                            SizedBox(height: SizeUtils().hp(2)),
-                            _textFormTitle(Strings.uploadLogo),
-                            SizedBox(height: SizeUtils().hp(0.5)),
-                            GestureDetector(
-                              onTap: () {
-                                if (IO.Platform.isIOS) {
-                                  _askPermissionPhotos();
-                                } else {
-                                  _askPermissionStorage();
-                                }
-                              },
-                              child: imageURL.isNotEmpty
-                                  ? SizedBox(
-                                      height: SizeUtils().hp(10),
-                                      width: SizeUtils().wp(19),
-                                      child: Stack(
-                                        children: [
-                                          Container(
-                                            height: SizeUtils().hp(10),
-                                            width: SizeUtils().wp(18),
-                                            decoration: BoxDecoration(
-                                              shape: BoxShape.circle,
-                                              image: DecorationImage(
-                                                image: NetworkImage(imageURL),
-                                                fit: BoxFit.fill,
-                                              ),
-                                            ),
-                                          ),
-                                          Positioned(
-                                            bottom: 0,
-                                            right: 0,
-                                            child: Container(
-                                              height: SizeUtils().hp(4),
-                                              width: SizeUtils().wp(7),
-                                              decoration: const BoxDecoration(
+                              SizedBox(height: SizeUtils().hp(2)),
+                              _textFormTitle(Strings.workName),
+                              SizedBox(height: SizeUtils().hp(0.5)),
+                              _textFormBackground(
+                                child: CustomTextField(
+                                  controller: workNameController,
+                                  cursorColor: blackColor,
+                                  isBorder: false,
+                                  textInputType: TextInputType.name,
+                                  textInputAction: TextInputAction.done,
+                                  style: size18Regular(textColor: blackColor),
+                                ),
+                              ),
+                              SizedBox(height: SizeUtils().hp(2)),
+                              _textFormTitle(Strings.mobileNo),
+                              SizedBox(height: SizeUtils().hp(0.5)),
+                              _textFormBackground(
+                                child: CustomTextField(
+                                  controller: mobileNumberController,
+                                  cursorColor: blackColor,
+                                  isBorder: false,
+                                  textInputType: TextInputType.phone,
+                                  textInputAction: TextInputAction.done,
+                                  style: size18Regular(textColor: blackColor),
+                                ),
+                              ),
+                              SizedBox(height: SizeUtils().hp(2)),
+                              _textFormTitle(Strings.businessType),
+                              SizedBox(height: SizeUtils().hp(0.5)),
+                              _textFormBackground(
+                                child: DropdownButtonHideUnderline(
+                                  child: DropdownButton(
+                                    isExpanded: true,
+                                    value: dropdownvalue,
+                                    dropdownColor: whiteColor,
+                                    icon: Icon(
+                                      Icons.arrow_drop_down_rounded,
+                                      color: blackColor,
+                                      size: SizeUtils().wp(8),
+                                    ),
+                                    items: items.map((String items) {
+                                      return DropdownMenuItem(
+                                        value: items,
+                                        child: Text(
+                                          items,
+                                          style: size18Regular(
+                                              textColor: blackColor),
+                                        ),
+                                      );
+                                    }).toList(),
+                                    onChanged: (type) {
+                                      businessFormEditBloc.add(
+                                        BusinessTypeChangeEvent(
+                                          businessType: type.toString(),
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                ),
+                              ),
+                              SizedBox(height: SizeUtils().hp(2)),
+                              _textFormTitle(Strings.uploadLogo),
+                              SizedBox(height: SizeUtils().hp(0.5)),
+                              GestureDetector(
+                                onTap: () {
+                                  if (IO.Platform.isIOS) {
+                                    _askPermissionPhotos();
+                                  } else {
+                                    _askPermissionStorage();
+                                  }
+                                },
+                                child: imageURL.isNotEmpty
+                                    ? SizedBox(
+                                        height: SizeUtils().hp(10),
+                                        width: SizeUtils().wp(19),
+                                        child: Stack(
+                                          children: [
+                                            Container(
+                                              height: SizeUtils().hp(10),
+                                              width: SizeUtils().wp(18),
+                                              decoration: BoxDecoration(
                                                 shape: BoxShape.circle,
-                                                color: profileButtonColor,
-                                              ),
-                                              child: Center(
-                                                child: Icon(
-                                                  Icons.camera_alt,
-                                                  size: SizeUtils().wp(4),
+                                                image: DecorationImage(
+                                                  image: NetworkImage(imageURL),
+                                                  fit: BoxFit.fill,
                                                 ),
                                               ),
                                             ),
-                                          ),
-                                        ],
-                                      ),
-                                    )
-                                  : businessLogoImage.path.isEmpty
-                                      ? _uploadImageField()
-                                      : SizedBox(
-                                          height: SizeUtils().hp(10),
-                                          width: SizeUtils().wp(19),
-                                          child: Stack(
-                                            children: [
-                                              Container(
-                                                height: SizeUtils().hp(10),
-                                                width: SizeUtils().wp(18),
-                                                decoration: BoxDecoration(
+                                            Positioned(
+                                              bottom: 0,
+                                              right: 0,
+                                              child: Container(
+                                                height: SizeUtils().hp(4),
+                                                width: SizeUtils().wp(7),
+                                                decoration: const BoxDecoration(
                                                   shape: BoxShape.circle,
-                                                  image: DecorationImage(
-                                                    image: FileImage(
-                                                        businessLogoImage),
-                                                    fit: BoxFit.fill,
+                                                  color: profileButtonColor,
+                                                ),
+                                                child: Center(
+                                                  child: Icon(
+                                                    Icons.camera_alt,
+                                                    size: SizeUtils().wp(4),
                                                   ),
                                                 ),
                                               ),
-                                              Positioned(
-                                                bottom: 0,
-                                                right: 0,
-                                                child: Container(
-                                                  height: SizeUtils().hp(4),
-                                                  width: SizeUtils().wp(7),
-                                                  decoration:
-                                                      const BoxDecoration(
+                                            ),
+                                          ],
+                                        ),
+                                      )
+                                    : businessLogoImage.path.isEmpty
+                                        ? _uploadImageField()
+                                        : SizedBox(
+                                            height: SizeUtils().hp(10),
+                                            width: SizeUtils().wp(19),
+                                            child: Stack(
+                                              children: [
+                                                Container(
+                                                  height: SizeUtils().hp(10),
+                                                  width: SizeUtils().wp(18),
+                                                  decoration: BoxDecoration(
                                                     shape: BoxShape.circle,
-                                                    color: profileButtonColor,
-                                                  ),
-                                                  child: Center(
-                                                    child: Icon(
-                                                      Icons.camera_alt,
-                                                      size: SizeUtils().wp(4),
+                                                    image: DecorationImage(
+                                                      image: FileImage(
+                                                          businessLogoImage),
+                                                      fit: BoxFit.fill,
                                                     ),
                                                   ),
                                                 ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                            ),
-                            SizedBox(height: SizeUtils().hp(2)),
-                            Center(
-                              child: GestureDetector(
-                                onTap: isLoading
-                                    ? null
-                                    : () {
-                                        if (checkValidation()) {
-                                          businessFormEditBloc.add(
-                                            UpdateBusinessEvent(
-                                              businessId:
-                                                  businessData.id.toString(),
-                                              businessName: nameController.text,
-                                              businessAddress:
-                                                  workNameController.text,
-                                              businessPhoneNumber:
-                                                  mobileNumberController.text,
-                                              businessTypeId: businessTypeId,
-                                              businessImage: businessLogoImage,
+                                                Positioned(
+                                                  bottom: 0,
+                                                  right: 0,
+                                                  child: Container(
+                                                    height: SizeUtils().hp(4),
+                                                    width: SizeUtils().wp(7),
+                                                    decoration:
+                                                        const BoxDecoration(
+                                                      shape: BoxShape.circle,
+                                                      color: profileButtonColor,
+                                                    ),
+                                                    child: Center(
+                                                      child: Icon(
+                                                        Icons.camera_alt,
+                                                        size: SizeUtils().wp(4),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
                                             ),
-                                          );
-                                        }
-                                      },
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                      color: whiteColor,
-                                      borderRadius: BorderRadius.circular(30)),
-                                  child: Padding(
-                                    padding: EdgeInsets.symmetric(
-                                      vertical: SizeUtils().hp(1),
-                                      horizontal: SizeUtils().wp(3),
-                                    ),
-                                    child: Text(
-                                      Strings.update,
-                                      style:
-                                          size18Regular(textColor: blackColor),
+                                          ),
+                              ),
+                              SizedBox(height: SizeUtils().hp(2)),
+                              Center(
+                                child: GestureDetector(
+                                  onTap: isLoading
+                                      ? null
+                                      : () {
+                                          if (checkValidation()) {
+                                            businessFormEditBloc.add(
+                                              UpdateBusinessEvent(
+                                                businessId:
+                                                    businessData.id.toString(),
+                                                businessName: nameController.text,
+                                                businessAddress:
+                                                    workNameController.text,
+                                                businessPhoneNumber:
+                                                    mobileNumberController.text,
+                                                businessTypeId: businessTypeId,
+                                                businessImage: businessLogoImage,
+                                              ),
+                                            );
+                                          }
+                                        },
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                        color: whiteColor,
+                                        borderRadius: BorderRadius.circular(30)),
+                                    child: Padding(
+                                      padding: EdgeInsets.symmetric(
+                                        vertical: SizeUtils().hp(1),
+                                        horizontal: SizeUtils().wp(3),
+                                      ),
+                                      child: Text(
+                                        Strings.update,
+                                        style:
+                                            size18Regular(textColor: blackColor),
+                                      ),
                                     ),
                                   ),
                                 ),
                               ),
-                            ),
-                          ],
-                        )
-                      ],
+                            ],
+                          )
+                        ],
+                      ),
                     ),
                   ),
-                ),
-                ProgressBarRound(isLoading: isLoading),
-              ],
+                  ProgressBarRound(isLoading: isLoading),
+                ],
+              ),
             );
           },
         ),

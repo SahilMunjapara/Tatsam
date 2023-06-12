@@ -105,42 +105,41 @@ class _LoginScreenState extends State<LoginScreen> {
               }
               if (state is LoginUserFetchState) {
                 log('SUCESSS');
-                _phoneVerification(
-                  Strings.phoneCode.trim() +
-                      state.responseModel.loginUserData!.phoneNo!,
+                log(state.responseModel.loginUserData!.id.toString());
+                loginBloc.add(
+                  LoginUserDetailEvent(
+                      phoneNumber:
+                          state.responseModel.loginUserData!.id!.toString()),
                 );
+                // _phoneVerification(
+                //   Strings.phoneCode.trim() +
+                //       state.responseModel.loginUserData!.phoneNo!,
+                // );
               }
               if (state is LoginUserDetailState) {
-                if (state.responseModel.userData!.isEmpty) {
-                  SnackbarWidget.showSnackbar(
-                    context: context,
-                    message: state.responseModel.message,
-                    duration: 1500,
-                  );
-                } else {
-                  AppPreference().setBoolData(PreferencesKey.isLogin, true);
-                  AppPreference().setStringData(PreferencesKey.userName,
-                      state.responseModel.userData!.first.name!);
-                  AppPreference().setStringData(PreferencesKey.userEmail,
-                      state.responseModel.userData!.first.email!);
-                  AppPreference().setStringData(PreferencesKey.userPhone,
-                      state.responseModel.userData!.first.phoneNo!);
-                  AppPreference().setStringData(PreferencesKey.userId,
-                      state.responseModel.userData!.first.id!.toString());
-                  Navigator.pushNamedAndRemoveUntil(
-                      context, Routes.dashboardScreen, (route) => false);
-                }
+                AppPreference().setBoolData(PreferencesKey.isLogin, true);
+                AppPreference().setStringData(PreferencesKey.userName,
+                    state.responseModel.userdata!.name!);
+                AppPreference().setStringData(PreferencesKey.userEmail,
+                    state.responseModel.userdata!.email!);
+                AppPreference().setStringData(PreferencesKey.userPhone,
+                    state.responseModel.userdata!.phoneNo!);
+                AppPreference().setStringData(PreferencesKey.userId,
+                    state.responseModel.userdata!.id!.toString());
+                Navigator.pushNamedAndRemoveUntil(
+                    context, Routes.dashboardScreen, (route) => false);
               }
+
               if (state is PhoneCheckState) {
                 if (state.responseModel.message! == "Yes") {
-                  _phoneVerification(
-                    Strings.phoneCode.trim() + mobileNumberController.text,
-                  );
-                  // loginBloc.add(
-                  //   LoginUserDetailEvent(
-                  //     phoneNumber: mobileNumberController.text,
-                  //   ),
+                  // _phoneVerification(
+                  //   Strings.phoneCode.trim() + mobileNumberController.text,
                   // );
+                  loginBloc.add(
+                    LoginUserDetailEvent(
+                      phoneNumber: mobileNumberController.text,
+                    ),
+                  );
                 } else {
                   SnackbarWidget.showSnackbar(
                     context: context,
@@ -155,268 +154,272 @@ class _LoginScreenState extends State<LoginScreen> {
               }
             },
             builder: (context, state) {
-              return Stack(
-                children: [
-                  Image.asset(ImageString.topLeftBlur),
-                  Positioned(
-                    bottom: 0,
-                    right: 0,
-                    child: Image.asset(ImageString.bottomRightBlur),
-                  ),
-                  Align(
-                    alignment: Alignment.bottomCenter,
-                    child: SizedBox(
-                      height: SizeUtils().hp(18),
-                      width: SizeUtils().screenWidth,
-                      child: Image.asset(
-                        ImageString.building,
-                        fit: BoxFit.fill,
+              return GestureDetector(
+                onTap: () => FocusScope.of(context).unfocus(),
+                child: Stack(
+                  children: [
+                    Image.asset(ImageString.topLeftBlur),
+                    Positioned(
+                      bottom: 0,
+                      right: 0,
+                      child: Image.asset(ImageString.bottomRightBlur),
+                    ),
+                    Align(
+                      alignment: Alignment.bottomCenter,
+                      child: SizedBox(
+                        height: SizeUtils().hp(18),
+                        width: SizeUtils().screenWidth,
+                        child: Image.asset(
+                          ImageString.building,
+                          fit: BoxFit.fill,
+                        ),
                       ),
                     ),
-                  ),
-                  Center(
-                    child: Padding(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: SizeUtils().wp(8)),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          SizedBox(height: SizeUtils().hp(4)),
-                          Text(
-                            Strings.appName,
-                            style: size48Regular(),
-                          ),
-                          SizedBox(height: SizeUtils().hp(2)),
-                          Stack(
-                            children: [
-                              Padding(
-                                padding: EdgeInsets.only(
-                                  top: SizeUtils().hp(3),
-                                  bottom: SizeUtils().hp(7),
-                                ),
-                                child: SizedBox(
-                                  height: SizeUtils().hp(60),
-                                  width: SizeUtils().wp(150),
-                                  child: Image.asset(
-                                    ImageString.rectangle,
-                                    fit: BoxFit.fill,
+                    Center(
+                      child: Padding(
+                        padding:
+                            EdgeInsets.symmetric(horizontal: SizeUtils().wp(8)),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            SizedBox(height: SizeUtils().hp(4)),
+                            Text(
+                              Strings.appName,
+                              style: size48Regular(),
+                            ),
+                            SizedBox(height: SizeUtils().hp(2)),
+                            Stack(
+                              children: [
+                                Padding(
+                                  padding: EdgeInsets.only(
+                                    top: SizeUtils().hp(3),
+                                    bottom: SizeUtils().hp(7),
                                   ),
-                                ),
-                              ),
-                              Positioned(
-                                top: SizeUtils().hp(13),
-                                left: SizeUtils().wp(7),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      Strings.login,
-                                      style: size38Regular(),
-                                    ),
-                                    SizedBox(height: SizeUtils().hp(4)),
-                                    Text(
-                                      Strings.email,
-                                      style: size18Regular(),
-                                    ),
-                                    SizedBox(
-                                      width: SizeUtils().wp(70),
-                                      height: SizeUtils().hp(4),
-                                      child: CustomTextField(
-                                        controller: emailIdController,
-                                        focusNode: emailIdFocusNode,
-                                        textInputType:
-                                            TextInputType.emailAddress,
-                                        textInputAction: TextInputAction.next,
-                                        style:
-                                            size15Regular(letterSpacing: 1.25),
-                                      ),
-                                    ),
-                                    SizedBox(height: SizeUtils().hp(4)),
-                                    Text(
-                                      Strings.password,
-                                      style: size18Regular(),
-                                    ),
-                                    SizedBox(
-                                      width: SizeUtils().wp(70),
-                                      height: SizeUtils().hp(4),
-                                      child: CustomTextField(
-                                        isObscureText: true,
-                                        obscureText: obscureTextValue,
-                                        onObscureTap: () =>
-                                            loginBloc.add(LoginPasswordEvent()),
-                                        controller: passwordController,
-                                        focusNode: passwordFocusNode,
-                                        textInputType:
-                                            TextInputType.emailAddress,
-                                        textInputAction: TextInputAction.done,
-                                        style:
-                                            size15Regular(letterSpacing: 1.25),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              Positioned(
-                                right: 0,
-                                child: SizedBox(
-                                  height: SizeUtils().hp(15),
-                                  width: SizeUtils().wp(40),
-                                  child: Image.asset(
-                                    ImageString.polygonTopRight,
-                                    fit: BoxFit.fill,
-                                  ),
-                                ),
-                              ),
-                              Positioned(
-                                bottom: 0,
-                                child: GestureDetector(
-                                  onTap: isLoading
-                                      ? null
-                                      : () {
-                                          if (checkValidation()) {
-                                            // loginBloc.add(PhoneCheckEvent(
-                                            //   phoneNumber:
-                                            //       mobileNumberController.text,
-                                            // ));
-                                            loginBloc.add(
-                                              LoginUserEvent(
-                                                userEmail: emailIdController
-                                                    .text
-                                                    .trim(),
-                                                userPassword:
-                                                    passwordController.text,
-                                                deviceToken: deviceToken,
-                                              ),
-                                            );
-                                          }
-                                        },
                                   child: SizedBox(
-                                    height: SizeUtils().hp(15),
-                                    width: SizeUtils().wp(40),
+                                    height: SizeUtils().hp(60),
+                                    width: SizeUtils().wp(150),
                                     child: Image.asset(
-                                      ImageString.polygonBottomLeft,
+                                      ImageString.rectangle,
                                       fit: BoxFit.fill,
                                     ),
                                   ),
                                 ),
-                              ),
-                              Positioned(
-                                bottom: SizeUtils().hp(17),
-                                child: SizedBox(
-                                  height: SizeUtils().hp(3.5),
-                                  width: SizeUtils().wp(3.5),
-                                  child: SvgPicture.asset(
-                                    ImageString.facebookSvg,
+                                Positioned(
+                                  top: SizeUtils().hp(13),
+                                  left: SizeUtils().wp(7),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        Strings.login,
+                                        style: size38Regular(),
+                                      ),
+                                      SizedBox(height: SizeUtils().hp(4)),
+                                      Text(
+                                        Strings.email,
+                                        style: size18Regular(),
+                                      ),
+                                      SizedBox(
+                                        width: SizeUtils().wp(70),
+                                        height: SizeUtils().hp(4),
+                                        child: CustomTextField(
+                                          controller: emailIdController,
+                                          focusNode: emailIdFocusNode,
+                                          textInputType:
+                                              TextInputType.emailAddress,
+                                          textInputAction: TextInputAction.next,
+                                          style: size15Regular(
+                                              letterSpacing: 1.25),
+                                        ),
+                                      ),
+                                      SizedBox(height: SizeUtils().hp(4)),
+                                      Text(
+                                        Strings.password,
+                                        style: size18Regular(),
+                                      ),
+                                      SizedBox(
+                                        width: SizeUtils().wp(70),
+                                        height: SizeUtils().hp(4),
+                                        child: CustomTextField(
+                                          isObscureText: true,
+                                          obscureText: obscureTextValue,
+                                          onObscureTap: () => loginBloc
+                                              .add(LoginPasswordEvent()),
+                                          controller: passwordController,
+                                          focusNode: passwordFocusNode,
+                                          textInputType:
+                                              TextInputType.emailAddress,
+                                          textInputAction: TextInputAction.done,
+                                          style: size15Regular(
+                                              letterSpacing: 1.25),
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ),
-                              ),
-                              Positioned(
-                                bottom: SizeUtils().hp(13.8),
-                                left: SizeUtils().wp(16),
-                                child: SizedBox(
-                                  height: SizeUtils().hp(3.5),
-                                  width: SizeUtils().wp(6),
-                                  child: SvgPicture.asset(
-                                    ImageString.googleSvg,
-                                  ),
-                                ),
-                              ),
-                              Positioned(
-                                bottom: SizeUtils().hp(10.5),
-                                left: SizeUtils().wp(34),
-                                child: SizedBox(
-                                  height: SizeUtils().hp(3.3),
-                                  width: SizeUtils().wp(6),
-                                  child: SvgPicture.asset(
-                                    ImageString.instagramSvg,
-                                  ),
-                                ),
-                              ),
-                              Positioned(
-                                bottom: SizeUtils().hp(6),
-                                left: SizeUtils().wp(11),
-                                child: GestureDetector(
-                                  onTap: isLoading
-                                      ? null
-                                      : () {
-                                          if (checkValidation()) {
-                                            // loginBloc.add(PhoneCheckEvent(
-                                            //     phoneNumber:
-                                            //         mobileNumberController
-                                            //             .text));
-                                            loginBloc.add(
-                                              LoginUserEvent(
-                                                userEmail: emailIdController
-                                                    .text
-                                                    .trim(),
-                                                userPassword:
-                                                    passwordController.text,
-                                                deviceToken: deviceToken,
-                                              ),
-                                            );
-                                          }
-                                        },
+                                Positioned(
+                                  right: 0,
                                   child: SizedBox(
-                                    height: SizeUtils().hp(3),
-                                    width: SizeUtils().wp(6),
-                                    child: SvgPicture.asset(
-                                      ImageString.loginSvg,
+                                    height: SizeUtils().hp(15),
+                                    width: SizeUtils().wp(40),
+                                    child: Image.asset(
+                                      ImageString.polygonTopRight,
+                                      fit: BoxFit.fill,
                                     ),
                                   ),
                                 ),
-                              ),
-                              Positioned(
-                                right: 0,
-                                bottom: 0,
-                                child: GestureDetector(
-                                  onTap: isLoading
-                                      ? null
-                                      : () {
-                                          Navigator.pushNamedAndRemoveUntil(
-                                              context,
-                                              Routes.signupScreen,
-                                              (route) => false);
-                                        },
-                                  child: Padding(
-                                    padding: EdgeInsets.symmetric(
-                                      vertical: SizeUtils().hp(1),
-                                    ),
-                                    child: Text.rich(
-                                      TextSpan(
-                                        children: [
-                                          TextSpan(
-                                            text: Strings.newUser,
-                                            style: size18Regular(),
-                                          ),
-                                          TextSpan(
-                                            text: Strings.sign,
-                                            style: size18Regular(
-                                              decoration:
-                                                  TextDecoration.underline,
-                                            ),
-                                          ),
-                                          const TextSpan(text: ' '),
-                                          TextSpan(
-                                            text: Strings.up,
-                                            style: size18Regular(
-                                              decoration:
-                                                  TextDecoration.underline,
-                                            ),
-                                          ),
-                                        ],
+                                Positioned(
+                                  bottom: 0,
+                                  child: GestureDetector(
+                                    onTap: isLoading
+                                        ? null
+                                        : () {
+                                            if (checkValidation()) {
+                                              // loginBloc.add(PhoneCheckEvent(
+                                              //   phoneNumber:
+                                              //       mobileNumberController.text,
+                                              // ));
+                                              loginBloc.add(
+                                                LoginUserEvent(
+                                                  userEmail: emailIdController
+                                                      .text
+                                                      .trim(),
+                                                  userPassword:
+                                                      passwordController.text,
+                                                  deviceToken: deviceToken,
+                                                ),
+                                              );
+                                            }
+                                          },
+                                    child: SizedBox(
+                                      height: SizeUtils().hp(15),
+                                      width: SizeUtils().wp(40),
+                                      child: Image.asset(
+                                        ImageString.polygonBottomLeft,
+                                        fit: BoxFit.fill,
                                       ),
                                     ),
                                   ),
                                 ),
-                              ),
-                            ],
-                          ),
-                        ],
+                                Positioned(
+                                  bottom: SizeUtils().hp(17),
+                                  child: SizedBox(
+                                    height: SizeUtils().hp(3.5),
+                                    width: SizeUtils().wp(3.5),
+                                    child: SvgPicture.asset(
+                                      ImageString.facebookSvg,
+                                    ),
+                                  ),
+                                ),
+                                Positioned(
+                                  bottom: SizeUtils().hp(13.8),
+                                  left: SizeUtils().wp(16),
+                                  child: SizedBox(
+                                    height: SizeUtils().hp(3.5),
+                                    width: SizeUtils().wp(6),
+                                    child: SvgPicture.asset(
+                                      ImageString.googleSvg,
+                                    ),
+                                  ),
+                                ),
+                                Positioned(
+                                  bottom: SizeUtils().hp(10.5),
+                                  left: SizeUtils().wp(34),
+                                  child: SizedBox(
+                                    height: SizeUtils().hp(3.3),
+                                    width: SizeUtils().wp(6),
+                                    child: SvgPicture.asset(
+                                      ImageString.instagramSvg,
+                                    ),
+                                  ),
+                                ),
+                                Positioned(
+                                  bottom: SizeUtils().hp(6),
+                                  left: SizeUtils().wp(11),
+                                  child: GestureDetector(
+                                    onTap: isLoading
+                                        ? null
+                                        : () {
+                                            if (checkValidation()) {
+                                              // loginBloc.add(PhoneCheckEvent(
+                                              //     phoneNumber:
+                                              //         mobileNumberController
+                                              //             .text));
+                                              loginBloc.add(
+                                                LoginUserEvent(
+                                                  userEmail: emailIdController
+                                                      .text
+                                                      .trim(),
+                                                  userPassword:
+                                                      passwordController.text,
+                                                  deviceToken: deviceToken,
+                                                ),
+                                              );
+                                            }
+                                          },
+                                    child: SizedBox(
+                                      height: SizeUtils().hp(3),
+                                      width: SizeUtils().wp(6),
+                                      child: SvgPicture.asset(
+                                        ImageString.loginSvg,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                Positioned(
+                                  right: 0,
+                                  bottom: 0,
+                                  child: GestureDetector(
+                                    onTap: isLoading
+                                        ? null
+                                        : () {
+                                            Navigator.pushNamedAndRemoveUntil(
+                                                context,
+                                                Routes.signupScreen,
+                                                (route) => false);
+                                          },
+                                    child: Padding(
+                                      padding: EdgeInsets.symmetric(
+                                        vertical: SizeUtils().hp(1),
+                                      ),
+                                      child: Text.rich(
+                                        TextSpan(
+                                          children: [
+                                            TextSpan(
+                                              text: Strings.newUser,
+                                              style: size18Regular(),
+                                            ),
+                                            TextSpan(
+                                              text: Strings.sign,
+                                              style: size18Regular(
+                                                decoration:
+                                                    TextDecoration.underline,
+                                              ),
+                                            ),
+                                            const TextSpan(text: ' '),
+                                            TextSpan(
+                                              text: Strings.up,
+                                              style: size18Regular(
+                                                decoration:
+                                                    TextDecoration.underline,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                  ProgressBarRound(isLoading: isLoading),
-                ],
+                    ProgressBarRound(isLoading: isLoading),
+                  ],
+                ),
               );
             },
           ),

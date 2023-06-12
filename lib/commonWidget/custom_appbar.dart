@@ -33,7 +33,7 @@ class CustomAppBar extends StatelessWidget {
         children: [
           Column(
             children: [
-              SizedBox(height: SizeUtils().hp(2)),
+              // SizedBox(height: SizeUtils().hp(2)),
               GestureDetector(
                 onTap: onMenuTap,
                 child: Container(
@@ -70,7 +70,7 @@ class CustomAppBar extends StatelessWidget {
           ),
           Column(
             children: [
-              SizedBox(height: SizeUtils().hp(2)),
+              // SizedBox(height: SizeUtils().hp(2)),
               GestureDetector(
                 onTap: onSearchTap ?? () => log('Search'),
                 child: Container(

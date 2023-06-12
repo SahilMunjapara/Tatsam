@@ -208,226 +208,231 @@ class _ProfileScreenState extends State<ProfileScreen> {
           child: BlocBuilder(
             bloc: profileBloc,
             builder: (context, state) {
-              return Stack(
-                children: [
-                  Padding(
-                    padding:
-                        EdgeInsets.symmetric(horizontal: SizeUtils().wp(6)),
-                    child: Column(
-                      children: [
-                        SizedBox(height: SizeUtils().hp(2)),
-                        CustomAppBar(
-                          title: Strings.profile,
-                          onMenuTap: () =>
-                              scaffoldState.currentState!.openDrawer(),
-                        ),
-                        SizedBox(height: SizeUtils().hp(4)),
-                        Visibility(
-                          visible: isProfileEdit,
-                          child: Padding(
-                            padding: EdgeInsets.symmetric(
-                                horizontal: SizeUtils().wp(2.5)),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                GestureDetector(
-                                  onTap: () {
-                                    _fetchLocalData();
-                                    profileBloc.add(
-                                        ProfileEditEvent(isProfileEdit: false));
-                                  },
-                                  child: SizedBox(
-                                    height: SizeUtils().hp(2.5),
-                                    width: SizeUtils().wp(5),
-                                    child:
-                                        SvgPicture.asset(ImageString.closeSvg),
-                                  ),
-                                ),
-                                GestureDetector(
-                                  onTap: () {
-                                    if (checkValidation()) {
-                                      if (profileFile.path.isNotEmpty ||
-                                          dataUpdated()) {
-                                        profileBloc.add(
-                                          ProfileupdatedEvent(
-                                            userName: nameController.text,
-                                            userEmail: emailIdController.text,
-                                            userPhone:
-                                                mobileNumberController.text,
-                                            userId:
-                                                AppPreference().getStringData(
-                                              PreferencesKey.userId,
-                                            ),
-                                            groupId: AppPreference()
-                                                .getStringData(
-                                                    PreferencesKey.groupId),
-                                            userImage: profileFile,
-                                          ),
-                                        );
-                                      } else {
-                                        _fetchLocalData();
-                                        profileBloc.add(ProfileEditEvent(
-                                            isProfileEdit: false));
-                                      }
-                                    }
-                                  },
-                                  child: SizedBox(
-                                    height: SizeUtils().hp(2.5),
-                                    width: SizeUtils().wp(5),
-                                    child:
-                                        SvgPicture.asset(ImageString.checkSvg),
-                                  ),
-                                ),
-                              ],
-                            ),
+              return GestureDetector(
+                onTap: () => FocusScope.of(context).unfocus(),
+                child: Stack(
+                  children: [
+                    Padding(
+                      padding:
+                          EdgeInsets.symmetric(horizontal: SizeUtils().wp(6)),
+                      child: Column(
+                        children: [
+                          SizedBox(height: SizeUtils().hp(2)),
+                          CustomAppBar(
+                            title: Strings.profile,
+                            onMenuTap: () =>
+                                scaffoldState.currentState!.openDrawer(),
                           ),
-                        ),
-                        SizedBox(height: SizeUtils().hp(2)),
-                        GestureDetector(
-                          onTap: !isProfileEdit
-                              ? null
-                              : () {
-                                  if (IO.Platform.isIOS) {
-                                    _askPermissionPhotos();
-                                  } else {
-                                    _askPermissionStorage();
-                                  }
-                                },
-                          child: Container(
-                            height: SizeUtils().hp(18),
-                            width: SizeUtils().wp(34),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(30),
-                              color: whiteColor,
-                              // image: const DecorationImage(
-                              //   image: AssetImage(ImageString.person),
-                              //   fit: BoxFit.fill,
-                              // ),
-                            ),
-                            child: Stack(
-                              children: [
-                                profileImageURL.isNotEmpty
-                                    ? SizedBox(
-                                        height: SizeUtils().hp(18),
-                                        width: SizeUtils().wp(34),
-                                        child: ClipRRect(
-                                          borderRadius:
-                                              BorderRadius.circular(10),
-                                          child: Image.network(
-                                            profileImageURL,
-                                            fit: BoxFit.fill,
-                                          ),
-                                        ),
-                                      )
-                                    : SizedBox(
-                                        height: SizeUtils().hp(18),
-                                        width: SizeUtils().wp(34),
-                                        child: profileFile.path.isNotEmpty
-                                            ? ClipRRect(
-                                                borderRadius:
-                                                    BorderRadius.circular(10),
-                                                child: Image.file(
-                                                  profileFile,
-                                                  fit: BoxFit.fill,
-                                                ),
-                                              )
-                                            : Center(
-                                                child: Text(
-                                                  nameController.text
-                                                      .substring(0, 1),
-                                                  style: size48Regular(
-                                                      textColor:
-                                                          profileButtonColor),
-                                                ),
-                                              ),
-                                      ),
-                                Visibility(
-                                  visible: !isProfileEdit,
-                                  child: Positioned(
-                                    bottom: 0,
-                                    right: 0,
-                                    child: Container(
-                                      height: SizeUtils().hp(5),
-                                      width: SizeUtils().wp(9),
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(10),
-                                        color: backgroundColor,
-                                      ),
-                                      child: GestureDetector(
-                                        onTap: () {
+                          SizedBox(height: SizeUtils().hp(4)),
+                          Visibility(
+                            visible: isProfileEdit,
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: SizeUtils().wp(2.5)),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  GestureDetector(
+                                    onTap: () {
+                                      _fetchLocalData();
+                                      profileBloc.add(ProfileEditEvent(
+                                          isProfileEdit: false));
+                                    },
+                                    child: SizedBox(
+                                      height: SizeUtils().hp(2.5),
+                                      width: SizeUtils().wp(5),
+                                      child: SvgPicture.asset(
+                                          ImageString.closeSvg),
+                                    ),
+                                  ),
+                                  GestureDetector(
+                                    onTap: () {
+                                      if (checkValidation()) {
+                                        if (profileFile.path.isNotEmpty ||
+                                            dataUpdated()) {
                                           profileBloc.add(
-                                            ProfileEditEvent(
-                                              isProfileEdit: !isProfileEdit,
+                                            ProfileupdatedEvent(
+                                              userName: nameController.text,
+                                              userEmail: emailIdController.text,
+                                              userPhone:
+                                                  mobileNumberController.text,
+                                              userId:
+                                                  AppPreference().getStringData(
+                                                PreferencesKey.userId,
+                                              ),
+                                              groupId: AppPreference()
+                                                  .getStringData(
+                                                      PreferencesKey.groupId),
+                                              userImage: profileFile,
                                             ),
                                           );
-                                          if (!isProfileEdit) {
-                                            _fetchLocalData();
-                                          }
-                                        },
-                                        child: const Center(
-                                          child: Icon(Icons.edit),
+                                        } else {
+                                          _fetchLocalData();
+                                          profileBloc.add(ProfileEditEvent(
+                                              isProfileEdit: false));
+                                        }
+                                      }
+                                    },
+                                    child: SizedBox(
+                                      height: SizeUtils().hp(2.5),
+                                      width: SizeUtils().wp(5),
+                                      child: SvgPicture.asset(
+                                          ImageString.checkSvg),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          SizedBox(height: SizeUtils().hp(2)),
+                          GestureDetector(
+                            onTap: !isProfileEdit
+                                ? null
+                                : () {
+                                    if (IO.Platform.isIOS) {
+                                      _askPermissionPhotos();
+                                    } else {
+                                      _askPermissionStorage();
+                                    }
+                                  },
+                            child: Container(
+                              height: SizeUtils().hp(18),
+                              width: SizeUtils().wp(34),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(30),
+                                color: whiteColor,
+                                // image: const DecorationImage(
+                                //   image: AssetImage(ImageString.person),
+                                //   fit: BoxFit.fill,
+                                // ),
+                              ),
+                              child: Stack(
+                                children: [
+                                  profileImageURL.isNotEmpty
+                                      ? SizedBox(
+                                          height: SizeUtils().hp(18),
+                                          width: SizeUtils().wp(34),
+                                          child: ClipRRect(
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                            child: Image.network(
+                                              profileImageURL,
+                                              fit: BoxFit.fill,
+                                            ),
+                                          ),
+                                        )
+                                      : SizedBox(
+                                          height: SizeUtils().hp(18),
+                                          width: SizeUtils().wp(34),
+                                          child: profileFile.path.isNotEmpty
+                                              ? ClipRRect(
+                                                  borderRadius:
+                                                      BorderRadius.circular(10),
+                                                  child: Image.file(
+                                                    profileFile,
+                                                    fit: BoxFit.fill,
+                                                  ),
+                                                )
+                                              : Center(
+                                                  child: Text(
+                                                    nameController.text
+                                                        .substring(0, 1),
+                                                    style: size48Regular(
+                                                        textColor:
+                                                            profileButtonColor),
+                                                  ),
+                                                ),
+                                        ),
+                                  Visibility(
+                                    visible: !isProfileEdit,
+                                    child: Positioned(
+                                      bottom: 0,
+                                      right: 0,
+                                      child: Container(
+                                        height: SizeUtils().hp(5),
+                                        width: SizeUtils().wp(9),
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                          color: backgroundColor,
+                                        ),
+                                        child: GestureDetector(
+                                          onTap: () {
+                                            profileBloc.add(
+                                              ProfileEditEvent(
+                                                isProfileEdit: !isProfileEdit,
+                                              ),
+                                            );
+                                            if (!isProfileEdit) {
+                                              _fetchLocalData();
+                                            }
+                                          },
+                                          child: const Center(
+                                            child: Icon(Icons.edit),
+                                          ),
                                         ),
                                       ),
                                     ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
                           ),
-                        ),
-                        SizedBox(height: SizeUtils().hp(3)),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            _textFormTitle(Strings.fullName),
-                            SizedBox(height: SizeUtils().hp(0.5)),
-                            _textFormBackground(
-                              child: CustomTextField(
-                                enabled: isProfileEdit,
-                                controller: nameController,
-                                isBorder: false,
-                                hintText: Strings.nameHint,
-                                textInputType: TextInputType.name,
-                                textInputAction: TextInputAction.done,
-                                style: size18Regular(),
+                          SizedBox(height: SizeUtils().hp(3)),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              _textFormTitle(Strings.fullName),
+                              SizedBox(height: SizeUtils().hp(0.5)),
+                              _textFormBackground(
+                                child: CustomTextField(
+                                  enabled: isProfileEdit,
+                                  controller: nameController,
+                                  isBorder: false,
+                                  hintText: Strings.nameHint,
+                                  textInputType: TextInputType.name,
+                                  textInputAction: TextInputAction.done,
+                                  style: size18Regular(),
+                                ),
                               ),
-                            ),
-                            SizedBox(height: SizeUtils().hp(2.5)),
-                            _textFormTitle(Strings.contactNum),
-                            SizedBox(height: SizeUtils().hp(0.5)),
-                            _textFormBackground(
-                              child: CustomTextField(
-                                enabled: isProfileEdit,
-                                controller: mobileNumberController,
-                                isBorder: false,
-                                maxLength: 10,
-                                hintText: Strings.contactHint,
-                                textInputType: TextInputType.phone,
-                                textInputAction: TextInputAction.done,
-                                style: size18Regular(),
+                              SizedBox(height: SizeUtils().hp(2.5)),
+                              _textFormTitle(Strings.contactNum),
+                              SizedBox(height: SizeUtils().hp(0.5)),
+                              _textFormBackground(
+                                child: CustomTextField(
+                                  enabled: isProfileEdit,
+                                  controller: mobileNumberController,
+                                  isBorder: false,
+                                  maxLength: 10,
+                                  hintText: Strings.contactHint,
+                                  textInputType: TextInputType.phone,
+                                  textInputAction: TextInputAction.done,
+                                  style: size18Regular(),
+                                ),
                               ),
-                            ),
-                            SizedBox(height: SizeUtils().hp(2.5)),
-                            _textFormTitle(Strings.emailId),
-                            SizedBox(height: SizeUtils().hp(0.5)),
-                            _textFormBackground(
-                              child: CustomTextField(
-                                enabled: isProfileEdit,
-                                controller: emailIdController,
-                                isBorder: false,
-                                hintText: Strings.emailHint,
-                                textInputType: TextInputType.emailAddress,
-                                textInputAction: TextInputAction.done,
-                                style: size18Regular(),
+                              SizedBox(height: SizeUtils().hp(2.5)),
+                              _textFormTitle(Strings.emailId),
+                              SizedBox(height: SizeUtils().hp(0.5)),
+                              _textFormBackground(
+                                child: CustomTextField(
+                                  enabled: isProfileEdit,
+                                  controller: emailIdController,
+                                  isBorder: false,
+                                  hintText: Strings.emailHint,
+                                  textInputType: TextInputType.emailAddress,
+                                  textInputAction: TextInputAction.done,
+                                  style: size18Regular(),
+                                ),
                               ),
-                            ),
-                          ],
-                        ),
-                      ],
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                  ProgressBarRound(isLoading: isLoading),
-                ],
+                    ProgressBarRound(isLoading: isLoading),
+                  ],
+                ),
               );
             },
           ),

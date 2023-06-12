@@ -7,7 +7,7 @@ class SnackbarWidget {
   static showSnackbar({
     String? message,
     BuildContext? context,
-    int duration = 800,
+    int duration = 1600,
   }) {
     ScaffoldMessenger.of(context!).showSnackBar(
       SnackBar(

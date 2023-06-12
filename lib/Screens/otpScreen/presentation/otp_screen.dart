@@ -114,29 +114,29 @@ class _OtpScreenState extends State<OtpScreen> {
                   );
                 }
               }
-              if (state is FetchUserState) {
-                if (state.responseModel.userData!.isEmpty) {
-                  SnackbarWidget.showSnackbar(
-                    context: context,
-                    message: state.responseModel.message,
-                    duration: 1500,
-                  );
-                } else {
-                  AppPreference().setBoolData(PreferencesKey.isLogin, true);
-                  AppPreference().setStringData(PreferencesKey.userName,
-                      state.responseModel.userData!.first.name!);
-                  AppPreference().setStringData(PreferencesKey.userEmail,
-                      state.responseModel.userData!.first.email!);
-                  AppPreference().setStringData(PreferencesKey.userPhone,
-                      state.responseModel.userData!.first.phoneNo!);
-                  AppPreference().setStringData(PreferencesKey.userImage,
-                      state.responseModel.userData!.first.imagePath!);
-                  AppPreference().setStringData(PreferencesKey.userId,
-                      state.responseModel.userData!.first.id!.toString());
-                  Navigator.pushNamedAndRemoveUntil(
-                      context, Routes.dashboardScreen, (route) => false);
-                }
-              }
+              // if (state is FetchUserState) {
+              //   if (state.responseModel.userdata!.isEmpty) {
+              //     SnackbarWidget.showSnackbar(
+              //       context: context,
+              //       message: state.responseModel.message,
+              //       duration: 1500,
+              //     );
+              //   } else {
+              //     AppPreference().setBoolData(PreferencesKey.isLogin, true);
+              //     AppPreference().setStringData(PreferencesKey.userName,
+              //         state.responseModel.userData!.first.name!);
+              //     AppPreference().setStringData(PreferencesKey.userEmail,
+              //         state.responseModel.userData!.first.email!);
+              //     AppPreference().setStringData(PreferencesKey.userPhone,
+              //         state.responseModel.userData!.first.phoneNo!);
+              //     AppPreference().setStringData(PreferencesKey.userImage,
+              //         state.responseModel.userData!.first.imagePath!);
+              //     AppPreference().setStringData(PreferencesKey.userId,
+              //         state.responseModel.userData!.first.id!.toString());
+              //     Navigator.pushNamedAndRemoveUntil(
+              //         context, Routes.dashboardScreen, (route) => false);
+              //   }
+              // }
               if (state is TimerStartedState) {
                 _textControllers
                     .map((controller) => controller!.clear())
@@ -506,6 +506,12 @@ class _OtpScreenState extends State<OtpScreen> {
                       if (!_pin.contains(null) &&
                           !_pin.contains('') &&
                           currentPin.length == 6) {
+                        if (checkValidation()) {
+                          _verifyOtp(
+                            _verificationToken,
+                            _getCurrentPin(),
+                          );
+                        }
                         LogUtils.showLogs(message: currentPin, tag: 'PIN');
                       }
                     },

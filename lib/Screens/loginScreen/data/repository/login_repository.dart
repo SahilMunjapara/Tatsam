@@ -1,8 +1,12 @@
+import 'dart:developer';
+
 import 'package:tatsam/Screens/loginScreen/bloc/login_screen_event.dart';
 import 'package:tatsam/Screens/loginScreen/data/model/login_response_model.dart';
 import 'package:tatsam/Screens/loginScreen/data/model/login_user_fetch_response_model.dart';
 import 'package:tatsam/Screens/loginScreen/data/model/phone_check_response_model.dart';
 import 'package:tatsam/Screens/otpScreen/data/model/fetch_user_response_model.dart';
+import 'package:tatsam/Utils/app_preferences/app_preferences.dart';
+import 'package:tatsam/Utils/app_preferences/prefrences_key.dart';
 import 'package:tatsam/service/network/model/resource_model.dart';
 import 'package:tatsam/service/network/network.dart';
 import 'package:tatsam/service/network/network_string.dart';
@@ -37,7 +41,9 @@ class LoginRepository implements ILoginRepository {
 
       var result = await NetworkAPICall().post(loginUserURL, body);
       LoginResponseModel responseModel = LoginResponseModel.fromJson(result);
-
+      log(responseModel.loginData!.token!,name: 'API TOKEN');
+      AppPreference().setStringData(
+          PreferencesKey.userToken, responseModel.loginData!.token!);
       resource = Resource(
         error: null,
         data: responseModel,
